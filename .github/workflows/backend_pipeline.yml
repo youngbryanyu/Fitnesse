@@ -12,9 +12,9 @@ on:
   # Enable manual runs of workflow
   workflow_dispatch:
 
-# Job to run in the pipeline workflow
+# Workflow stages
 jobs:      
-  # Test Formatting and style with ESLint
+  # Perform Lint Checks
   lint:
     name: Lint Checks
     runs-on: ubuntu-latest
@@ -30,7 +30,7 @@ jobs:
     - name: Run lint script
       run: pnpm run lint
 
-  # Run unit tests for each OS version and Node version
+  # Run Unit Tests
   test:
     name: Unit Tests
     needs: lint
@@ -51,7 +51,7 @@ jobs:
     - name: Run unit tests with jest
       run: echo "No unit tests exist yet. Skipping."
 
-  # Build application
+  # Build Application
   build:
     name: Build Application
     needs: test
@@ -61,7 +61,7 @@ jobs:
     - name: Build
       run: echo "No builds yet. Skipping."
 
-  # Deploy application
+  # Deploy Application
   deploy:
     name: Deploy Application
     needs: build
@@ -72,7 +72,7 @@ jobs:
     - name: Build
       run: echo "No deployments yet. Skipping."
 
-  # Notify after deployment
+  # Notify After Deployment
   notify:
     name: Send Notifications
     needs: deploy
