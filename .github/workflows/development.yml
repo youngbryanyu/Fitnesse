@@ -27,6 +27,9 @@ jobs:
       with:
         node-version: ${{ matrix.node_version }}
 
+    - name: cd into backend directory
+      run: cd backend
+      
     - name: Install pnpm
       run: npm install -g pnpm
 
