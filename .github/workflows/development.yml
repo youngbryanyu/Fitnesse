@@ -10,7 +10,7 @@ on:
     - cron: 0 0 * * *
   workflow_dispatch:
 
-# Jobs to run and test
+# Job to test installation of dependencies with pnpm package manager
 jobs:
   test:
     name: Test on node ${{ matrix.node_version }} and ${{ matrix.os }}
@@ -26,15 +26,13 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node_version }}
-
-    - name: cd into backend directory
-      run: cd backend
       
     - name: Install pnpm
       run: npm install -g pnpm
 
     - name: Install dependencies with pnpm
       run: pnpm install
+      working-directory: ./backend
   
   
 # default below:
