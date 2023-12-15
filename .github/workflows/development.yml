@@ -81,4 +81,28 @@ jobs:
     - name: Send Notification
       run: echo "No notifications yet. Skipping."
 
+# Run unit tests for each OS version and Node version
+  # test:
+  #   name: Unit Tests [${{ matrix.os }}] [Node ${{ matrix.node_version }}] 
+  #   needs: lint
+  #   runs-on: ${{ matrix.os }}
+  #   strategy:
+  #     matrix:
+  #       node_version: [16.x, 18.x, 20.x]
+  #       os: [ubuntu-latest, windows-latest, macOS-latest]   
+  #   defaults:
+  #     run:
+  #       working-directory: ./backend
+  #   steps:
+  #   - uses: actions/checkout@v3
+  #   - name: Use Node.js ${{ matrix.node_version }}
+  #     uses: actions/setup-node@v3
+  #     with:
+  #       node-version: ${{ matrix.node_version }} 
+  #   - name: Install pnpm
+  #     run: npm install -g pnpm
+  #   - name: Install dependencies with pnpm
+  #     run: pnpm install
+  #   - name: Run unit tests with jest
+  #     run: echo "No unit tests exist yet. Skipping."
 
