@@ -1,4 +1,4 @@
-name: Development workflow 
+name: Backend Development Pipeline
 
 # Workflow triggers
 on:
@@ -6,54 +6,79 @@ on:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
+  # Schedule pipeline to run everyday midnight
   schedule:
     - cron: 0 0 * * *
+  # Enable manual runs of workflow
   workflow_dispatch:
 
-# Job to test installation of dependencies with pnpm package manager
-jobs:
+# Job to run in the pipeline workflow
+jobs:      
+  # Test Formatting and style with ESLint
+  lint:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./backend
+    steps:
+    - uses: actions/checkout@v3
+    - name: Install pnpm package manager
+      run: npm install -g pnpm
+    - name: Install Dependencies
+      run: pnpm install
+    - name: Run lint script
+      run: pnpm run lint
+
+  # Run unit tests for each OS version and Node version
   test:
-    name: Test on node ${{ matrix.node_version }} and ${{ matrix.os }}
+    name: Tests on ${{ matrix.os }} with node ${{ matrix.node_version }} 
+    needs: lint
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         node_version: [16.x, 18.x, 20.x]
-        os: [ubuntu-latest, windows-latest, macOS-latest]
-
+        os: [ubuntu-latest, windows-latest, macOS-latest]   
+    defaults:
+      run:
+        working-directory: ./backend
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v3
     - name: Use Node.js ${{ matrix.node_version }}
       uses: actions/setup-node@v3
       with:
-        node-version: ${{ matrix.node_version }}
-      
+        node-version: ${{ matrix.node_version }} 
     - name: Install pnpm
       run: npm install -g pnpm
-
     - name: Install dependencies with pnpm
       run: pnpm install
-      working-directory: ./backend
-  
-  
-# default below:
+    - name: Run unit tests with jest
+      run: echo "No unit tests exist yet. Skipping."
 
-# jobs:
-#   build:
-#     runs-on: ubuntu-latest
+  # Build application
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build
+      run: echo "No builds yet. Skipping."
 
-#     strategy:
-#       matrix:
-#         node-version: [14.x, 16.x, 18.x]
+  # Deploy application
+  deploy:
+    needs: test
+    if: github.event_name == 'schedule' # only deploy application based on the schedule
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build
+      run: echo "No deployments yet. Skipping."
 
-#     steps:
-#     - uses: actions/checkout@v3
+  # Notify after deployment
+  notify:
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+    - name: Send Notification
+      run: echo "No notifications yet. Skipping."
 
-#     - name: Use Node.js ${{ matrix.node-version }}
-#       uses: actions/setup-node@v3
-#       with:
-#         node-version: ${{ matrix.node-version }}
 
-    # - name: Build
-    #   run: |
-    #     npm install
-    #     gulp
