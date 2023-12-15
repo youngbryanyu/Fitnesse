@@ -1,6 +1,24 @@
 {
+  "name": "Fitnesse",
+  "version": "1.0",
+  "description": "Fitnesse is an mobile app that provides a centralized fitness and nutrition platform for users to track both their food and workouts.",
+  "license": "MIT",
+  "contributors": ["Young Yu", "Aaron Kim"],
+  "repository": {"url": "https://github.com/yyu2002/Fitnesse"},
+  "keywords": ["fitness", "nutrition", "mobile"],
   "dependencies": {
     "mongoose": "^8.0.3",
     "pnpm": "^8.12.1"
+  },
+  "devDependencies": {
+    "eslint": "^8.55.0",
+    "eslint-config-standard": "^17.1.0",
+    "eslint-plugin-import": "^2.25.2",
+    "eslint-plugin-n": "^15.0.0 || ^16.0.0 ",
+    "eslint-plugin-promise": "^6.0.0"
+  },
+  "scripts": {
+    "lint": "eslint .", 
+    "test": "echo \"Currently no tests exist yet\""
   }
 }
