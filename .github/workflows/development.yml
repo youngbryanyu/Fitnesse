@@ -16,6 +16,7 @@ on:
 jobs:      
   # Test Formatting and style with ESLint
   lint:
+    name: Lint Checks
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -31,7 +32,7 @@ jobs:
 
   # Run unit tests for each OS version and Node version
   test:
-    name: Tests on ${{ matrix.os }} with node ${{ matrix.node_version }} 
+    name: Unit Tests [${{ matrix.os }}] [Node ${{ matrix.node_version }}] 
     needs: lint
     runs-on: ${{ matrix.os }}
     strategy:
@@ -56,6 +57,7 @@ jobs:
 
   # Build application
   build:
+    name: Build Application
     needs: test
     runs-on: ubuntu-latest
     steps:
@@ -65,7 +67,8 @@ jobs:
 
   # Deploy application
   deploy:
-    needs: test
+    name: Deploy Application
+    needs: build
     if: github.event_name == 'schedule' # only deploy application based on the schedule
     runs-on: ubuntu-latest
     steps:
@@ -75,6 +78,7 @@ jobs:
 
   # Notify after deployment
   notify:
+    name: Send Notifications
     needs: deploy
     runs-on: ubuntu-latest
     steps:
