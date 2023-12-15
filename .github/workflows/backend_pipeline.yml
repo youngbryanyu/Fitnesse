@@ -1,4 +1,4 @@
-name: Backend Development Pipeline
+name: Backend Pipeline
 
 # Workflow triggers
 on:
