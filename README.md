@@ -9,7 +9,7 @@ Fitnesse is an mobile app that provides a centralized fitness and nutrition plat
 Reach out to [youngyu19@gmail.com.com](mailto:youngyu2002@gmail.com) or [aaronkim0928@gmail.com](mailto:aaronkim0928@gmail.com) if you're interested in contributing!
 
 ## Development Guide
-See the [Development Guide] file to see resources and things to keep in mind while contributing to this project.
+See the [Development Guide](https://github.com/yyu2002/Fitnesse/blob/development/DEVELOPMENT_GUIDE.md) file to see resources and things to keep in mind while contributing to this project.
 
 ## Documentation
 Documentation can be found in this private [folder](https://drive.google.com/drive/u/0/folders/14OD0Z6h0RKR4SW87Mh0a9upd-fyANRFn). Please reach out for access if you're interested in contributing.
