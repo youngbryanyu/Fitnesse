@@ -11,5 +11,4 @@ app.use(express.json())
 /* Load .env file */
 dotenv.config()
 
-
 /* test comment */
