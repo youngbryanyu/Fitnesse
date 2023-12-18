@@ -1,4 +1,4 @@
-# Development G
+# Development Guide
 Some resources and things to keep in mind while contributing to this project. 
 
 ## Do Not Work Directly on Main Branch
