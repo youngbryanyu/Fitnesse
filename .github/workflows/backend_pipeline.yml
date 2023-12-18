@@ -3,9 +3,9 @@ name: Backend Pipeline
 # Workflow triggers
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "development" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "main", "development" ]
   # Schedule pipeline to run everyday midnight
   schedule:
     - cron: 0 0 * * *
