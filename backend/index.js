@@ -11,4 +11,7 @@ app.use(express.json())
 /* Load .env file */
 dotenv.config()
 
-/* test comment - 2nd test - erd */
+/* Start backend server */
+app.listen(process.env.PORT, async () => {
+  console.log(`Backend is running. Listening on port ${process.env.PORT}`)
+})

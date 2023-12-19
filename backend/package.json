@@ -31,6 +31,7 @@
   },
   "scripts": {
     "lint": "eslint .",
-    "test": "echo \"Currently no tests exist yet\""
+    "test": "echo \"Currently no tests exist yet\"",
+    "start": "node index.js"
   }
 }
