@@ -1,5 +1,7 @@
 name: Backend Pipeline
 
+# TODO: considering abstracting repeatable setup steps into a separate workflow file and calling it
+
 # Workflow triggers
 on:
   push:
@@ -60,6 +62,9 @@ jobs:
     name: Build Application
     needs: test
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./backend
     steps:
     - uses: actions/checkout@v3
     - name: Build
