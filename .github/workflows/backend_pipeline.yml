@@ -1,5 +1,7 @@
 name: Backend Pipeline
 
+# TODO: considering abstracting repeatable setup steps into a separate workflow file and calling it
+
 # Workflow triggers
 on:
   push:
@@ -23,7 +25,11 @@ jobs:
         working-directory: ./backend
     steps:
     - uses: actions/checkout@v3
-    - name: Install pnpm package manager
+    - name: Use Node.js 20.x
+      uses: actions/setup-node@v3
+      with:
+        node-version: '20.x'
+    - name: Install pnpm
       run: npm install -g pnpm
     - name: Install Dependencies
       run: pnpm install
@@ -46,7 +52,7 @@ jobs:
         node-version: 20.x
     - name: Install pnpm
       run: npm install -g pnpm
-    - name: Install dependencies with pnpm
+    - name: Install dependencies
       run: pnpm install
     - name: Run unit tests with jest
       run: echo "No unit tests exist yet. Skipping."
@@ -56,10 +62,23 @@ jobs:
     name: Build Application
     needs: test
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./backend
     steps:
     - uses: actions/checkout@v3
     - name: Build
       run: echo "No builds yet. Skipping."
+    - name: Use Node.js 20.x
+      uses: actions/setup-node@v3
+      with:
+        node-version: '20.x'
+    - name: Install pnpm
+      run: npm install -g pnpm
+    - name: Install Dependencies
+      run: pnpm install
+    - name: Compile TypeScript into JavaScript
+      run: pnpm run build
 
   # Deploy Application
   deploy:
@@ -80,29 +99,3 @@ jobs:
     steps:
     - name: Send Notification
       run: echo "No notifications yet. Skipping."
-
-# Run unit tests for each OS version and Node version
-  # test:
-  #   name: Unit Tests [${{ matrix.os }}] [Node ${{ matrix.node_version }}] 
-  #   needs: lint
-  #   runs-on: ${{ matrix.os }}
-  #   strategy:
-  #     matrix:
-  #       node_version: [16.x, 18.x, 20.x]
-  #       os: [ubuntu-latest, windows-latest, macOS-latest]   
-  #   defaults:
-  #     run:
-  #       working-directory: ./backend
-  #   steps:
-  #   - uses: actions/checkout@v3
-  #   - name: Use Node.js ${{ matrix.node_version }}
-  #     uses: actions/setup-node@v3
-  #     with:
-  #       node-version: ${{ matrix.node_version }} 
-  #   - name: Install pnpm
-  #     run: npm install -g pnpm
-  #   - name: Install dependencies with pnpm
-  #     run: pnpm install
-  #   - name: Run unit tests with jest
-  #     run: echo "No unit tests exist yet. Skipping."
-
