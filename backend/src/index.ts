@@ -1,16 +1,19 @@
-/* Entry point for backend server */
-import express from 'express';
-import dotenv from 'dotenv';
+/* Backend server startup script and entry point */
+import App from './app';
+import * as dotenv from 'dotenv';
 
-/* Create instance of backend server */
-const app = express();
-app.use(express.json());
-
-/* Load .env file */
+/* Load environmental variables */
 dotenv.config();
 
-/* Start backend server */
-app.listen(process.env.PORT, async () => {
-  console.log(`Backend is running. Listening on port ${process.env.PORT}`);
-});
+/* Get the server port from environmental variables */
+const PORT = process.env.PORT;
 
+/* Check if server's port number exists in environmental variables */
+if (!PORT) {
+  console.error('Server port number environment variable is not defined.');
+  process.exit(1);
+}
+
+/* Create instance of backend app server and listen for connections*/
+const appInstance = new App();
+appInstance.startServer(parseInt(PORT)); 
