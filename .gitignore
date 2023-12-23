@@ -1,5 +1,8 @@
-# ignore node_modules folders
+# ignore /node_modules folder
 node_modules
 
-# ignore .env file
+# ignore .env file with environmental variables
 .env
+
+# ignore /dst folder with compiled JavaScript from TypeScript
+dst
