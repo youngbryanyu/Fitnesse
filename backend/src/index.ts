@@ -16,4 +16,4 @@ if (!PORT) {
 
 /* Create instance of backend app server and listen for connections*/
 const appInstance = new App();
-appInstance.startServer(parseInt(PORT)); 
+appInstance.startServer(parseInt(PORT));

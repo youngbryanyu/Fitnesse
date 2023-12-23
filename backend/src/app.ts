@@ -7,7 +7,7 @@ import mongoose from 'mongoose';
  */
 class App {
   /* Express middleware */
-  public express: Express;
+  private express: Express;
 
   /**
    * Constructor for the backend application server {@link App}.
@@ -76,4 +76,7 @@ class App {
   // TODO: make server await to listen to db
 }
 
+/**
+ * Export App class
+ */
 export default App;
