@@ -6,3 +6,6 @@ node_modules
 
 # ignore /dst folder with compiled JavaScript from TypeScript
 dst
+
+# ignore .DS_Store
+.DS_Store

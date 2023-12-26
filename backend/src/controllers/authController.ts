@@ -2,13 +2,15 @@
 import { Request, Response } from 'express';
 import { UserModel } from '../models/userModel';
 import CryptoJS from 'crypto-js';
+import { AUTH_RESPONSES_400 } from '../responses/authResponses';
+import { GENERIC_RESPONSES } from '../responses/genericResponses';
 
 /**
  * Controller that contains authentication business logic
  */
 class AuthController {
   /**
-   * Attempts to register a new user.
+   * Attempts to register a new user. Will fail if the username or email provided by the user is already taken.
    * @param req incoming request from client.
    * @param res response to return to client.
    */
@@ -19,8 +21,8 @@ class AuthController {
         username: req.body.username
       });
       if (existingUsernameUser) {
-        console.log("The username is already taken");
-        res.status(403).json('The username is already taken');
+        console.log(`The username ${req.body.username} is already taken.`);
+        res.status(409).json(AUTH_RESPONSES_400._409_USERNAME_TAKEN);
         return;
       }
 
@@ -29,16 +31,16 @@ class AuthController {
         email: req.body.email
       });
       if (existingEmailUser) {
-        console.log("The email is already taken");
-        res.status(403).json('The email is already taken');
+        console.log(`The email ${req.body.email} is already taken.`);
+        res.status(409).json(AUTH_RESPONSES_400._409_EMAIL_TAKEN);
         return;
       }
 
       /* Get secret key from environment variables for password encryption */
       const secretKey = process.env.SECRET_KEY;
       if (!secretKey) {
-        console.log("The secret key doesn't exist");
-        res.status(500).json("Server error");
+        console.log("The secret key doesn't exist in the environment varirables.");
+        res.status(500).json(GENERIC_RESPONSES[500]);
         return;
       }
 
@@ -54,8 +56,8 @@ class AuthController {
       const savedUser = await newUser.save();
       res.status(201).json(savedUser);
     } catch (error) {
-      console.error("Server error");
-      res.status(500).json(error);
+      console.error("Server error occured: " + error);
+      res.status(500).json(GENERIC_RESPONSES[500]);
     }
   }
 }
