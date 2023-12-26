@@ -55,7 +55,7 @@ jobs:
     - name: Install dependencies
       run: pnpm install
     - name: Run unit tests with jest
-      run: echo "No unit tests exist yet. Skipping."
+      run: pnpm run test
 
   # Build Application
   build:
