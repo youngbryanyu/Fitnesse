@@ -4,7 +4,7 @@ import mongoose, { Document, Schema } from 'mongoose';
 /**
  * Interface for MongoDB user document
  */
-interface IUser extends Document {
+export interface IUser extends Document {
   username: string,
   email: string,
   password: string,
@@ -13,7 +13,7 @@ interface IUser extends Document {
 /**
  * Schema for MongoDB user document
  */
-const UserSchema: Schema<IUser> = new Schema<IUser>(
+const UserSchema = new Schema<IUser>(
   {
     /* _id is automatically created by MongoDB */
     username: { type: String, required: true },
@@ -26,5 +26,4 @@ const UserSchema: Schema<IUser> = new Schema<IUser>(
 )
 
 /* Create and export the user schema */
-const UserModel = mongoose.model<IUser>('User', UserSchema);
-export default UserModel;
+export const UserModel = mongoose.model<IUser>('User', UserSchema);
