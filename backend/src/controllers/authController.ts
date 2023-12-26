@@ -2,8 +2,8 @@
 import { Request, Response } from 'express';
 import { UserModel } from '../models/userModel';
 import CryptoJS from 'crypto-js';
-import { AUTH_RESPONSES_400 } from '../responses/authResponses';
-import { GENERIC_RESPONSES } from '../responses/genericResponses';
+import { AUTH_RESPONSES_400 } from '../constants/responses/authResponses';
+import { GENERIC_RESPONSES } from '../constants/responses/genericResponses';
 
 /**
  * Controller that contains authentication business logic

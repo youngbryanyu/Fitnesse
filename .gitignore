@@ -9,3 +9,6 @@ dst
 
 # ignore .DS_Store
 .DS_Store
+
+# ignore jest code coverage folder
+coverage
