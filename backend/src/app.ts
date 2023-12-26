@@ -2,13 +2,14 @@
 import express, { Express } from 'express';
 import mongoose from 'mongoose';
 import authRoute from './routes/authRoutes';
+import { ROUTE_URLS_V1 } from './constants/routeUrls';
 
 /**
  * The backend application server.
  */
 class App {
   /* Express middleware */
-  private express: Express;
+  express: Express;
 
   /**
    * Constructor for the backend application server {@link App}.
@@ -31,11 +32,11 @@ class App {
    * Mounts the routes for the backend API endpoints.
    */
   private mountRoutes(): void {
-    this.express.use('/fitnesse/v1/auth', authRoute);
+    this.express.use(ROUTE_URLS_V1.AUTH_ROUTE, authRoute);
   }
 
   /**
-   * Connect to the MongoDB using the connection URL. Exits with error if connection fails.
+   * Connect to the MongoDB using the connection URL in the environmental variables. Exits with error if connection fails.
    */
   private async connectToDatabase(): Promise<void> {
     /* Get connection URL from environment variables */
