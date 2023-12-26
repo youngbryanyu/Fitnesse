@@ -1,6 +1,7 @@
 /* Application setup */
 import express, { Express } from 'express';
 import mongoose from 'mongoose';
+import authRoute from './routes/authRoutes';
 
 /**
  * The backend application server.
@@ -29,7 +30,9 @@ class App {
   /**
    * Mounts the routes for the backend API endpoints.
    */
-  private mountRoutes(): void {}
+  private mountRoutes(): void {
+    this.express.use('/fitnesse/v1/auth', authRoute);
+  }
 
   /**
    * Connect to the MongoDB using the connection URL. Exits with error if connection fails.
@@ -41,7 +44,7 @@ class App {
     /* Check if connection URL exists in environment variables */
     if (!mongoUrl) {
       console.error('MongoDB URL environment variable is not defined.');
-      process.exit(1);
+      process.exit(1); // TODO: add errors for this, catch, and handle it
     }
 
     /* Try connecting to the database specified by the connection URL */
@@ -50,7 +53,7 @@ class App {
       console.log('Successfully connected to MongoDB.');
     } catch (error) {
       console.error('Failed to connect to MongoBD.', error);
-      process.exit(1);
+      process.exit(1); // TODO: add errors for this, catch, and handle it
     }
   }
 
@@ -69,7 +72,7 @@ class App {
       });
     } catch (error) {
       console.error('Error starting the server.', error);
-      process.exit(1);
+      process.exit(1); // TODO: add errors for this, catch, and handle it
     }
   }
 
