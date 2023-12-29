@@ -9,21 +9,19 @@ import { ROUTE_URLS_V1 } from './constants/routeUrls';
  */
 class App {
   /* Express middleware */
-  express: Express;
+  public readonly express: Express;
 
   /**
    * Constructor for the backend application server {@link App}.
    */
   constructor() {
     this.express = express();
-    this.initializeMiddleWares();
-    this.mountRoutes();
   }
 
   /**
    * Initialize middlewares for the application.
    */
-  private initializeMiddleWares(): void {
+  public initializeMiddleWares(): void {
     /* Use express middleware to parse HTTP requests in JSON format */
     this.express.use(express.json());
   }
@@ -31,14 +29,14 @@ class App {
   /**
    * Mounts the routes for the backend API endpoints.
    */
-  private mountRoutes(): void {
+  public mountRoutes(): void {
     this.express.use(ROUTE_URLS_V1.AUTH_ROUTE, authRoute);
   }
 
   /**
    * Connect to the MongoDB using the connection URL in the environmental variables. Exits with error if connection fails.
    */
-  private async connectToDatabase(): Promise<void> {
+  public async connectToDatabase(): Promise<void> {
     /* Get connection URL from environment variables */
     const mongoUrl = process.env.MONGO_URL;
 
@@ -48,13 +46,25 @@ class App {
       process.exit(1); // TODO: add errors for this, catch, and handle it
     }
 
-    /* Try connecting to the database specified by the connection URL */
-    try {
-      await mongoose.connect(mongoUrl);
-      console.log('Successfully connected to MongoDB.');
-    } catch (error) {
-      console.error('Failed to connect to MongoBD.', error);
-      process.exit(1); // TODO: add errors for this, catch, and handle it
+    /* Try connecting to the database specified by the connection URL, with retries */
+    let attempts = 0;
+    const maxAttempts = process.env.MONGO_CONNECTION_RETRIES ? parseInt(process.env.MONGO_CONNECTION_RETRIES) : 2;
+    while (attempts < maxAttempts) {
+      try {
+        await mongoose.connect(mongoUrl);
+        console.log('Successfully connected to MongoDB.');
+        return;
+      } catch (error) {
+        console.error('Failed to connect to MongoDB:', error);
+        attempts++;
+        if (attempts >= maxAttempts) {
+          console.error(`Maximum connection attempts of ${maxAttempts} reached for MongoDB.`);
+          process.exit(1);
+        }
+        // Wait for 1 second before retrying 
+        console.log('Retrying connection to MongoDB...');
+        await new Promise(resolve => setTimeout(resolve, 1000));
+      }
     }
   }
 
@@ -64,20 +74,15 @@ class App {
    */
   public async startServer(port: number): Promise<void> {
     try {
-      /* Await connection to MongoDB */
-      await this.connectToDatabase();
-
       /* Listen for connections */
       this.express.listen(port, () => {
         console.log(`Server is listening on port ${port}`);
       });
     } catch (error) {
       console.error('Error starting the server.', error);
-      process.exit(1); // TODO: add errors for this, catch, and handle it
+      return; // TODO: add errors for this, catch, and handle it
     }
   }
-
-  // TODO: make server await to listen to db
 }
 
 /**

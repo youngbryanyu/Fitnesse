@@ -18,6 +18,8 @@ describe('Auth Routes Tests', () => {
   /* Initialize app instance before all tests */
   beforeAll(() => {
     appInstance = new App();
+    appInstance.mountRoutes();
+    appInstance.initializeMiddleWares();
   });
 
   /* Clear all mocks before each test */

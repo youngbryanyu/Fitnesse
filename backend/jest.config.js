@@ -17,5 +17,6 @@ module.exports = {
     '!src/**/index.ts',   /* exclude index.ts files */
     '!src/models/**',     /* exclude data models */
     '!src/constants/**',   /* exclude constants */
-  ]
+  ],
+  setupFilesAfterEnv: ['./jest.setup.js'] /* Global set up file */
 };
