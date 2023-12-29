@@ -1,31 +1,10 @@
 /* Unit tests for the backend application server class */
 import mongoose from 'mongoose';
 import App from '../src/app';
-import express, { Express } from 'express';
+import { Express } from 'express';
 
-<<<<<<< HEAD
-/* Partially mock mongoose's connect function */
-jest.mock('mongoose', () => {
-  const actualMongoose = jest.requireActual('mongoose');
-  return {
-    ...actualMongoose,
-    connect: jest.fn()
-  }
-});
-
-/* Mock process.exit */
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
 /* Mock process.exit globally to do nothing */
->>>>>>> cb70f89 (finish unit tests for app.ts)
 jest.spyOn(process, 'exit').mockImplementation(() => undefined as never);
-=======
-jest.spyOn(process, 'exit').mockImplementation((code?: number) => undefined as never);
->>>>>>> 87dfe08 (make unit tests for app.ts and add retries to mongo)
-=======
-jest.spyOn(process, 'exit').mockImplementation(() => undefined as never);
->>>>>>> 467e792 (fix lint issues)
 
 /* Dummy test MongoDB connection URL */
 const TEST_URL = 'TEST_URL'
@@ -52,30 +31,14 @@ describe('App Tests', () => {
 
   /* Test initialization of middleware */
   it('should initialize JSON middleware', () => {
-<<<<<<< HEAD
-<<<<<<< HEAD
     jest.spyOn(appInstance.express, 'use');
-=======
-    const spy = jest.spyOn(appInstance.express, 'use');
->>>>>>> 87dfe08 (make unit tests for app.ts and add retries to mongo)
-=======
-    jest.spyOn(appInstance.express, 'use');
->>>>>>> 467e792 (fix lint issues)
     appInstance.initializeMiddleWares();
     expect(appInstance.express.use).toHaveBeenCalledWith(expect.any(Function));
   });
 
   /* Test mounting of API routes */
   it('should mount API routes', () => {
-<<<<<<< HEAD
-<<<<<<< HEAD
     jest.spyOn(appInstance.express, 'use');
-=======
-    const spy = jest.spyOn(appInstance.express, 'use');
->>>>>>> 87dfe08 (make unit tests for app.ts and add retries to mongo)
-=======
-    jest.spyOn(appInstance.express, 'use');
->>>>>>> 467e792 (fix lint issues)
     appInstance.initializeMiddleWares();
     expect(appInstance.express.use).toHaveBeenCalledWith(expect.any(Function));
   });
