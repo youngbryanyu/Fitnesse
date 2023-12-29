@@ -3,7 +3,6 @@ import mongoose from 'mongoose';
 import App from '../src/app';
 import { Express } from 'express';
 
-
 /* Mock process.exit globally to do nothing */
 jest.spyOn(process, 'exit').mockImplementation(() => undefined as never);
 
