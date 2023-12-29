@@ -75,9 +75,8 @@ class App {
   public async startServer(port: number): Promise<void> {
     try {
       /* Listen for connections */
-      this.express.listen(port, () => {
-        console.log(`Server is listening on port ${port}`);
-      });
+      this.express.listen(port);
+      console.log(`Server is listening on port ${port}`);
     } catch (error) {
       console.error('Error starting the server.', error);
       return; // TODO: add errors for this, catch, and handle it

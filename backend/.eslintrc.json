@@ -18,7 +18,8 @@
     },
     "ignorePatterns": [
       "dst/",               /* Ignore JS files */
-      "**/jest.setup.js"    /* Ignore jest setup file */
+      "**/jest.setup.js",   /* Ignore jest setup file */
+      "tests/"              /* Ignore Test files */
     ], 
     "rules": {
       /* Add custom rules here */

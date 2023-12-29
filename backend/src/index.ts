@@ -2,6 +2,15 @@
 import App from './app';
 import * as dotenv from 'dotenv';
 
+/*
+TODO: think about using app config file instead of environment variables 
+for some things: https://stackoverflow.com/questions/41467801/how-to-create-an-application-specific-config-file-for-typescript
+
+.env files are generally used to store information related to 
+the particular deployment environment (e.g. docker), while config.json files 
+might be used to store data particular to the application as a whole.
+*/
+
 /* Load environmental variables */
 dotenv.config();
 
