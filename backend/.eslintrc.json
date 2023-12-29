@@ -16,7 +16,10 @@
         "ecmaVersion": "latest",
         "sourceType": "module"
     },
-    "ignorePatterns": ["dst/"], /* Ignore JS files */
+    "ignorePatterns": [
+      "dst/",               /* Ignore JS files */
+      "**/jest.setup.js"    /* Ignore jest setup file */
+    ], 
     "rules": {
       /* Add custom rules here */
     }

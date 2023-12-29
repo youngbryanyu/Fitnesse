@@ -12,7 +12,7 @@ jest.mock('mongoose', () => {
 });
 
 /* Mock process.exit */
-jest.spyOn(process, 'exit').mockImplementation((code?: number) => undefined as never);
+jest.spyOn(process, 'exit').mockImplementation(() => undefined as never);
 
 /* Test backend app server */
 describe('App Tests', () => {
@@ -30,14 +30,14 @@ describe('App Tests', () => {
 
   /* Test initialization of middleware */
   it('should initialize JSON middleware', () => {
-    const spy = jest.spyOn(appInstance.express, 'use');
+    jest.spyOn(appInstance.express, 'use');
     appInstance.initializeMiddleWares();
     expect(appInstance.express.use).toHaveBeenCalledWith(expect.any(Function));
   });
 
   /* Test mounting of API routes */
   it('should mount API routes', () => {
-    const spy = jest.spyOn(appInstance.express, 'use');
+    jest.spyOn(appInstance.express, 'use');
     appInstance.initializeMiddleWares();
     expect(appInstance.express.use).toHaveBeenCalledWith(expect.any(Function));
   });
