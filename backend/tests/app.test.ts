@@ -12,7 +12,11 @@ jest.mock('mongoose', () => {
 });
 
 /* Mock process.exit */
+<<<<<<< HEAD
 jest.spyOn(process, 'exit').mockImplementation(() => undefined as never);
+=======
+jest.spyOn(process, 'exit').mockImplementation((code?: number) => undefined as never);
+>>>>>>> 87dfe08 (make unit tests for app.ts and add retries to mongo)
 
 /* Test backend app server */
 describe('App Tests', () => {
@@ -30,14 +34,22 @@ describe('App Tests', () => {
 
   /* Test initialization of middleware */
   it('should initialize JSON middleware', () => {
+<<<<<<< HEAD
     jest.spyOn(appInstance.express, 'use');
+=======
+    const spy = jest.spyOn(appInstance.express, 'use');
+>>>>>>> 87dfe08 (make unit tests for app.ts and add retries to mongo)
     appInstance.initializeMiddleWares();
     expect(appInstance.express.use).toHaveBeenCalledWith(expect.any(Function));
   });
 
   /* Test mounting of API routes */
   it('should mount API routes', () => {
+<<<<<<< HEAD
     jest.spyOn(appInstance.express, 'use');
+=======
+    const spy = jest.spyOn(appInstance.express, 'use');
+>>>>>>> 87dfe08 (make unit tests for app.ts and add retries to mongo)
     appInstance.initializeMiddleWares();
     expect(appInstance.express.use).toHaveBeenCalledWith(expect.any(Function));
   });
