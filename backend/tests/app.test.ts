@@ -9,7 +9,7 @@ jest.spyOn(process, 'exit').mockImplementation(() => undefined as never);
 /* Dummy test MongoDB connection URL */
 const TEST_URL = 'TEST_URL'
 
-/* Dummy port */
+/* Dummy port for backend server */
 const PORT = 3000;
 
 /* Dummy MongoDB retry count */
