@@ -13,10 +13,14 @@ jest.mock('mongoose', () => {
 
 /* Mock process.exit */
 <<<<<<< HEAD
+<<<<<<< HEAD
 jest.spyOn(process, 'exit').mockImplementation(() => undefined as never);
 =======
 jest.spyOn(process, 'exit').mockImplementation((code?: number) => undefined as never);
 >>>>>>> 87dfe08 (make unit tests for app.ts and add retries to mongo)
+=======
+jest.spyOn(process, 'exit').mockImplementation(() => undefined as never);
+>>>>>>> 467e792 (fix lint issues)
 
 /* Test backend app server */
 describe('App Tests', () => {
@@ -35,10 +39,14 @@ describe('App Tests', () => {
   /* Test initialization of middleware */
   it('should initialize JSON middleware', () => {
 <<<<<<< HEAD
+<<<<<<< HEAD
     jest.spyOn(appInstance.express, 'use');
 =======
     const spy = jest.spyOn(appInstance.express, 'use');
 >>>>>>> 87dfe08 (make unit tests for app.ts and add retries to mongo)
+=======
+    jest.spyOn(appInstance.express, 'use');
+>>>>>>> 467e792 (fix lint issues)
     appInstance.initializeMiddleWares();
     expect(appInstance.express.use).toHaveBeenCalledWith(expect.any(Function));
   });
@@ -46,10 +54,14 @@ describe('App Tests', () => {
   /* Test mounting of API routes */
   it('should mount API routes', () => {
 <<<<<<< HEAD
+<<<<<<< HEAD
     jest.spyOn(appInstance.express, 'use');
 =======
     const spy = jest.spyOn(appInstance.express, 'use');
 >>>>>>> 87dfe08 (make unit tests for app.ts and add retries to mongo)
+=======
+    jest.spyOn(appInstance.express, 'use');
+>>>>>>> 467e792 (fix lint issues)
     appInstance.initializeMiddleWares();
     expect(appInstance.express.use).toHaveBeenCalledWith(expect.any(Function));
   });
