@@ -8,3 +8,6 @@ global.console = {
   info: jest.fn(), // Mock console.info
   debug: jest.fn(), // Mock console.debug
 }
+
+/* Mock all timeouts */
+global.setTimeout = jest.fn(cb => cb());
