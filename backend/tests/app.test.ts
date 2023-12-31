@@ -3,17 +3,13 @@ import mongoose from 'mongoose';
 import App from '../src/app';
 import { Express } from 'express';
 
+/* Note: all environment variables are read into appConfig.ts upon startup so setting process.env variables does not affect them here */
+
 /* Mock process.exit globally to do nothing */
 jest.spyOn(process, 'exit').mockImplementation(() => undefined as never);
 
-/* Dummy test MongoDB connection URL */
-const TEST_URL = 'TEST_URL'
-
 /* Dummy port for backend server */
 const PORT = 3000;
-
-/* Dummy MongoDB retry count */
-const MONGO_RETRIES = "2";
 
 /* Test backend app server */
 describe('App Tests', () => {
@@ -49,9 +45,8 @@ describe('App Tests', () => {
     jest.spyOn(mongoose, 'connect').mockImplementation(() => {
       return { close: jest.fn() } as unknown as Promise<typeof import("mongoose")>; 
     });
-    process.env.MONGO_URL = TEST_URL;
     await appInstance.connectToDatabase();
-    expect(mongoose.connect).toHaveBeenCalledWith(expect.any(String));
+    expect(mongoose.connect).toHaveBeenCalled();
   });
 
   /* Test failed connection to MongoDB due to undefined environment variable */
@@ -66,7 +61,6 @@ describe('App Tests', () => {
     jest.spyOn(mongoose, 'connect').mockImplementation(() => {
       throw new Error();
     });
-    process.env.MONGO_URL = TEST_URL;
     await appInstance.connectToDatabase();
     expect(process.exit).toHaveBeenCalledWith(1);
     expect(console.log).toHaveBeenCalled();
@@ -80,7 +74,6 @@ describe('App Tests', () => {
      jest.spyOn(mongoose, 'connect').mockImplementation(() => {
       return { close: jest.fn() } as unknown as Promise<typeof import("mongoose")>; 
     });
-    process.env.MONGO_CONNECTION_RETRIES = MONGO_RETRIES;
     await appInstance.connectToDatabase();
     expect(mongoose.connect).toHaveBeenCalled();
   });
@@ -109,7 +102,6 @@ describe('App Tests', () => {
 
   /* Clean up environment variables after each test */
   afterEach(() => {
-    delete process.env.MONGO_URL;
-    delete process.env.MONGO_CONNECTION_RETRIES;
+    
   });
 });

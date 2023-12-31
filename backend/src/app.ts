@@ -2,7 +2,8 @@
 import express, { Express } from 'express';
 import mongoose from 'mongoose';
 import authRoute from './routes/authRoutes';
-import { ROUTE_URLS_V1 } from './constants/routeUrls';
+import { API_URLS_V1 } from './config/constants';
+import appConfig from './config/appConfig';
 
 /**
  * The backend application server.
@@ -30,7 +31,7 @@ class App {
    * Mounts the routes for the backend API endpoints.
    */
   public mountRoutes(): void {
-    this.express.use(ROUTE_URLS_V1.AUTH_ROUTE, authRoute);
+    this.express.use(API_URLS_V1.AUTH, authRoute);
   }
 
   /**
@@ -38,17 +39,17 @@ class App {
    */
   public async connectToDatabase(): Promise<void> {
     /* Get connection URL from environment variables */
-    const mongoUrl = process.env.MONGO_URL;
+    const mongoUrl = appConfig.MONGO_URL;
 
     /* Check if connection URL exists in environment variables */
     if (!mongoUrl) {
       console.error('MongoDB URL environment variable is not defined.');
-      process.exit(1); // TODO: add errors for this, catch, and handle it
+      process.exit(1);
     }
 
     /* Try connecting to the database specified by the connection URL, with retries */
     let attempts = 0;
-    const maxAttempts = process.env.MONGO_CONNECTION_RETRIES ? parseInt(process.env.MONGO_CONNECTION_RETRIES) : 2;
+    const maxAttempts = appConfig.MONGO_CONNECTION_RETRIES;
     while (attempts < maxAttempts) {
       try {
         await mongoose.connect(mongoUrl);
@@ -63,7 +64,7 @@ class App {
         }
         // Wait for 1 second before retrying 
         console.log('Retrying connection to MongoDB...');
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        await new Promise(resolve => setTimeout(resolve, appConfig.MONGO_CONNECTION_RETRY_TIMEOUT));
       }
     }
   }
@@ -79,7 +80,7 @@ class App {
       console.log(`Server is listening on port ${port}`);
     } catch (error) {
       console.error('Error starting the server.', error);
-      return; // TODO: add errors for this, catch, and handle it
+      return;
     }
   }
 }

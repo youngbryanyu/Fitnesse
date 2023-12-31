@@ -3,7 +3,7 @@ module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
   testMatch: ['**/tests/**/*.test.ts'],
-  coverageThreshold: { /* TODO: set thresholds to 80% */
+  coverageThreshold: { /* TODO: set thresholds to 80% after finishing register tests */
     global: {
       branches: 0,
       functions: 0,
@@ -16,7 +16,7 @@ module.exports = {
     'src/**/*.ts',        /* include all files in src directory*/
     '!src/**/index.ts',   /* exclude index.ts files */
     '!src/models/**',     /* exclude data models */
-    '!src/constants/**',  /* exclude constants */
+    '!src/config/**',  /* exclude config and constants */
   ],
   setupFilesAfterEnv: ['./jest.setup.js'] /* Global set up file */
 };

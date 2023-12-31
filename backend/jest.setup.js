@@ -11,3 +11,6 @@ global.console = {
 
 /* Mock all timeouts */
 global.setTimeout = jest.fn(cb => cb());
+
+/* Set the environment to test */
+process.env.NODE_ENV = 'test';
