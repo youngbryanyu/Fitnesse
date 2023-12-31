@@ -43,25 +43,3 @@ export const AUTH_RESPONSES = {
   _409_EMAIL_TAKEN: "The email is already taken.",
   _429_RATE_LIMIT_EXCEEDED: "Too many requests from this API, please try again later.",
 }
-
-// -----------------
-// API RATE LIMITING
-// -----------------
-
-/* Rate limit defaults */
-export const RATE_LIMIT_DEFAULTS = {
-  REGISTER_THRESHOLD: 10,
-  REGISTER_WINDOW: 3600000,
-  LOGIN_THRESHOLD: 60,
-  LOGIN_WINDOW: 3600000
-}
-
-// -----------------------
-// MONGO_DB CONFIGURATIONS
-// -----------------------
-
-/* Number of times to retry MongoDB connection */
-export const DEFAULT_MONGO_CONNECTION_RETRIES = 2;
-
-/* Timeout before retrying MongoDB connection */
-export const DEFAULT_MONGO_CONNECTION_RETRY_TIMEOUT = 1000;
