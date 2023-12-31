@@ -4,6 +4,7 @@ import { UserModel } from '../models/userModel';
 import CryptoJS from 'crypto-js';
 import { AUTH_RESPONSES } from '../config/constants';
 import { GENERIC_RESPONSES } from '../config/constants';
+import AppConfig from '../config/appConfig';
 
 /**
  * Controller that contains authentication business logic
@@ -56,14 +57,8 @@ class AuthController {
       /* Password validation will be handled on the front end */
 
       /* Get secret key from environment variables for password encryption */
-      const secretKey = process.env.SECRET_KEY;
-      if (!secretKey) {
-        console.log("The secret key doesn't exist in the environment varirables.");
-        res.status(500).json({
-          message: GENERIC_RESPONSES[500]
-        });
-        return;
-      }
+      const appConfig = new AppConfig();
+      const secretKey = appConfig.getConfig('AES_SECRET_KEY');
 
       /* Create a new user */
       const newUser = new UserModel({

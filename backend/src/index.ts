@@ -1,20 +1,18 @@
 /* Backend server startup script and entry point */
 import App from './app';
-import appConfig from './config/appConfig';
+import AppConfig from './config/appConfig';
 
-/* .env loaded in appConfig.ts */
+/* Explicitely initialize app config globally */
+AppConfig.initialize();
+
+/* Create app config instance */
+const appConfig = new AppConfig();
 
 /* Get the server port from environmental variables */
-const PORT = appConfig.PORT;
-
-/* Check if server's port number exists in environmental variables. Exit with error if field doesn't exist. */
-if (!PORT) {
-  console.error('Server port number environment variable is not defined.');
-  process.exit(1);
-}
+const PORT = appConfig.getConfig('PORT');
 
 /* Start application */
-startApp(PORT);
+startApp(parseInt(PORT));
 
 /**
  * Initializes middlewares, mounts API routes, connects to MongoDB, and starts the backend server.

@@ -2,11 +2,14 @@
 import mongoose from 'mongoose';
 import App from '../src/app';
 import { Express } from 'express';
+import AppConfig from '../src/config/appConfig';
+import { API_URLS_V1 } from '../src/config/constants';
 
-/* Note: all environment variables are read into appConfig.ts upon startup so setting process.env variables does not affect them here */
-
-/* Mock process.exit globally to do nothing */
-jest.spyOn(process, 'exit').mockImplementation(() => undefined as never);
+/* 
+Note: 
+- All environment variables are read into appConfig.ts upon startup so setting process.env variables does not affect them here. This
+  makes mocking the environment variables and testing them much harder and less straight forward.
+*/
 
 /* Dummy port for backend server */
 const PORT = 3000;
@@ -22,7 +25,7 @@ describe('App Tests', () => {
 
   /* Reset all mocks before each test */
   beforeEach(() => {
-    jest.clearAllMocks();
+    jest.resetAllMocks();
   });
 
   /* Test initialization of middleware */
@@ -35,8 +38,8 @@ describe('App Tests', () => {
   /* Test mounting of API routes */
   it('should mount API routes', () => {
     jest.spyOn(appInstance.express, 'use');
-    appInstance.initializeMiddleWares();
-    expect(appInstance.express.use).toHaveBeenCalledWith(expect.any(Function));
+    appInstance.mountRoutes();
+    expect(appInstance.express.use).toHaveBeenCalledWith(API_URLS_V1.AUTH, expect.any(Function));
   });
 
   /* Test successful connection to MongoDB */
@@ -45,37 +48,53 @@ describe('App Tests', () => {
     jest.spyOn(mongoose, 'connect').mockImplementation(() => {
       return { close: jest.fn() } as unknown as Promise<typeof import("mongoose")>; 
     });
-    await appInstance.connectToDatabase();
-    expect(mongoose.connect).toHaveBeenCalled();
-  });
 
-  /* Test failed connection to MongoDB due to undefined environment variable */
-  it('should fail connecting to MongoDB if the environment variable is undefined', async () => {
+    /* Mock AppConfig to return a dummy connection string */
+    jest.spyOn(AppConfig.prototype, 'getConfigString').mockImplementation(() => {
+      return "dummy connection string";
+    });
+    
+    /* Mock AppConfig to return a dummy value for retry values */
+    jest.spyOn(AppConfig.prototype, 'getConfigNumber').mockImplementation(() => {
+      return 2;
+    });
+
+    /* Connect to DB */
     await appInstance.connectToDatabase();
-    expect(process.exit).toHaveBeenCalledWith(1);
+
+    /* Make checks */
+    expect(mongoose.connect).toHaveBeenCalled();
   });
 
   /* Test failed connection to MongoDB due to server error and retries */
   it('should fail and retry connecting to MongoDB if connection fails due to server error', async () => {
     /* Mock mongoose.connect to throw an exception */
     jest.spyOn(mongoose, 'connect').mockImplementation(() => {
-      throw new Error();
+      throw new Error("Test");
     });
+
+    /* Mock AppConfig to return a dummy connection string */
+    jest.spyOn(AppConfig.prototype, 'getConfigString').mockImplementation(() => {
+      return "dummy connection string";
+    });
+    
+    /* Mock AppConfig to return a dummy value for retry values */
+    jest.spyOn(AppConfig.prototype, 'getConfigNumber').mockReturnValueOnce(2).mockReturnValueOnce(10);
+
+    /* Mock process.exit globally to do nothing */
+    jest.spyOn(process, 'exit').mockImplementation(() => undefined as never);
+
+    /* Mock setTimeout to do nothing */
+    jest.spyOn(global, 'setTimeout').mockImplementation((fn: Function) => fn());
+
+    /* Connect to database */
     await appInstance.connectToDatabase();
+
+    /* Make checks */
     expect(process.exit).toHaveBeenCalledWith(1);
     expect(console.log).toHaveBeenCalled();
     expect(console.error).toHaveBeenCalled();
     expect(setTimeout).toHaveBeenCalled();
-  });
-
-  /* Test when MongoDB connection retries environment variable is undefined and default value is used */
-  it('should use the default number of retries if the environment variable is undefined', async () => {
-     /* Mock mongoose.connect to return dummy object */
-     jest.spyOn(mongoose, 'connect').mockImplementation(() => {
-      return { close: jest.fn() } as unknown as Promise<typeof import("mongoose")>; 
-    });
-    await appInstance.connectToDatabase();
-    expect(mongoose.connect).toHaveBeenCalled();
   });
 
   /* Test that server listens when started  */
@@ -98,10 +117,5 @@ describe('App Tests', () => {
     await appInstance.startServer(PORT);
     expect(console.error).toHaveBeenCalled();
 
-  });
-
-  /* Clean up environment variables after each test */
-  afterEach(() => {
-    
   });
 });

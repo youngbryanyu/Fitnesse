@@ -3,7 +3,7 @@ import express, { Express } from 'express';
 import mongoose from 'mongoose';
 import authRoute from './routes/authRoutes';
 import { API_URLS_V1 } from './config/constants';
-import appConfig from './config/appConfig';
+import AppConfig from './config/appConfig';
 
 /**
  * The backend application server.
@@ -38,25 +38,23 @@ class App {
    * Connect to the MongoDB using the connection URL in the environmental variables. Exits with error if connection fails.
    */
   public async connectToDatabase(): Promise<void> {
-    /* Get connection URL from environment variables */
-    const mongoUrl = appConfig.MONGO_URL;
+    /* Initialize app config */
+    const appConfig = new AppConfig('MONGO_DB');
 
-    /* Check if connection URL exists in environment variables */
-    if (!mongoUrl) {
-      console.error('MongoDB URL environment variable is not defined.');
-      process.exit(1);
-    }
+    /* Get connection URL from environment variables */
+    const mongoUrl = appConfig.getConfigString('CONNECTION_URL');
 
     /* Try connecting to the database specified by the connection URL, with retries */
     let attempts = 0;
-    const maxAttempts = appConfig.MONGO_CONNECTION_RETRIES;
+    const maxAttempts = appConfig.getConfigNumber('CONNECTION_RETRIES');
+    const retryTimeout = appConfig.getConfigNumber('CONNECTION_RETRY_TIMEOUT');
     while (attempts < maxAttempts) {
       try {
         await mongoose.connect(mongoUrl);
         console.log('Successfully connected to MongoDB.');
         return;
       } catch (error) {
-        console.error('Failed to connect to MongoDB:', error);
+        console.error('Failed to connect to MongoDB: ', error);
         attempts++;
         if (attempts >= maxAttempts) {
           console.error(`Maximum connection attempts of ${maxAttempts} reached for MongoDB.`);
@@ -64,7 +62,7 @@ class App {
         }
         // Wait for 1 second before retrying 
         console.log('Retrying connection to MongoDB...');
-        await new Promise(resolve => setTimeout(resolve, appConfig.MONGO_CONNECTION_RETRY_TIMEOUT));
+        await new Promise(resolve => setTimeout(resolve, retryTimeout));
       }
     }
   }
@@ -80,7 +78,7 @@ class App {
       console.log(`Server is listening on port ${port}`);
     } catch (error) {
       console.error('Error starting the server.', error);
-      return;
+      process.exit(1);
     }
   }
 }
