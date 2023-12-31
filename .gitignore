@@ -2,7 +2,7 @@
 node_modules
 
 # ignore .env file with environmental variables
-.env
+.env.dev
 
 # ignore /dst folder with compiled JavaScript from TypeScript
 dst

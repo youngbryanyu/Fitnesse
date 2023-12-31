@@ -2,15 +2,28 @@
 import { Request, Response } from 'express';
 import { UserModel } from '../models/userModel';
 import CryptoJS from 'crypto-js';
-import { AUTH_RESPONSES_400 } from '../constants/responses/authResponses';
-import { GENERIC_RESPONSES } from '../constants/responses/genericResponses';
+import { AUTH_RESPONSES } from '../config/constants';
+import { GENERIC_RESPONSES } from '../config/constants';
 
 /**
  * Controller that contains authentication business logic
  */
 class AuthController {
   /**
-   * Attempts to register a new user. Will fail if the username or email provided by the user is already taken.
+   * Attempts to register a new user. Will fail if the username or email provided by the user is already taken. 
+   * 
+   * Expected body:
+   * {
+   *    username: ...
+   *    email: ...
+   *    password: ...
+   * }
+   * 
+   * Response:
+   * {
+   *    message: ...,
+   *    user: ...
+   * }
    * @param req incoming request from client.
    * @param res response to return to client.
    */
@@ -22,7 +35,9 @@ class AuthController {
       });
       if (existingUsernameUser) {
         console.log(`The username ${req.body.username} is already taken.`);
-        res.status(409).json(AUTH_RESPONSES_400._409_USERNAME_TAKEN);
+        res.status(409).json({
+          message: AUTH_RESPONSES._409_USERNAME_TAKEN
+        });
         return;
       }
 
@@ -32,15 +47,21 @@ class AuthController {
       });
       if (existingEmailUser) {
         console.log(`The email ${req.body.email} is already taken.`);
-        res.status(409).json(AUTH_RESPONSES_400._409_EMAIL_TAKEN);
+        res.status(409).json({
+          message: AUTH_RESPONSES._409_EMAIL_TAKEN
+        });
         return;
       }
+
+      /* Password validation will be handled on the front end */
 
       /* Get secret key from environment variables for password encryption */
       const secretKey = process.env.SECRET_KEY;
       if (!secretKey) {
         console.log("The secret key doesn't exist in the environment varirables.");
-        res.status(500).json(GENERIC_RESPONSES[500]);
+        res.status(500).json({
+          message: GENERIC_RESPONSES[500]
+        });
         return;
       }
 
@@ -54,10 +75,15 @@ class AuthController {
 
       /* Try saving new user to database */
       const savedUser = await newUser.save();
-      res.status(201).json(savedUser);
+      res.status(201).json({
+        message: AUTH_RESPONSES._201_REGISTER_SUCCESSFUL,
+        user: savedUser
+      });
     } catch (error) {
       console.error("Server error occured: " + error);
-      res.status(500).json(GENERIC_RESPONSES[500]);
+      res.status(500).json({
+        message: GENERIC_RESPONSES[500]
+      });
     }
   }
 }
