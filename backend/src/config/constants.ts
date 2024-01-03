@@ -41,5 +41,6 @@ export const AUTH_RESPONSES = {
   _201_REGISTER_SUCCESSFUL: "User successfully registered.",
   _409_USERNAME_TAKEN: "The username is already taken.",
   _409_EMAIL_TAKEN: "The email is already taken.",
+  _422_INVALID_PASSWORD: "The password is invalid",
   _429_RATE_LIMIT_EXCEEDED: "Too many requests from this API, please try again later.",
 }

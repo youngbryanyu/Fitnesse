@@ -54,7 +54,14 @@ class AuthController {
         return;
       }
 
-      /* Password validation will be handled on the front end */
+      /* Password validation. This should be validated on the front end first */
+      if (!this.isValidPassword(req.body.password)) {
+        console.log(`The password is invalid.`);
+        res.status(422).json({
+          message: AUTH_RESPONSES._422_INVALID_PASSWORD
+        });
+        return;
+      }
 
       /* Get secret key from environment variables for password encryption */
       const appConfig = new AppConfig();
@@ -80,6 +87,18 @@ class AuthController {
         message: GENERIC_RESPONSES[500]
       });
     }
+  }
+
+  /**
+   * Returns whether the password is valid. The password is valid if its minimum length is at least 8.
+   * @param password 
+   */
+  static isValidPassword(password: string) {
+    if (password.length < 8) {
+      return false;
+    }
+
+    return true;
   }
 }
 

@@ -1,7 +1,5 @@
 name: Backend Pipeline
 
-# TODO: considering abstracting repeatable setup steps into a separate workflow file and calling it
-
 # Workflow triggers
 on:
   push:

@@ -88,9 +88,7 @@ class AppConfig {
     /* Check if the --dev flag is set */
     if (process.argv.includes('--dev')) {
       process.env.NODE_ENV = ENVIRONMENTS.DEV;
-    } else if (process.argv.includes('--prod')) {
-      process.env.NODE_ENV = ENVIRONMENTS.PROD;
-    }
+    } 
   }
 
   /**
@@ -111,8 +109,7 @@ class AppConfig {
         path: ENV_PATHS.TEST
       });
     } else {
-      console.error('Environment variable file not found.');
-      process.exit(1);
+      console.error('Environment variable file not found. You should set the necessary environment variables in a .env file, through your deployment environment, or manually in the command line.');
     }
   }
 }

@@ -1,6 +1,6 @@
 /* Global jest setup file for all tests */
 
-/* Remove all console print statements */
+/* Remove all console print statements - uncomment for debugging, but leave commented when pushing to git */
 global.console = {
   log: jest.fn(), // Mock console.log
   error: jest.fn(), // Mock console.error

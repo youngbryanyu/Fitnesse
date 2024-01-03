@@ -46,18 +46,21 @@ describe('App Tests', () => {
   it('should successfully connect to MongoDB', async () => {
     /* Mock mongoose.connect to return dummy object */
     jest.spyOn(mongoose, 'connect').mockImplementation(() => {
-      return { close: jest.fn() } as unknown as Promise<typeof import("mongoose")>; 
+      return { close: jest.fn() } as unknown as Promise<typeof import("mongoose")>;
     });
 
     /* Mock AppConfig to return a dummy connection string */
     jest.spyOn(AppConfig.prototype, 'getConfigString').mockImplementation(() => {
       return "dummy connection string";
     });
-    
+
     /* Mock AppConfig to return a dummy value for retry values */
     jest.spyOn(AppConfig.prototype, 'getConfigNumber').mockImplementation(() => {
       return 2;
     });
+
+    /* Spy on console.log and mock to hide output */
+    jest.spyOn(console, 'log').mockImplementation(() => { return 0 });
 
     /* Connect to DB */
     await appInstance.connectToDatabase();
@@ -77,7 +80,7 @@ describe('App Tests', () => {
     jest.spyOn(AppConfig.prototype, 'getConfigString').mockImplementation(() => {
       return "dummy connection string";
     });
-    
+
     /* Mock AppConfig to return a dummy value for retry values */
     jest.spyOn(AppConfig.prototype, 'getConfigNumber').mockReturnValueOnce(2).mockReturnValueOnce(10);
 
@@ -86,6 +89,10 @@ describe('App Tests', () => {
 
     /* Mock setTimeout to do nothing */
     jest.spyOn(global, 'setTimeout').mockImplementation((fn: Function) => fn());
+
+    /* Spy on console.log and console.error and mock them to hide output */
+    jest.spyOn(console, 'log').mockImplementation(() => { return 0 });
+    jest.spyOn(console, 'error').mockImplementation(() => { return 0 });
 
     /* Connect to database */
     await appInstance.connectToDatabase();
@@ -101,7 +108,7 @@ describe('App Tests', () => {
   it('should start the server and have it listen successfully', async () => {
     /* Mock express.listen to return dummy object */
     jest.spyOn(appInstance.express, 'listen').mockImplementation(() => {
-      return { close: jest.fn() } as unknown as ReturnType<Express['listen']>; 
+      return { close: jest.fn() } as unknown as ReturnType<Express['listen']>;
     });
     await appInstance.startServer(PORT);
     expect(appInstance.express.listen).toHaveBeenCalled();
@@ -113,9 +120,11 @@ describe('App Tests', () => {
     jest.spyOn(appInstance.express, 'listen').mockImplementation(() => {
       throw new Error();
     });
-    
+
+    /* Spy on console.error */
+    jest.spyOn(console, 'error');
+
     await appInstance.startServer(PORT);
     expect(console.error).toHaveBeenCalled();
-
   });
 });

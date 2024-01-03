@@ -52,6 +52,6 @@
     "start": "node dst/index.js",
     "dev": "nodemon src/index.ts --dev",
     "lint": "eslint .",
-    "test": "jest"
+    "test": "jest --verbose"
   }
 }
