@@ -44,3 +44,12 @@ export const AUTH_RESPONSES = {
   _422_INVALID_PASSWORD: "The password is invalid",
   _429_RATE_LIMIT_EXCEEDED: "Too many requests from this API, please try again later.",
 }
+
+// ---------------------------
+// PASSWORD AND AUTHENTICATION
+// ---------------------------
+
+/* Password rules */
+export const PASSWORD_RULES = {
+  MIN_LENGTH: 8
+}

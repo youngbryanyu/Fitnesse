@@ -2,7 +2,7 @@
 import { Request, Response } from 'express';
 import { UserModel } from '../models/userModel';
 import CryptoJS from 'crypto-js';
-import { AUTH_RESPONSES } from '../config/constants';
+import { AUTH_RESPONSES, PASSWORD_RULES } from '../config/constants';
 import { GENERIC_RESPONSES } from '../config/constants';
 import AppConfig from '../config/appConfig';
 
@@ -94,7 +94,7 @@ class AuthController {
    * @param password 
    */
   static isValidPassword(password: string) {
-    if (password.length < 8) {
+    if (password.length < PASSWORD_RULES.MIN_LENGTH) {
       return false;
     }
 

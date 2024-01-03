@@ -5,10 +5,10 @@ module.exports = {
   testMatch: ['**/tests/**/*.test.ts'],
   coverageThreshold: { /* TODO: set thresholds to 80% after finishing register tests */
     global: {
-      branches: 0,
-      functions: 0,
-      lines: 0,
-      statements: 0
+      branches: 80,
+      functions: 80,
+      lines: 80,
+      statements: 80
     }
   },
   collectCoverage: true,  /* force tests to pass coverage or else will exit with error */
