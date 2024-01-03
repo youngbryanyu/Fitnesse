@@ -9,10 +9,10 @@ AppConfig.initialize();
 const appConfig = new AppConfig();
 
 /* Get the server port from environmental variables */
-const PORT = appConfig.getConfig('PORT');
+const PORT = appConfig.getConfigNumber('PORT');
 
 /* Start application */
-startApp(parseInt(PORT));
+startApp(PORT);
 
 /**
  * Initializes middlewares, mounts API routes, connects to MongoDB, and starts the backend server.

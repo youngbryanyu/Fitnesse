@@ -35,8 +35,6 @@ const rateLimitRegister = rateLimit({
   }
 });
 
-
-
 /**
  * Register route.
  */
