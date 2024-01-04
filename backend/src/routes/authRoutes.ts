@@ -4,6 +4,7 @@ import AuthController from '../controllers/authController';
 import rateLimit from 'express-rate-limit';
 import { AUTH_RESPONSES } from '../config/constants';
 import AppConfig from '../config/appConfig';
+import logger from '../logging/logger';
 
 /* Initialize router middleware to parse incoming requests */
 const router = express.Router();
@@ -28,7 +29,7 @@ const rateLimitRegister = rateLimit({
   windowMs: appConfig.getConfigNumber('REGISTER.WINDOW'), 
   max: appConfig.getConfigNumber('REGISTER.THRESHOLD'), 
   handler: (req, res) => {
-    console.log(`The register rate limit has been reached for IP ${req.socket.remoteAddress}`);
+    logger.info(`The register rate limit has been reached for IP ${req.socket.remoteAddress}`);
     res.status(429).json({
       message: AUTH_RESPONSES._429_RATE_LIMIT_EXCEEDED
     });

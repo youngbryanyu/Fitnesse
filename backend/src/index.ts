@@ -1,6 +1,7 @@
 /* Backend server startup script and entry point */
 import App from './app';
 import AppConfig from './config/appConfig';
+import logger from './logging/logger';
 
 /* Explicitely initialize app config globally */
 AppConfig.initialize();
@@ -30,7 +31,7 @@ async function startApp(port: number) {
     /* Start the server after successful database connection */
     await appInstance.startServer(port);
   } catch (error) {
-    console.error('Failed to start the application:', error);
+    logger.error('Failed to start the application:', error);
     process.exit(1);
   }
 }

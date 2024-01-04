@@ -60,9 +60,6 @@ describe('Auth Controller Tests', () => {
       /* Mock UserModel to return a user upon findOne */
       UserModel.findOne = jest.fn().mockResolvedValueOnce(mockUser);
 
-      /* Spy on console.log and mock to hide output */
-      jest.spyOn(console, 'log').mockImplementationOnce(() => { return 0 });
-
       /* Create request mock */
       request = createRequest({
         method: 'POST',
@@ -86,9 +83,6 @@ describe('Auth Controller Tests', () => {
     it('should return a 409 error message when the email is already taken', async () => {
       /* Mock UserModel to return a user upon findOne */
       UserModel.findOne = jest.fn().mockResolvedValueOnce(undefined).mockResolvedValueOnce(mockUser);
-
-      /* Spy on console.log and mock to hide output */
-      jest.spyOn(console, 'log').mockImplementationOnce(() => { return 0 });
 
       /* Create request mock */
       request = createRequest({

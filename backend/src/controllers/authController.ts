@@ -5,6 +5,7 @@ import CryptoJS from 'crypto-js';
 import { AUTH_RESPONSES, PASSWORD_RULES } from '../config/constants';
 import { GENERIC_RESPONSES } from '../config/constants';
 import AppConfig from '../config/appConfig';
+import logger from '../logging/logger';
 
 /**
  * Controller that contains authentication business logic
@@ -35,7 +36,7 @@ class AuthController {
         username: req.body.username
       });
       if (existingUsernameUser) {
-        console.log(`The username ${req.body.username} is already taken.`);
+        logger.info(`The username ${req.body.username} is already taken.`);
         res.status(409).json({
           message: AUTH_RESPONSES._409_USERNAME_TAKEN
         });
@@ -47,7 +48,7 @@ class AuthController {
         email: req.body.email
       });
       if (existingEmailUser) {
-        console.log(`The email ${req.body.email} is already taken.`);
+        logger.info(`The email ${req.body.email} is already taken.`);
         res.status(409).json({
           message: AUTH_RESPONSES._409_EMAIL_TAKEN
         });
@@ -55,8 +56,8 @@ class AuthController {
       }
 
       /* Password validation. This should be validated on the front end first */
-      if (!this.isValidPassword(req.body.password)) {
-        console.log(`The password is invalid.`);
+      if (AuthController.isValidPassword(req.body.password) === false) {
+        logger.info(`The password is invalid.`);
         res.status(422).json({
           message: AUTH_RESPONSES._422_INVALID_PASSWORD
         });
@@ -82,7 +83,7 @@ class AuthController {
         user: savedUser
       });
     } catch (error) {
-      console.error("Server error occured: " + error);
+      logger.error("Server error occured: " + error);
       res.status(500).json({
         message: GENERIC_RESPONSES[500]
       });
