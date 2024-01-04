@@ -29,23 +29,15 @@ If using VSCode 1.75 or later, it's recommended that you install the [VSCode Flu
 4. Run `which flutter`. If this command errors, find the binary for `flutter` by running this command (or similar commands involving `rg` or `fd`): `find / -type d -wholename "flutter/bin" 2>/dev/null` and take the output and run the command `$ echo 'export PATH="$PATH:<path_to_flutter_directory>/flutter/bin"' >> $HOME/.bashrc && source ~/.bashrc && which flutter dart`. This compound command will find the flutter/bin binary directory, add it to the user's .bashrc file, re-source it, and then run the `which` command to output the proper flutter and dart binary paths, which should come from the same `bin` directory. For instance,
 ```bash
 $ which flutter dart
-  /path-to-flutter-sdk/bin/flutter
-  /usr/local/bin/dart
+/path-to-flutter-sdk/bin/flutter
+/usr/local/bin/dart
 ``` 
 This would be incorrectly set up because the flutter and dart binaries aren't located in the same directory. The proper output should be:
 ```bash
 $ which flutter dart
-  /path-to-flutter-sdk/bin/flutter
-  /path-to-flutter-sdk/bin/dart
+/path-to-flutter-sdk/bin/flutter
+/path-to-flutter-sdk/bin/dart
 ```
 If this output is incorrect, please update the path to use the commands from `/path-to-flutter-sdk` before commands from `/usr/local/bin` (in this case).
 
 ### MacOS (iOS setup)
-
-## Android studio installation
-
-### Windows
-### Linux/WSL
-### MacOS
-
-
