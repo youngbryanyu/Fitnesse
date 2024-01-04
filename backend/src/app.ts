@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 import authRoute from './routes/authRoutes';
 import { API_URLS_V1 } from './config/constants';
 import AppConfig from './config/appConfig';
+import logger from './logging/logger';
 
 /**
  * The backend application server.
@@ -51,17 +52,17 @@ class App {
     while (attempts < maxAttempts) {
       try {
         await mongoose.connect(mongoUrl);
-        console.log('Successfully connected to MongoDB.');
+        logger.info('Successfully connected to MongoDB.');
         return;
       } catch (error) {
-        console.error('Failed to connect to MongoDB: ', error);
+        logger.error('Failed to connect to MongoDB: ', error);
         attempts++;
         if (attempts >= maxAttempts) {
-          console.error(`Maximum connection attempts of ${maxAttempts} reached for MongoDB.`);
+          logger.error(`Maximum connection attempts of ${maxAttempts} reached for MongoDB.`);
           process.exit(1);
         }
         // Wait for 1 second before retrying 
-        console.log('Retrying connection to MongoDB...');
+        logger.info('Retrying connection to MongoDB...');
         await new Promise(resolve => setTimeout(resolve, retryTimeout));
       }
     }
@@ -75,9 +76,9 @@ class App {
     try {
       /* Listen for connections */
       this.express.listen(port);
-      console.log(`Server is listening on port ${port}`);
+      logger.info(`Server is listening on port ${port}`);
     } catch (error) {
-      console.error('Error starting the server.', error);
+      logger.error('Error starting the server.', error);
       process.exit(1);
     }
   }
