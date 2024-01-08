@@ -21,6 +21,14 @@ If using VSCode 1.75 or later, it's recommended that you install the [VSCode Flu
 ## SDK Installation
 
 ### Windows 
+1. Open VS Code and then open the Command Palette with <kbd>Control</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd> 
+2. Search for "Flutter: New Project" and select it. VS Code will prompt you to find the Flutter SDK. If the SDK hasn't been installed, click <kbd> Download SDK </kbd>
+- When prompted with "Which Flutter Template?" just press <kbd>Esc</kbd> (this is for creating a new project)
+3. Select a folder (we recommend `%USERPROFILE%` or `C:\dev`. Do not attempt to set up in `C:\Program Files` because you need a directory without higher privileges and one without special characters or spaces.) 
+4. Click <kbd>Clone Flutter</kbd>. The output should read `Downloading the Flutter SDK. This may take a few minutes.` If the download hangs, cancel and restart it.
+5. After downloading, VS Code will start initializing the Flutter SDK. The output will read `Initializing the Flutter SDK. This may take a few minutes.` After this, the process will also run `flutter doctor -v`. Ignore the result of this output because Doctor might show errors that aren't relevant to the setup process.
+6. Click <kbd>Add SDK to PATH</kbd>. The output should read `The Flutter SDK was added to your PATH`.
+7. Close, then reopen all PowerShell windows and restart VS Code for Flutter commands to work.
 
 ### Linux (WSL recommended because of incompatibility between WSL and Android studio)
 1. Use `snapd` to install flutter with `sudo snap install flutter --classic`
@@ -40,4 +48,4 @@ $ which flutter dart
 ```
 If this output is incorrect, please update the path to use the commands from `/path-to-flutter-sdk` before commands from `/usr/local/bin` (in this case).
 
-### MacOS (iOS setup)
+### MacOS
