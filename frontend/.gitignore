@@ -1,22 +1,3 @@
-# ignore /node_modules folder
-node_modules
-
-# ignore .env file with environmental variables
-.env.dev
-.env.prod
-
-# ignore logs
-logs
-
-# ignore /dst folder with compiled JavaScript from TypeScript
-dst
-
-# ignore .DS_Store
-.DS_Store
-
-# ignore jest code coverage folder
-coverage
-
 # Miscellaneous
 *.class
 *.log
