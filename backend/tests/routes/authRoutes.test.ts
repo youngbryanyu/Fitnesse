@@ -38,10 +38,7 @@ describe('Auth Routes Tests', () => {
   });
 
   /* Test when the rate limit is exceeded for registering */
-  it('should response with 429 when the rate limit is exceeded for POST /register', async () => {
-    /* Spy on console.log and mock to hide output */
-    jest.spyOn(console, 'log').mockImplementationOnce(() => { return 0 }).mockImplementationOnce(() => { return 0 });
-    
+  it('should response with 429 when the rate limit is exceeded for POST /register', async () => {    
     /* Get register threshold from test .env file */
     const appConfig = new AppConfig();
     const threshold = appConfig.getConfigNumber('RATE_LIMITING.AUTH.REGISTER.THRESHOLD');

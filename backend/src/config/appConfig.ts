@@ -1,4 +1,5 @@
 /* Environment app configurations */
+import logger from '../logging/logger';
 import { ENVIRONMENTS, ENV_PATHS } from './constants';
 import dotenv from 'dotenv';
 
@@ -17,7 +18,7 @@ class AppConfig {
   /**
    * Whether the .env file has already been loaded
    */
-  private static initialized: boolean;
+  private static initialized: boolean = false; 
 
   /**
    * Constructor for {@link AppConfig}.
@@ -25,7 +26,6 @@ class AppConfig {
    */
   constructor(prefix: string = '') {
     this.prefix = prefix;
-    AppConfig.initialized = false;
 
     /* Attempt to load .env if not done yet */
     AppConfig.initialize();
@@ -68,7 +68,7 @@ class AppConfig {
   public setPrefix(prefix: string): void {
     this.prefix = prefix;
   }
-
+  
   /**
    * Initializes the app config by reading command line args and loading the environment variables from .env. Will only
    * perform initialization if it has not been performed globally yet.
@@ -78,7 +78,8 @@ class AppConfig {
       this.parseArgs();
       this.loadEnvironmentVariables();
       AppConfig.initialized = true;
-    }
+      logger.info('Initialized AppConfig successfully.');
+    } 
   }
 
   /**
@@ -89,6 +90,7 @@ class AppConfig {
     if (process.argv.includes('--dev')) {
       process.env.NODE_ENV = ENVIRONMENTS.DEV;
     } 
+    logger.info('Command line args parsed successfully.');
   }
 
   /**
@@ -109,8 +111,10 @@ class AppConfig {
         path: ENV_PATHS.TEST
       });
     } else {
-      console.error('Environment variable file not found. You should set the necessary environment variables in a .env file, through your deployment environment, or manually in the command line.');
+      logger.error('Environment variable file (.env) not found. You should set the necessary environment variables in a .env file, through your deployment environment, or manually in the command line.');
     }
+
+    logger.info(`Environment variables parsed successfully. The environment found was: [${process.env.NODE_ENV}]`);
   }
 }
 

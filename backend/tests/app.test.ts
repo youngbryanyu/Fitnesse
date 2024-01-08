@@ -4,12 +4,7 @@ import App from '../src/app';
 import { Express } from 'express';
 import AppConfig from '../src/config/appConfig';
 import { API_URLS_V1 } from '../src/config/constants';
-
-/* 
-Note: 
-- All environment variables are read into appConfig.ts upon startup so setting process.env variables does not affect them here. This
-  makes mocking the environment variables and testing them much harder and less straight forward.
-*/
+import logger from '../src/logging/logger';
 
 /* Dummy port for backend server */
 const PORT = 3000;
@@ -59,9 +54,6 @@ describe('App Tests', () => {
       return 2;
     });
 
-    /* Spy on console.log and mock to hide output */
-    jest.spyOn(console, 'log').mockImplementation(() => { return 0 });
-
     /* Connect to DB */
     await appInstance.connectToDatabase();
 
@@ -90,17 +82,17 @@ describe('App Tests', () => {
     /* Mock setTimeout to do nothing */
     jest.spyOn(global, 'setTimeout').mockImplementation((fn: Function) => fn());
 
-    /* Spy on console.log and console.error and mock them to hide output */
-    jest.spyOn(console, 'log').mockImplementation(() => { return 0 });
-    jest.spyOn(console, 'error').mockImplementation(() => { return 0 });
+    /* Spy on logger and mock them to hide output */
+    jest.spyOn(logger, 'error');
+    jest.spyOn(logger, 'info');
 
     /* Connect to database */
     await appInstance.connectToDatabase();
 
     /* Make checks */
     expect(process.exit).toHaveBeenCalledWith(1);
-    expect(console.log).toHaveBeenCalled();
-    expect(console.error).toHaveBeenCalled();
+    expect(logger.info).toHaveBeenCalled();
+    expect(logger.error).toHaveBeenCalled();
     expect(setTimeout).toHaveBeenCalled();
   });
 
@@ -121,10 +113,10 @@ describe('App Tests', () => {
       throw new Error();
     });
 
-    /* Spy on console.error */
-    jest.spyOn(console, 'error');
+    /* Spy on logger.error */
+    jest.spyOn(logger, 'error');
 
     await appInstance.startServer(PORT);
-    expect(console.error).toHaveBeenCalled();
+    expect(logger.error).toHaveBeenCalled();
   });
 });
