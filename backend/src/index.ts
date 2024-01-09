@@ -1,16 +1,17 @@
 /* Backend server startup script and entry point */
 import App from './app';
-import AppConfig from './config/appConfig';
+import EnvConfig from './config/envConfig';
 import logger from './logging/logger';
 
-/* Explicitely initialize app config globally */
-AppConfig.initialize();
 
-/* Create app config instance */
-const appConfig = new AppConfig();
+/* Explicitely initialize env config globally */
+EnvConfig.initialize();
+
+/* Create env config instance */
+const envConfig = new EnvConfig();
 
 /* Get the server port from environmental variables */
-const PORT = appConfig.getConfigNumber('PORT');
+const PORT = envConfig.getConfigNumber('PORT');
 
 /* Start application */
 startApp(PORT);

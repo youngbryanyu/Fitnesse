@@ -1,19 +1,20 @@
 /* Schema definition for a user */
-import mongoose, { Document, Schema } from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
+import { BaseDocument } from './baseDocument';
 
 /**
- * Interface for MongoDB user document
+ * Interface for user document
  */
-export interface IUser extends Document {
+export interface IUser extends BaseDocument<IUser> {
   username: string,
   email: string,
   password: string,
 }
 
 /**
- * Schema for MongoDB user document
+ * Schema for user document
  */
-const UserSchema = new Schema<IUser>(
+const userSchema = new Schema<IUser>(
   {
     /* _id is automatically created by MongoDB */
     username: { type: String, required: true },
@@ -26,4 +27,4 @@ const UserSchema = new Schema<IUser>(
 )
 
 /* Create and export the user schema */
-export const UserModel = mongoose.model<IUser>('User', UserSchema);
+export const UserModel = mongoose.model<IUser>('User', userSchema);
