@@ -9,7 +9,7 @@ node_modules
 logs
 
 # ignore /dst folder with compiled JavaScript from TypeScript
-dst
+dist
 
 # ignore .DS_Store
 .DS_Store
