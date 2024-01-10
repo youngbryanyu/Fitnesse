@@ -22,7 +22,7 @@ describe('App Tests', () => {
   /* Set up before each test */
   beforeEach(() => {
     /* Reset all mock states and implementations */
-    jest.resetAllMocks(); 
+    jest.restoreAllMocks(); 
   });
 
   /* Test initialization of middleware */
@@ -117,6 +117,9 @@ describe('App Tests', () => {
 
     /* Spy on logger.error */
     jest.spyOn(logger, 'error');
+
+    /* Mock process.exit globally to do nothing */
+    jest.spyOn(process, 'exit').mockImplementation(() => undefined as never);
 
     await appInstance.startServer(PORT);
     expect(logger.error).toHaveBeenCalled();

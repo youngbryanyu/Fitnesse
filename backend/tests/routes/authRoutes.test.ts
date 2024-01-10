@@ -29,8 +29,8 @@ describe('Auth Routes Tests', () => {
 
   /* Setup before each test */
   beforeEach(() => {
-    /* Clear mock states but not their implementation */
-    jest.clearAllMocks(); 
+    /* Restore all mock states */
+    jest.restoreAllMocks(); 
   });
 
   /* Test that the register controller function is called on POST /register */

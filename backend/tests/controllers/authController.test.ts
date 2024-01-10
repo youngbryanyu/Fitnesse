@@ -38,8 +38,8 @@ describe('Auth Controller Tests', () => {
     /* Create mock response */
     response = createResponse();
 
-    /* Reset all mock states and implementations */
-    jest.resetAllMocks();
+    /* Restore all mocks */
+    jest.restoreAllMocks();
   });
 
   /* Register API tests */
