@@ -296,6 +296,7 @@ describe('Auth Controller Tests', () => {
       /* Compare against expected */
       expect(response.statusCode).toBe(401);
       expect(response._getJSONData().message).toBe(AUTH_RESPONSES._401_INVALID_CREDENTIALS);
+      expect(FailedLoginUserModel.prototype.save).toHaveBeenCalled();
     });
 
     /* Test incorrect login password and user has recent failed login attempts */
@@ -348,7 +349,6 @@ describe('Auth Controller Tests', () => {
 
       /* Call API and get response */
       await AuthController.login(request, response);
-
 
       /* Compare against expected */
       expect(response.statusCode).toBe(401);
@@ -410,10 +410,10 @@ describe('Auth Controller Tests', () => {
       /* Call API and get response */
       await AuthController.login(request, response);
 
-
       /* Compare against expected */
       expect(response.statusCode).toBe(401);
       expect(response._getJSONData().message).toBe(AUTH_RESPONSES._401_INVALID_CREDENTIALS);
+      expect(LockedOutUserModel.prototype.save).toHaveBeenCalled();
     });
 
     /* Test when server error is thrown */

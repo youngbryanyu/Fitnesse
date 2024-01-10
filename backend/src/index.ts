@@ -1,10 +1,11 @@
 /* Backend server startup script and entry point */
-import App from './app';
 import EnvConfig from './config/envConfig';
+import App from './app';
 import logger from './logging/logger';
 
+/* TODO: switch to env-var-config after publishing version 1.0.0 */
 
-/* Explicitely initialize env config globally */
+/* Initialize config */
 EnvConfig.initialize();
 
 /* Create env config instance */
