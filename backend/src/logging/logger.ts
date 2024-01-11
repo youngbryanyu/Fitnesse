@@ -15,7 +15,6 @@ const fileTransport = new DailyRotateFile({
 /* Handle log rotation */
 fileTransport.on('rotate', (oldFilename, newFilename) => {
   console.log(`Log file rotated: ${oldFilename} -> ${newFilename}`);
-  // TODO: 
 });
 
 /* Set up console transport */

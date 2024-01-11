@@ -2,7 +2,7 @@
 import mongoose from 'mongoose';
 import App from '../src/app';
 import { Express } from 'express';
-import AppConfig from '../src/config/appConfig';
+import EnvConfig from '../src/config/envConfig';
 import { API_URLS_V1 } from '../src/config/constants';
 import logger from '../src/logging/logger';
 
@@ -13,14 +13,16 @@ const PORT = 3000;
 describe('App Tests', () => {
   let appInstance: App;
 
-  /* Initialize app instance before all tests */
+  /* Setup before all tesets */
   beforeAll(async () => {
+    /* Initialize app instance */
     appInstance = new App();
   });
 
-  /* Reset all mocks before each test */
+  /* Set up before each test */
   beforeEach(() => {
-    jest.resetAllMocks();
+    /* Reset all mock states and implementations */
+    jest.restoreAllMocks(); 
   });
 
   /* Test initialization of middleware */
@@ -45,12 +47,12 @@ describe('App Tests', () => {
     });
 
     /* Mock AppConfig to return a dummy connection string */
-    jest.spyOn(AppConfig.prototype, 'getConfigString').mockImplementation(() => {
+    jest.spyOn(EnvConfig.prototype, 'getConfigString').mockImplementation(() => {
       return "dummy connection string";
     });
 
     /* Mock AppConfig to return a dummy value for retry values */
-    jest.spyOn(AppConfig.prototype, 'getConfigNumber').mockImplementation(() => {
+    jest.spyOn(EnvConfig.prototype, 'getConfigNumber').mockImplementation(() => {
       return 2;
     });
 
@@ -69,12 +71,12 @@ describe('App Tests', () => {
     });
 
     /* Mock AppConfig to return a dummy connection string */
-    jest.spyOn(AppConfig.prototype, 'getConfigString').mockImplementation(() => {
+    jest.spyOn(EnvConfig.prototype, 'getConfigString').mockImplementation(() => {
       return "dummy connection string";
     });
 
     /* Mock AppConfig to return a dummy value for retry values */
-    jest.spyOn(AppConfig.prototype, 'getConfigNumber').mockReturnValueOnce(2).mockReturnValueOnce(10);
+    jest.spyOn(EnvConfig.prototype, 'getConfigNumber').mockReturnValueOnce(2).mockReturnValueOnce(10);
 
     /* Mock process.exit globally to do nothing */
     jest.spyOn(process, 'exit').mockImplementation(() => undefined as never);
@@ -115,6 +117,9 @@ describe('App Tests', () => {
 
     /* Spy on logger.error */
     jest.spyOn(logger, 'error');
+
+    /* Mock process.exit globally to do nothing */
+    jest.spyOn(process, 'exit').mockImplementation(() => undefined as never);
 
     await appInstance.startServer(PORT);
     expect(logger.error).toHaveBeenCalled();

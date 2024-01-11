@@ -94,5 +94,11 @@ Doctor summary (to see all details, run flutter doctor -v):
 [✓] Network resources
 ! Doctor found issues in 2 categories.
 ```
+=======
+- Go to Settings -> SDK Manager (Tools -> SDK Manager if you have a project open)
+- Click SDK Platforms and select Android API 34.0.0. If it hasn't been installed, click <kbd>Apply</kbd> and confirm the change when the installation modal pops up.
+- Next go to SDK Tools and uncheck "Hide Obsolete Packages". Ensure that all of the requisite packages have been installed. If they haven't (Android SDK Command-line Tools is often not installed) check them and click <kbd>Apply</kbd> and install any missing packages.
+
+#### Once all of these steps have been taken, run `flutter doctor` again and check to see what problems exist (since our app isn't made for Windows or Web, any issues regarding "Chrome - develop for the web" or "Visual Studio - develop Windows apps" aren't a concern). Check to see that all other categories have a green check mark. If any have further steps to take, such as Android toolchain licenses to agree to, run `flutter doctor --android-licenses` and accept them all. Run `flutter doctor` after any fixes to ensure the output is as expected.
 
 ## MacOS

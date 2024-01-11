@@ -11,13 +11,12 @@
         "node": true,
         "es6": true
     },
-    // "extends": "standard",
     "parserOptions": {
         "ecmaVersion": "latest",
         "sourceType": "module"
     },
     "ignorePatterns": [
-      "dst/",               /* Ignore JS files */
+      "dist/",               /* Ignore JS files */
       "**/jest.setup.js",   /* Ignore jest setup file */
       "tests/"              /* Ignore Test files */
     ], 

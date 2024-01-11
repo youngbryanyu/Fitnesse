@@ -1,16 +1,18 @@
 /* Backend server startup script and entry point */
+import EnvConfig from './config/envConfig';
 import App from './app';
-import AppConfig from './config/appConfig';
 import logger from './logging/logger';
 
-/* Explicitely initialize app config globally */
-AppConfig.initialize();
+/* TODO: switch to env-var-config after publishing version 1.0.0 */
 
-/* Create app config instance */
-const appConfig = new AppConfig();
+/* Initialize config */
+EnvConfig.initialize();
+
+/* Create env config instance */
+const envConfig = new EnvConfig();
 
 /* Get the server port from environmental variables */
-const PORT = appConfig.getConfigNumber('PORT');
+const PORT = envConfig.getConfigNumber('PORT');
 
 /* Start application */
 startApp(PORT);
