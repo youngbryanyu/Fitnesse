@@ -63,6 +63,38 @@ Android Studio is necessary on Windows and Linux for building and testing Flutte
 - Android SDK Command-line Tools
 - Android Emulator.
 #### If you have already installed Android Studio, follow these steps to ensure all the requisite components have been installed:
+- Go to More Actions -> SDK Manager (Tools -> SDK Manager if you have a project open)
+- Click SDK Platforms and select Android API 34.0.0. If it hasn't been installed, click <kbd>Apply</kbd> and confirm the change when the installation modal pops up.
+- Next go to SDK Tools and uncheck "Hide Obsolete Packages". Ensure that all of the requisite packages have been installed. If they haven't (Android SDK Command-line Tools is often not installed) check them and click <kbd>Apply</kbd> and install any missing packages.
+
+#### VM Configuration for virtual Android Device Emulation
+1. Enable VM Acceleration on your PC by accessing the BIOS (more detailed instructions [here](https://developer.android.com/studio/run/emulator-acceleration?authuser=1#accel-vm))
+2. Access the Device Manager in Android Studio (More Actions -> Device Manager if no project open, Tools -> Device Manager if project open)
+3. A device should be available already and listed. The name should be along the lines of "Pixel_3a_API_...x86_32" or "Pixel_3a_API_...x86_64". 
+4. On the right side of the existing device click the triple dot menu -> **Edit** to open **Virtual Device Configuration** for this Android Virtual Device (**AVD**). Scroll down to **Emulated Performance** and click on the **Graphics** dropdown. Click **Hardware - GLES 2.0** to enable hardware acceleration (read more about this [here](https://developer.android.com/studio/run/emulator-acceleration)).
+5. Verify the AVD configuration is correct and click **Finish** to save your changes. Learn more about managing different AVDs [here](https://developer.android.com/studio/run/managing-avds).
+6. Click the play button on the AVD to run and test it. The emulator should start up and a virtual Android device should run. 
+
+#### Licensing Agreements
+- Once all of these steps have been taken, run `flutter doctor` again and check to see what problems exist (since our app isn't made for Windows or Web, any issues regarding "Chrome - develop for the web" or "Visual Studio - develop Windows apps" aren't a concern). 
+- Check to see that all non-web/Windows categories have a green check mark. 
+- If any categories have further steps to take, such as Android toolchain licenses to agree to, run `flutter doctor --android-licenses` and accept them all. Run `flutter doctor` after any fixes to ensure the output is as expected.
+- The expected output for this setup should be as follows:
+```
+Running flutter doctor...
+Doctor summary (to see all details, run flutter doctor -v):
+[✓] Flutter (Channel stable, 3.13.4, on Windows A.B chipset, locale en)
+[✓] Windows version (Installed version of Windows is version 10 or higher)
+[✓] Android toolchain - develop for Android devices (Android SDK version 33.0.0)
+[!] Chrome - develop for the web
+[!] Visual Studio - develop Windows apps
+[✓] Android Studio (version 2022.3 (Giraffe) or later)
+[✓] VS Code (version 1.81.1)
+[✓] Connected device (1 available)
+[✓] Network resources
+! Doctor found issues in 2 categories.
+```
+=======
 - Go to Settings -> SDK Manager (Tools -> SDK Manager if you have a project open)
 - Click SDK Platforms and select Android API 34.0.0. If it hasn't been installed, click <kbd>Apply</kbd> and confirm the change when the installation modal pops up.
 - Next go to SDK Tools and uncheck "Hide Obsolete Packages". Ensure that all of the requisite packages have been installed. If they haven't (Android SDK Command-line Tools is often not installed) check them and click <kbd>Apply</kbd> and install any missing packages.
