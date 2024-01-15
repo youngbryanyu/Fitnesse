@@ -2,8 +2,9 @@
 import EnvConfig from './config/envConfig';
 import App from './app';
 import logger from './logging/logger';
+import Config from 'simple-app-config';
 
-/* TODO: switch to env-var-config after publishing version 1.0.0 */
+/* TODO: switch to simple-app-config after publishing version 1.0.0 */
 
 /* Initialize config */
 EnvConfig.initialize();
