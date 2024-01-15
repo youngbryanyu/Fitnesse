@@ -32,6 +32,9 @@ dependencies:
   pnpm:
     specifier: ^8.12.1
     version: 8.12.1
+  simple-app-config:
+    specifier: 0.0.8
+    version: 0.0.8
   supertest:
     specifier: ^6.3.3
     version: 6.3.3
@@ -4501,6 +4504,12 @@ packages:
   /signal-exit@3.0.7:
     resolution: {integrity: sha512-wnD2ZE+l+SPC/uoS0vXeE9L1+0wuaMqKlfz9AMUo38JsyLSBWSFcHR1Rri62LZc12vLr1gb3jl7iwQhgwpAbGQ==}
     dev: true
+
+  /simple-app-config@0.0.8:
+    resolution: {integrity: sha512-AK9h6Y7TKWfvLVZHFelq53bwmGbR0h6VCCT5cOWB26TY2qdbgTjhRqojyI5FPFtERPvDb7REvvtnQ73BasoOWg==}
+    dependencies:
+      dotenv: 16.3.1
+    dev: false
 
   /simple-swizzle@0.2.2:
     resolution: {integrity: sha512-JA//kQgZtbuY83m+xT+tXJkmJncGMTFT+C+g2h2R9uxkYIrE2yy9sgmcLhCnw57/WSD+Eh3J97FPEDFnbXnDUg==}

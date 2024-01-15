@@ -1,7 +1,10 @@
 /* Environment variable configuration interface */
+import { Config } from 'simple-app-config';
 import logger from '../logging/logger';
 import { ENVIRONMENTS, ENV_PATHS } from './constants';
 import dotenv from 'dotenv';
+
+console.log(Config.get('TEST'))
 
 /**
  * Env config class that loads fields from the environment variables.
@@ -10,7 +13,7 @@ import dotenv from 'dotenv';
  * - Create environment variables in the form XXX.YYY.ZZZ... in the .env files.
  * - Can set prefix such as XXX in the AppConfig and get config for YYY.ZZZ and it will match XXX.YYY.ZZZ
  */
-class EnvConfig {
+class EnvConfig2 {
   /**
    * Prefix to begin searching from in the .env file loaded.
    */
@@ -21,14 +24,14 @@ class EnvConfig {
   private static initialized: boolean = false; 
 
   /**
-   * Constructor for {@link EnvConfig}.
+   * Constructor for {@link EnvConfig2}.
    * @param prefix Prefix to start search from in .env. Defaults to '' if not specified.
    */
   constructor(prefix: string = '') {
     this.prefix = prefix;
 
     /* Attempt to load .env if not done yet */
-    EnvConfig.initialize();
+    EnvConfig2.initialize();
   }
 
   /**
@@ -43,7 +46,7 @@ class EnvConfig {
   }
   
   /**
-   * Identical function to @{@link EnvConfig.getConfig}, but with a clearer function name.
+   * Identical function to @{@link EnvConfig2.getConfig}, but with a clearer function name.
    * @param key The name of the environment variable in .env we are searching for.
    * @returns The value of the specified field as a string.
    */
@@ -75,12 +78,12 @@ class EnvConfig {
    * @param force Whether to force the initialization even if initialization has already occurred.
    */
   public static initialize(force?: boolean): void {
-    if (EnvConfig.initialized === false || force === true) {
-      this.parseArgs();
-      this.loadEnvironmentVariables();
-      EnvConfig.initialized = true;
-      logger.info('Initialized AppConfig successfully.');
-    } 
+    // if (EnvConfig2.initialized === false || force === true) {
+    //   this.parseArgs();
+    //   this.loadEnvironmentVariables();
+    //   EnvConfig2.initialized = true;
+    //   logger.info('Initialized AppConfig successfully.');
+    // } 
   }
 
   /**
@@ -120,4 +123,4 @@ class EnvConfig {
 }
 
 /* Create default export */
-export default EnvConfig;
+export default EnvConfig2;

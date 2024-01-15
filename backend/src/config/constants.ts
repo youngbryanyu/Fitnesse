@@ -6,16 +6,16 @@
 
 /* Environments */
 export const ENVIRONMENTS = {
-  DEV: 'dev',
-  PROD: 'prod',
-  TEST: 'test'
+  DEV: 'development',
+  PROD: 'production',
+  TEST: 'testing'
 }
 
 /* Environment file paths */
 export const ENV_PATHS = {
-  DEV: './.env.dev',
-  PROD: './.env.prod',
-  TEST: './.env.test'
+  DEV: './.env.development',
+  PROD: './.env.production',
+  TEST: './.env.testing'
 }
 
 // -----------------
