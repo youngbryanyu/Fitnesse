@@ -76,20 +76,21 @@ jobs:
     - name: Compile TypeScript into JavaScript
       run: pnpm run build
 
-  # Deploy Application
+  # Deploy Application on push and schedule
   deploy:
     name: Deploy Application
     needs: build
-    if: github.event_name == 'schedule' # only deploy application based on the schedule
+    if: github.event_name == 'schedule' || github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
     - name: Build
       run: echo "No deployments yet. Skipping."
 
-  # Notify After Deployment
+  # Notify After Deployment on push and schedule
   notify:
     name: Send Notifications
+    if: github.event_name == 'schedule' || github.event_name == 'push'
     needs: deploy
     runs-on: ubuntu-latest
     steps:
