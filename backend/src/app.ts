@@ -2,9 +2,9 @@
 import express, { Express } from 'express';
 import mongoose from 'mongoose';
 import authRoute from './routes/authRoutes';
-import { API_URLS_V1 } from './config/constants';
-import EnvConfig from './config/envConfig';
+import { API_URLS_V1 } from './constants';
 import logger from './logging/logger';
+import Config from 'simple-app-config';
 
 /**
  * The backend application server.
@@ -39,16 +39,13 @@ class App {
    * Connect to the MongoDB using the connection URL in the environmental variables. Exits with error if connection fails.
    */
   public async connectToDatabase(): Promise<void> {
-    /* Create env config instance */
-    const envConfig = new EnvConfig();
-
     /* Get connection URL from environment variables */
-    const mongoUrl = envConfig.getConfigString('MONGO_DB.CONNECTION_URL');
+    const mongoUrl: string = Config.get('MONGO_DB.CONNECTION_URL');
 
     /* Try connecting to the database specified by the connection URL, with retries */
     let attempts = 0;
-    const maxAttempts = envConfig.getConfigNumber('MONGO_DB.CONNECTION_RETRIES');
-    const retryTimeout = envConfig.getConfigNumber('MONGO_DB.CONNECTION_RETRY_TIMEOUT');
+    const maxAttempts: number = Config.get('MONGO_DB.CONNECTION_RETRIES');
+    const retryTimeout: number = Config.get('MONGO_DB.CONNECTION_RETRY_TIMEOUT');
     while (attempts < maxAttempts) {
       try {
         await mongoose.connect(mongoUrl);

@@ -1,9 +1,9 @@
 /* Unit tests for the auth routes */
 import request from 'supertest';
 import AuthController from '../../src/controllers/authController';
-import { API_URLS_V1, AUTH_RESPONSES } from '../../src/config/constants';
+import { API_URLS_V1, AUTH_RESPONSES } from '../../src/constants';
 import App from '../../src/app';
-import EnvConfig from '../../src/config/envConfig';
+import Config from 'simple-app-config';
 
 /* Mock the register endpoint to do nothing */
 jest.mock('../../src/controllers/authController', () => ({
@@ -45,8 +45,7 @@ describe('Auth Routes Tests', () => {
   /* Test when the rate limit is exceeded for registering */
   it('should response with 429 when the rate limit is exceeded for POST /register', async () => {    
     /* Get register threshold from test .env file */
-    const appConfig = new EnvConfig();
-    const threshold = appConfig.getConfigNumber('RATE_LIMITING.AUTH.REGISTER.THRESHOLD');
+    const threshold: number = Config.get('RATE_LIMITING.AUTH.REGISTER.THRESHOLD');
 
     /* Call API `threshold` times so that next call will cause rating limiting */
     for (let i = 0; i < threshold; i++) {
@@ -74,8 +73,7 @@ describe('Auth Routes Tests', () => {
   /* Test when the rate limit is exceeded for registering */
   it('should response with 429 when the rate limit is exceeded for POST /login', async () => {    
     /* Get register threshold from test .env file */
-    const appConfig = new EnvConfig();
-    const threshold = appConfig.getConfigNumber('RATE_LIMITING.AUTH.LOGIN.THRESHOLD');
+    const threshold: number = Config.get('RATE_LIMITING.AUTH.LOGIN.THRESHOLD');
 
     /* Call API `threshold` times so that next call will cause rating limiting */
     for (let i = 0; i < threshold; i++) {

@@ -1,10 +1,8 @@
 /* Schema definition for recently failed login attempts of users */
 import mongoose, { Schema } from "mongoose";
-import EnvConfig from "../config/envConfig";
 import { BaseDocument } from "./baseDocument";
+import Config from "simple-app-config";
 
-/* Create env config instance */
-const envConfig = new EnvConfig();
 
 /**
  * Interface for user with recently failed login attempts document
@@ -32,7 +30,7 @@ const failedLoginUserSchema = new Schema<IFailedLoginUser>(
     createdAt: {
       type: Date,
       default: Date.now,
-      index: { expireAfterSeconds: envConfig.getConfigNumber('AUTH.FAILED_LOGIN_ATTEMPTS_WINDOW') } /* TTL index */
+      index: { expireAfterSeconds: Config.get('AUTH.FAILED_LOGIN_ATTEMPTS_WINDOW') } /* TTL index */
     }
   }
 );

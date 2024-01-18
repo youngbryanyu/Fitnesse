@@ -1,19 +1,10 @@
 /* Backend server startup script and entry point */
-import EnvConfig from './config/envConfig';
 import App from './app';
 import logger from './logging/logger';
 import Config from 'simple-app-config';
 
-/* TODO: switch to simple-app-config after publishing version 1.0.0 */
-
-/* Initialize config */
-EnvConfig.initialize();
-
-/* Create env config instance */
-const envConfig = new EnvConfig();
-
-/* Get the server port from environmental variables */
-const PORT = envConfig.getConfigNumber('PORT');
+/* Get the server port from config */
+const PORT: number = Config.get('PORT')
 
 /* Start application */
 startApp(PORT);

@@ -1,10 +1,7 @@
 /* Schema definition for a users that have recently been locked out due to too many failed login attempts */
 import mongoose, { Schema } from "mongoose";
-import EnvConfig from "../config/envConfig";
 import { BaseDocument } from "./baseDocument";
-
-/* Create env config instance */
-const envConfig = new EnvConfig();
+import Config from "simple-app-config";
 
 /**
  * Interface for locked out user user document
@@ -27,7 +24,7 @@ const lockedOutUserSchema = new Schema<ILockedOutUser>(
     createdAt: {
       type: Date,
       default: Date.now,
-      index: { expireAfterSeconds: envConfig.getConfigNumber('AUTH.LOCKOUT_TIME') } /* TTL index */
+      index: { expireAfterSeconds: Config.get('AUTH.LOCKOUT_TIME') } /* TTL index */
     }
   }
 );

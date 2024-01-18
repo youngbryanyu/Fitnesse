@@ -2,13 +2,13 @@
 import { Request, Response } from 'express';
 import { UserModel } from '../models/userModel';
 import CryptoJS from 'crypto-js';
-import { AUTH_RESPONSES, PASSWORD_RULES } from '../config/constants';
-import { GENERIC_RESPONSES } from '../config/constants';
-import EnvConfig from '../config/envConfig';
+import { AUTH_RESPONSES, PASSWORD_RULES } from '../constants';
+import { GENERIC_RESPONSES } from '../constants';
 import logger from '../logging/logger';
 import { FailedLoginUserModel } from '../models/failedLoginUserModel';
 import { LockedOutUserModel } from '../models/lockedOutUserModel';
 import jwt from 'jsonwebtoken';
+import Config from 'simple-app-config';
 
 /**
  * Controller that contains authentication business logic
@@ -68,8 +68,7 @@ class AuthController {
       }
 
       /* Get secret key from environment variables for password encryption */
-      const envConfig = new EnvConfig();
-      const secretKey = envConfig.getConfigString('SECRET_KEY');
+      const secretKey: string = Config.get('SECRET_KEY');
 
       /* Create a new user */
       const newUser = new UserModel({
@@ -154,11 +153,8 @@ class AuthController {
         return;
       }
       
-      /* Create app config instance */
-      const appConfig = new EnvConfig();
-      
       /* Get AES secret key from environment variables */
-      const secretKey = appConfig.getConfigString('SECRET_KEY');
+      const secretKey: string = Config.get('SECRET_KEY');
       
       /* Check if password matches the decrypted version of the encrypted password stored in the database */
       const originalPasswordBytes = CryptoJS.AES.decrypt(user.password, secretKey);
@@ -182,7 +178,7 @@ class AuthController {
           failedLoginUser.numFailed++;
           
           /* Check if the number of times recently failed exceeds the threshold for the user */
-          const maxFailedLogins = appConfig.getConfigNumber('AUTH.MAX_FAILED_LOGINS')
+          const maxFailedLogins: number = Config.get('AUTH.MAX_FAILED_LOGINS')
           if (failedLoginUser.numFailed >= maxFailedLogins) {
             /* Add user to locked out collection */
             const lockedOutUser = new LockedOutUserModel({
@@ -220,13 +216,13 @@ class AuthController {
       logger.info(`Removed user [${user._id}] from recently failed login collection and locked out collection.`);
 
       /* Sign access token and refresh tokens */
-      const accessTokenLifetime = appConfig.getConfigString('AUTH.ACCESS_TOKEN_LIFETIME');
+      const accessTokenLifetime: string = Config.get('AUTH.ACCESS_TOKEN_LIFETIME');
       const accessToken = jwt.sign(
         { id: user._id },
         secretKey,
         { expiresIn: accessTokenLifetime }
       );
-      const refreshTokenLifetime = appConfig.getConfigString('AUTH.REFRESH_TOKEN_LIFETIME');
+      const refreshTokenLifetime: string = Config.get('AUTH.REFRESH_TOKEN_LIFETIME');
       const refreshToken = jwt.sign(
         { id: user._id },
         secretKey,
