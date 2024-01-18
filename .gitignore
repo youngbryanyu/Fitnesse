@@ -1,9 +1,9 @@
 # ignore /node_modules folder
 node_modules
 
-# ignore .env file with environmental variables
-.env.dev
-.env.prod
+# ignore .env file with environmental variables, but keep testing one
+.env**
+!.env.testing 
 
 # ignore logs
 logs
