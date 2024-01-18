@@ -2,9 +2,9 @@
 import mongoose from 'mongoose';
 import App from '../src/app';
 import { Express } from 'express';
-import EnvConfig from '../src/config/envConfig';
-import { API_URLS_V1 } from '../src/config/constants';
+import { API_URLS_V1 } from '../src/constants';
 import logger from '../src/logging/logger';
+import Config from 'simple-app-config';
 
 /* Dummy port for backend server */
 const PORT = 3000;
@@ -47,12 +47,12 @@ describe('App Tests', () => {
     });
 
     /* Mock AppConfig to return a dummy connection string */
-    jest.spyOn(EnvConfig.prototype, 'getConfigString').mockImplementation(() => {
+    jest.spyOn(Config, 'get').mockImplementation(() => {
       return "dummy connection string";
     });
 
     /* Mock AppConfig to return a dummy value for retry values */
-    jest.spyOn(EnvConfig.prototype, 'getConfigNumber').mockImplementation(() => {
+    jest.spyOn(Config, 'get').mockImplementation(() => {
       return 2;
     });
 
@@ -71,12 +71,12 @@ describe('App Tests', () => {
     });
 
     /* Mock AppConfig to return a dummy connection string */
-    jest.spyOn(EnvConfig.prototype, 'getConfigString').mockImplementation(() => {
+    jest.spyOn(Config, 'get').mockImplementation(() => {
       return "dummy connection string";
     });
 
     /* Mock AppConfig to return a dummy value for retry values */
-    jest.spyOn(EnvConfig.prototype, 'getConfigNumber').mockReturnValueOnce(2).mockReturnValueOnce(10);
+    jest.spyOn(Config, 'get').mockReturnValueOnce(2).mockReturnValueOnce(10);
 
     /* Mock process.exit globally to do nothing */
     jest.spyOn(process, 'exit').mockImplementation(() => undefined as never);

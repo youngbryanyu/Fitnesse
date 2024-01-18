@@ -1,0 +1,28 @@
+{
+  "PORT": "$PORT::number",
+  "SECRET_KEY": "$SECRET_KEY::string",
+  "MONGO_DB": {
+    "CONNECTION_RETRIES": 2,
+    "CONNECTION_RETRY_TIMEOUT": 1000,
+    "CONNECTION_URL": "$MONGO_CONNECTION_URL::string"
+  },
+  "RATE_LIMITING": {
+    "AUTH": {
+      "REGISTER": {
+        "THRESHOLD": 5,
+        "WINDOW": 5000
+      },
+      "LOGIN": {
+        "THRESHOLD": 5,
+        "WINDOW": 5000
+      }
+    }
+  },
+  "AUTH": {
+    "MAX_FAILED_LOGINS": 5,
+    "LOCKOUT_TIME": 5,
+    "FAILED_LOGIN_ATTEMPTS_WINDOW": 5,
+    "REFRESH_TOKEN_LIFETIME": "2d",
+    "ACCESS_TOKEN_LIFETIME": "1d"
+  }
+}

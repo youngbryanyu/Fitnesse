@@ -2,9 +2,9 @@
 import express from 'express';
 import AuthController from '../controllers/authController';
 import rateLimit from 'express-rate-limit';
-import { AUTH_RESPONSES } from '../config/constants';
-import EnvConfig from '../config/envConfig';
+import { AUTH_RESPONSES } from '../constants';
 import logger from '../logging/logger';
+import Config from 'simple-app-config';
 
 /* Initialize router middleware to parse incoming requests */
 const router = express.Router();
@@ -23,13 +23,10 @@ const router = express.Router();
 //   }
 // });
 
-/* Create env config instance */
-const envConfig = new EnvConfig();
-
 /* Rate limit for register API */
 const rateLimitRegister = rateLimit({
-  windowMs: envConfig.getConfigNumber('RATE_LIMITING.AUTH.REGISTER.WINDOW'), 
-  max: envConfig.getConfigNumber('RATE_LIMITING.AUTH.REGISTER.THRESHOLD'), 
+  windowMs: Config.get('RATE_LIMITING.AUTH.REGISTER.WINDOW'), 
+  max: Config.get('RATE_LIMITING.AUTH.REGISTER.THRESHOLD'), 
   handler: (req, res) => {
     logger.info(`The register rate limit has been reached for IP ${req.socket.remoteAddress}`);
     res.status(429).json({
@@ -40,8 +37,8 @@ const rateLimitRegister = rateLimit({
 
 /* Rate limit for login API */
 const rateLimitLogin = rateLimit({
-  windowMs: envConfig.getConfigNumber('RATE_LIMITING.AUTH.LOGIN.WINDOW'), 
-  max: envConfig.getConfigNumber('RATE_LIMITING.AUTH.LOGIN.THRESHOLD'), 
+  windowMs: Config.get('RATE_LIMITING.AUTH.LOGIN.WINDOW'), 
+  max: Config.get('RATE_LIMITING.AUTH.LOGIN.THRESHOLD'), 
   handler: (req, res) => {
     logger.info(`The login rate limit has been reached for IP ${req.socket.remoteAddress}`);
     res.status(429).json({

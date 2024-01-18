@@ -5,12 +5,12 @@ import AuthController from '../../src/controllers/authController';
 import {
   createRequest, createResponse, MockRequest, MockResponse
 } from 'node-mocks-http';
-import { API_URLS_V1, AUTH_RESPONSES, GENERIC_RESPONSES } from "../../src/config/constants";
+import { API_URLS_V1, AUTH_RESPONSES, GENERIC_RESPONSES } from "../../src/constants";
 import { LockedOutUserModel } from "../../src/models/lockedOutUserModel";
 import CryptoJS from "crypto-js";
 import mongoose from "mongoose";
 import { FailedLoginUserModel } from "../../src/models/failedLoginUserModel";
-import EnvConfig from "../../src/config/envConfig";
+import Config from "simple-app-config";
 
 /* Mock the mongoose user model that retrieves from the database */
 jest.mock('../../src/models/userModel');
@@ -309,8 +309,7 @@ describe('Auth Controller Tests', () => {
       LockedOutUserModel.findOne = jest.fn().mockResolvedValueOnce(undefined);
 
       /* Mock FailedLoginUserModel to return a valid entry */
-      const envConfig = new EnvConfig();
-      const maxFailedLogins = envConfig.getConfigNumber('AUTH.MAX_FAILED_LOGINS');
+      const maxFailedLogins: number = Config.get('AUTH.MAX_FAILED_LOGINS');
       const mockFailedLoginEntry = {
         _id: new mongoose.Types.ObjectId(0),
         userId: new mongoose.Types.ObjectId(2),
@@ -365,8 +364,7 @@ describe('Auth Controller Tests', () => {
       LockedOutUserModel.findOne = jest.fn().mockResolvedValueOnce(undefined);
 
       /* Mock FailedLoginUserModel to return a valid entry */
-      const envConfig = new EnvConfig();
-      const maxFailedLogins = envConfig.getConfigNumber('AUTH.MAX_FAILED_LOGINS');
+      const maxFailedLogins: number = Config.get('AUTH.MAX_FAILED_LOGINS');
       const mockFailedLoginEntry = {
         _id: new mongoose.Types.ObjectId(0),
         userId: new mongoose.Types.ObjectId(2),

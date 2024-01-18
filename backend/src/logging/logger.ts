@@ -1,7 +1,7 @@
 /* Setup for logger */
 import DailyRotateFile from "winston-daily-rotate-file";
 import winston from "winston";
-import { ENVIRONMENTS } from "../config/constants";
+import { ENVIRONMENTS } from "../constants";
 
 /* Set up file transport and rotation */
 const fileTransport = new DailyRotateFile({
