@@ -5,7 +5,7 @@ import authRoute from './routes/authRoutes';
 import { API_URLS_V1 } from './constants';
 import logger from './logging/logger';
 import Config from 'simple-app-config';
-
+import helmet from 'helmet';
 /**
  * The backend application server.
  */
@@ -26,6 +26,7 @@ class App {
   public initializeMiddleWares(): void {
     /* Use express middleware to parse HTTP requests in JSON format */
     this.express.use(express.json());
+    this.express.use(helmet())
   }
 
   /**
