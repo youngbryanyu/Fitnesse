@@ -2,10 +2,13 @@
     "parser": "@typescript-eslint/parser",
     "extends": [
       "eslint:recommended",
-      "plugin:@typescript-eslint/recommended"
+      "plugin:@typescript-eslint/recommended",
+      "plugin:@typescript-eslint/eslint-recommended",
+      "prettier"
     ],
     "plugins": [
-      "@typescript-eslint"
+      "@typescript-eslint",
+      "prettier"
     ],
     "env": {
         "node": true,
@@ -16,11 +19,9 @@
         "sourceType": "module"
     },
     "ignorePatterns": [
-      "dist/",               /* Ignore JS files */
-      "**/jest.setup.js",   /* Ignore jest setup file */
-      "tests/"              /* Ignore Test files */
+        /* See .eslintignore for ignored path patterns */
     ], 
     "rules": {
-      /* Add custom rules here */
+      "prettier/prettier": 2    /* Check if format matches prettier */
     }
 }

@@ -4,7 +4,7 @@ import logger from './logging/logger';
 import Config from 'simple-app-config';
 
 /* Get the server port from config */
-const PORT: number = Config.get('PORT')
+const PORT: number = Config.get('PORT');
 
 /* Start application */
 startApp(PORT);

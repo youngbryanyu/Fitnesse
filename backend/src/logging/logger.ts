@@ -1,14 +1,14 @@
 /* Setup for logger */
-import DailyRotateFile from "winston-daily-rotate-file";
-import winston from "winston";
-import { ENVIRONMENTS } from "../constants";
+import DailyRotateFile from 'winston-daily-rotate-file';
+import winston from 'winston';
+import { ENVIRONMENTS } from '../constants';
 
 /* Set up file transport and rotation */
 const fileTransport = new DailyRotateFile({
   filename: 'logs/app-%DATE%.log',
   datePattern: 'YYYY-MM-DD-HH-MM',
   zippedArchive: true,
-  maxSize: '20m', /* File size before rotating */
+  maxSize: '20m' /* File size before rotating */,
   maxFiles: '14d' /* How long to keep files */
 });
 
@@ -22,20 +22,21 @@ const consoleTransport = new winston.transports.Console({
   format: winston.format.combine(
     winston.format.colorize(),
     winston.format.simple(),
-    winston.format.printf(info => `[${info.timestamp}] ${info.level}: ${info.message}`)
+    winston.format.printf((info) => `[${info.timestamp}] ${info.level}: ${info.message}`)
   )
 });
 
 /* Set up logger configuration */
 const level = process.env.NODE_ENV === ENVIRONMENTS.PROD ? 'info' : 'debug';
 const logger = winston.createLogger({
-  level: level, /* Minimum level of message to be logged, ranked: silly, debug, verbose, http, info, warn, error */
+  level:
+    level /* Minimum level of message to be logged, ranked: silly, debug, verbose, http, info, warn, error */,
   format: winston.format.combine(
     winston.format.timestamp(),
-    winston.format.printf(info => `[${info.timestamp}] ${info.level}: ${info.message}`)
+    winston.format.printf((info) => `[${info.timestamp}] ${info.level}: ${info.message}`)
   ),
-  transports: [ 
-    /* No default transports */ 
+  transports: [
+    /* No default transports */
   ]
 });
 

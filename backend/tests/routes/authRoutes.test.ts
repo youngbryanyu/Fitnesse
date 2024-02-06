@@ -12,7 +12,7 @@ jest.mock('../../src/controllers/authController', () => ({
   }),
   login: jest.fn().mockImplementation((req, res) => {
     res.sendStatus(201); // Mock implementation
-  }),
+  })
 }));
 
 /* Test auth routes */
@@ -30,11 +30,11 @@ describe('Auth Routes Tests', () => {
   /* Setup before each test */
   beforeEach(() => {
     /* Restore all mock states */
-    jest.restoreAllMocks(); 
+    jest.restoreAllMocks();
   });
 
   /* Test that the register controller function is called on POST /register */
-  it('should call AuthController.register on POST /register', async () => {    
+  it('should call AuthController.register on POST /register', async () => {
     /* Make the API call */
     await request(appInstance.express).post(`${API_URLS_V1.AUTH}/register`).send({});
 
@@ -43,7 +43,7 @@ describe('Auth Routes Tests', () => {
   });
 
   /* Test when the rate limit is exceeded for registering */
-  it('should response with 429 when the rate limit is exceeded for POST /register', async () => {    
+  it('should response with 429 when the rate limit is exceeded for POST /register', async () => {
     /* Get register threshold from test .env file */
     const threshold: number = Config.get('RATE_LIMITING.AUTH.REGISTER.THRESHOLD');
 
@@ -53,7 +53,9 @@ describe('Auth Routes Tests', () => {
     }
 
     /* Call API to trigger rate limiting */
-    const response = await request(appInstance.express).post(`${API_URLS_V1.AUTH}/register`).send({});
+    const response = await request(appInstance.express)
+      .post(`${API_URLS_V1.AUTH}/register`)
+      .send({});
 
     /* Make checks */
     expect(AuthController.register).toHaveBeenCalled();
@@ -62,7 +64,7 @@ describe('Auth Routes Tests', () => {
   });
 
   /* Test that the login controller function is called on POST /login */
-  it('should call AuthController.register on POST /register', async () => {    
+  it('should call AuthController.register on POST /register', async () => {
     /* Make the API call */
     await request(appInstance.express).post(`${API_URLS_V1.AUTH}/login`).send({});
 
@@ -71,7 +73,7 @@ describe('Auth Routes Tests', () => {
   });
 
   /* Test when the rate limit is exceeded for registering */
-  it('should response with 429 when the rate limit is exceeded for POST /login', async () => {    
+  it('should response with 429 when the rate limit is exceeded for POST /login', async () => {
     /* Get register threshold from test .env file */
     const threshold: number = Config.get('RATE_LIMITING.AUTH.LOGIN.THRESHOLD');
 

@@ -6,9 +6,9 @@ import { BaseDocument } from './baseDocument';
  * Interface for user document
  */
 export interface IUser extends BaseDocument<IUser> {
-  username: string,
-  email: string,
-  password: string,
+  username: string;
+  email: string;
+  password: string;
 }
 
 /**
@@ -20,11 +20,11 @@ const userSchema = new Schema<IUser>(
     username: { type: String, required: true },
     email: { type: String, required: true },
     password: { type: String, required: true }
-  }, 
-  { 
-    timestamps: true 
+  },
+  {
+    timestamps: true
   }
-)
+);
 
 /* Create and export the user schema */
 export const UserModel = mongoose.model<IUser>('User', userSchema);
