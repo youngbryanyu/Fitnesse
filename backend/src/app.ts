@@ -26,7 +26,7 @@ class App {
   public initializeMiddleWares(): void {
     /* Use express middleware to parse HTTP requests in JSON format */
     this.express.use(express.json());
-    this.express.use(helmet())
+    this.express.use(helmet());
   }
 
   /**
@@ -59,16 +59,16 @@ class App {
           logger.error(`Maximum connection attempts of ${maxAttempts} reached for MongoDB.`);
           process.exit(1);
         }
-        // Wait for 1 second before retrying 
+        // Wait for 1 second before retrying
         logger.info('Retrying connection to MongoDB...');
-        await new Promise(resolve => setTimeout(resolve, retryTimeout));
+        await new Promise((resolve) => setTimeout(resolve, retryTimeout));
       }
     }
   }
 
   /**
    * Starts the backend server and listens for incoming connections. Exits with error if server fails to start.
-   * @param port port number that the backend server listens on. 
+   * @param port port number that the backend server listens on.
    */
   public async startServer(port: number): Promise<void> {
     try {

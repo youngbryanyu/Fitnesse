@@ -22,7 +22,7 @@ describe('App Tests', () => {
   /* Set up before each test */
   beforeEach(() => {
     /* Reset all mock states and implementations */
-    jest.restoreAllMocks(); 
+    jest.restoreAllMocks();
   });
 
   /* Test initialization of middleware */
@@ -43,12 +43,12 @@ describe('App Tests', () => {
   it('should successfully connect to MongoDB', async () => {
     /* Mock mongoose.connect to return dummy object */
     jest.spyOn(mongoose, 'connect').mockImplementation(() => {
-      return { close: jest.fn() } as unknown as Promise<typeof import("mongoose")>;
+      return { close: jest.fn() } as unknown as Promise<typeof import('mongoose')>;
     });
 
     /* Mock AppConfig to return a dummy connection string */
     jest.spyOn(Config, 'get').mockImplementation(() => {
-      return "dummy connection string";
+      return 'dummy connection string';
     });
 
     /* Mock AppConfig to return a dummy value for retry values */
@@ -67,12 +67,12 @@ describe('App Tests', () => {
   it('should fail and retry connecting to MongoDB if connection fails due to server error', async () => {
     /* Mock mongoose.connect to throw an exception */
     jest.spyOn(mongoose, 'connect').mockImplementation(() => {
-      throw new Error("Test");
+      throw new Error('Test');
     });
 
     /* Mock AppConfig to return a dummy connection string */
     jest.spyOn(Config, 'get').mockImplementation(() => {
-      return "dummy connection string";
+      return 'dummy connection string';
     });
 
     /* Mock AppConfig to return a dummy value for retry values */
@@ -82,7 +82,18 @@ describe('App Tests', () => {
     jest.spyOn(process, 'exit').mockImplementation(() => undefined as never);
 
     /* Mock setTimeout to do nothing */
-    jest.spyOn(global, 'setTimeout').mockImplementation((fn: Function) => fn());
+    jest
+      .spyOn(global, 'setTimeout')
+      .mockImplementation(
+        (
+          callback: (args: void) => void,
+          timeout: number | undefined,
+          args: void
+        ): NodeJS.Timeout => {
+          callback(args);
+          return setTimeout(callback, timeout, args) as unknown as NodeJS.Timeout;
+        }
+      );
 
     /* Spy on logger and mock them to hide output */
     jest.spyOn(logger, 'error');

@@ -1,5 +1,5 @@
 /* Business logic for authentication */
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { UserModel } from '../models/userModel';
 import CryptoJS from 'crypto-js';
 import { AUTH_RESPONSES, PASSWORD_RULES } from '../constants';
@@ -15,15 +15,15 @@ import Config from 'simple-app-config';
  */
 class AuthController {
   /**
-   * Attempts to register a new user. Will fail if the username or email provided by the user is already taken. 
-   * 
+   * Attempts to register a new user. Will fail if the username or email provided by the user is already taken.
+   *
    * Expected body:
    * {
    *    username: ...
    *    email: ...
    *    password: ...
    * }
-   * 
+   *
    * Response:
    * {
    *    message: ...,
@@ -86,7 +86,7 @@ class AuthController {
         user: savedUser
       });
     } catch (error) {
-      logger.error("Server error occured: " + error);
+      logger.error('Server error occured: ' + error);
       res.status(500).json({
         message: GENERIC_RESPONSES[500]
       });
@@ -95,7 +95,7 @@ class AuthController {
 
   /**
    * Returns whether the password is valid. The password is valid if its minimum length is at least 8.
-   * @param password 
+   * @param password
    */
   static isValidPassword(password: string) {
     if (password.length < PASSWORD_RULES.MIN_LENGTH) {
@@ -106,14 +106,14 @@ class AuthController {
   }
 
   /**
-   * Attempts to login. 
-   * 
+   * Attempts to login.
+   *
    * Expected body:
    * {
    *    emailOrUsername: ...
    *    password: ...
    * }
-   * 
+   *
    * Response:
    * {
    *    message: ...,
@@ -126,10 +126,7 @@ class AuthController {
     try {
       /* Try to find a user that matches the email or username */
       const user = await UserModel.findOne({
-        $or: [
-          { email: req.body.emailOrUsername },
-          { username: req.body.emailOrUsername }
-        ]
+        $or: [{ email: req.body.emailOrUsername }, { username: req.body.emailOrUsername }]
       });
 
       /* Invalid credentials - email or username doesn't exist */
@@ -140,22 +137,24 @@ class AuthController {
         });
         return;
       }
-      
+
       /* Check if user is locked out already */
       const lockedOutUser = await LockedOutUserModel.findOne({
         userId: user._id
       });
       if (lockedOutUser) {
-        logger.info(`User [${user._id}] is currently locked out due to too many failed login attempts.`);
+        logger.info(
+          `User [${user._id}] is currently locked out due to too many failed login attempts.`
+        );
         res.status(429).json({
           message: AUTH_RESPONSES._429_TOO_MANY_FAILED_LOGINS
         });
         return;
       }
-      
+
       /* Get AES secret key from environment variables */
       const secretKey: string = Config.get('SECRET_KEY');
-      
+
       /* Check if password matches the decrypted version of the encrypted password stored in the database */
       const originalPasswordBytes = CryptoJS.AES.decrypt(user.password, secretKey);
       const originalPassword = originalPasswordBytes.toString(CryptoJS.enc.Utf8);
@@ -176,9 +175,9 @@ class AuthController {
         } else {
           /* Update existing entry for user who failed to login recently */
           failedLoginUser.numFailed++;
-          
+
           /* Check if the number of times recently failed exceeds the threshold for the user */
-          const maxFailedLogins: number = Config.get('AUTH.MAX_FAILED_LOGINS')
+          const maxFailedLogins: number = Config.get('AUTH.MAX_FAILED_LOGINS');
           if (failedLoginUser.numFailed >= maxFailedLogins) {
             /* Add user to locked out collection */
             const lockedOutUser = new LockedOutUserModel({
@@ -194,7 +193,9 @@ class AuthController {
           } else {
             /* Save the incremented entry for recently failed login user */
             await failedLoginUser.save();
-            logger.info(`Incremented count of user [${user._id}] in recently failed login collection.`);
+            logger.info(
+              `Incremented count of user [${user._id}] in recently failed login collection.`
+            );
           }
         }
 
@@ -213,20 +214,18 @@ class AuthController {
       await LockedOutUserModel.findOneAndDelete({
         userId: user._id
       });
-      logger.info(`Removed user [${user._id}] from recently failed login collection and locked out collection.`);
+      logger.info(
+        `Removed user [${user._id}] from recently failed login collection and locked out collection.`
+      );
 
       /* Sign access token and refresh tokens */
       const accessTokenLifetime: string = Config.get('AUTH.ACCESS_TOKEN_LIFETIME');
-      const accessToken = jwt.sign(
-        { id: user._id },
-        secretKey,
-        { expiresIn: accessTokenLifetime }
-      );
-      const refreshTokenLifetime: string = Config.get('AUTH.REFRESH_TOKEN_LIFETIME');
+      const accessToken = jwt.sign({ id: user._id }, secretKey, { expiresIn: accessTokenLifetime });
       const refreshToken = jwt.sign(
         { id: user._id },
-        secretKey,
-        { expiresIn: refreshTokenLifetime }
+        secretKey
+        /* - refresh/login tokens won't expire, but will be revoked through a DB check 
+           - tokens are stored in DB, and removed from DB upon lockout or idle timeout */
       );
 
       /* Return user info and access + refresh tokens to client */
@@ -242,7 +241,58 @@ class AuthController {
         }
       });
     } catch (error) {
-      logger.error("Server error occured: " + error);
+      logger.error('Server error occured: ' + error);
+      res.status(500).json({
+        message: GENERIC_RESPONSES[500]
+      });
+    }
+  }
+
+  /**
+   * Verifies if an access token is valid. If not, it attempts to refresh it. If refresh fails, returns a 401 unauthorized
+   * response. If refresh is successful, attaches the new access token to the `x-new-access-token` response header.
+   *
+   * Response upon failure:
+   * {
+   *    message: ...,
+   * }
+   *
+   * @param req The request.
+   * @param res The response.
+   * @param next The next function to call in the middleware function stack.
+   */
+  static async verifyAndRefresh(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      /* Get tokens from request header */
+      const accessTokenHeader = req.headers.accessToken as string;
+      // const refreshTokenHeader = req.headers.refreshToken as string;
+
+      /* If access token is undefined */
+      if (!accessTokenHeader) {
+        logger.info('Access token is undefined. JWT access token verification failed.');
+        res.status(401).json({
+          message: AUTH_RESPONSES._401_NOT_AUTHENTICATED
+        });
+        return;
+      }
+
+      /* Verify access token */
+      const accessToken = accessTokenHeader.split(' ')[1];
+      const secretKey: string = Config.get('SECRET_KEY');
+      jwt.verify(accessToken, secretKey, (err) => {
+        /* Try to refresh access token */
+        if (err) {
+          // TODO: verify refresh token, provide new access token, update lastUsed if refresh token is valid
+
+          // TODO: if refresh token invalid, response with 401 login expired.
+          return;
+        }
+
+        /* Go to next function in call stack */
+        next();
+      });
+    } catch (error) {
+      logger.error('Server error occured: ' + error);
       res.status(500).json({
         message: GENERIC_RESPONSES[500]
       });
