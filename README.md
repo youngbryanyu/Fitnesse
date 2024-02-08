@@ -4,13 +4,7 @@
 Fitnesse is an mobile app that provides a centralized fitness and nutrition platform for users to track both their food and workouts.
 
 ## Development Setup
-
-### Backend
-1. Run `git clone https://github.com/youngbryanyu/Fitnesse.git` in your desired parent directory to clone the repository.
-2. Run `cd Fitnesse/backend && npm install -g pnpm && pnpm install` to install [pnpm](https://pnpm.io/installation) as the package manager globally and install necessary dependencies in the backend server directory. You may need to run the command with `sudo` to have the permissions to install pnpm globally.
-
-### Frontend
-See [DEV_SETUP.md](https://github.com/youngbryanyu/Fitnesse/blob/main/DEV_SETUP.md) for frontend setup.
+Clone the repo by running `git clone https://github.com/youngbryanyu/Fitnesse.git` (or fork the repo), then see [DEV_SETUP.md](https://github.com/youngbryanyu/Fitnesse/blob/main/DEV_SETUP.md) for more setup details.
 
 ## Contributing
 Reach out to [youngyu19@gmail.com.com](mailto:youngyu2002@gmail.com) or [aaronkim0928@gmail.com](mailto:aaronkim0928@gmail.com) if you're interested in contributing! See [Contributing](./CONTRIBUTING.md) for how to contribute.
