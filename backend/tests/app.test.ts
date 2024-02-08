@@ -82,18 +82,8 @@ describe('App Tests', () => {
     jest.spyOn(process, 'exit').mockImplementation(() => undefined as never);
 
     /* Mock setTimeout to do nothing */
-    jest
-      .spyOn(global, 'setTimeout')
-      .mockImplementation(
-        (
-          callback: (args: void) => void,
-          timeout: number | undefined,
-          args: void
-        ): NodeJS.Timeout => {
-          callback(args);
-          return setTimeout(callback, timeout, args) as unknown as NodeJS.Timeout;
-        }
-      );
+    // eslint-disable-next-line
+    jest.spyOn(global, 'setTimeout').mockImplementation((fn: Function) => fn());
 
     /* Spy on logger and mock them to hide output */
     jest.spyOn(logger, 'error');

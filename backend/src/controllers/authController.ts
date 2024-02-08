@@ -2,13 +2,21 @@
 import { NextFunction, Request, Response } from 'express';
 import { UserModel } from '../models/userModel';
 import CryptoJS from 'crypto-js';
-import { AUTH_RESPONSES, PASSWORD_RULES } from '../constants';
+import {
+  ACCESS_TOKEN_HEADER,
+  AUTH_RESPONSES,
+  NEW_ACCESS_TOKEN_HEADER,
+  PASSWORD_RULES,
+  REFRESH_TOKEN_HEADER,
+  USER_ID_HEADER
+} from '../constants';
 import { GENERIC_RESPONSES } from '../constants';
 import logger from '../logging/logger';
 import { FailedLoginUserModel } from '../models/failedLoginUserModel';
 import { LockedOutUserModel } from '../models/lockedOutUserModel';
 import jwt from 'jsonwebtoken';
 import Config from 'simple-app-config';
+import { RefreshTokenModel } from '../models/refreshTokenModel';
 
 /**
  * Controller that contains authentication business logic
@@ -82,8 +90,7 @@ class AuthController {
       const savedUser = await newUser.save();
       logger.info(`Register successful for user [${savedUser._id}]`);
       res.status(201).json({
-        message: AUTH_RESPONSES._201_REGISTER_SUCCESSFUL,
-        user: savedUser
+        message: AUTH_RESPONSES._201_REGISTER_SUCCESSFUL
       });
     } catch (error) {
       logger.error('Server error occured: ' + error);
@@ -228,6 +235,16 @@ class AuthController {
            - tokens are stored in DB, and removed from DB upon lockout or idle timeout */
       );
 
+      // TODO: add refresh token (login token) to database
+
+      /* Add refresh token (loggin session) to DB */
+      const refreshTokenEntry = new RefreshTokenModel({
+        userId: user._id,
+        lastUsed: Date.now(),
+        token: refreshToken
+      });
+      await refreshTokenEntry.save();
+
       /* Return user info and access + refresh tokens to client */
       // eslint-disable-next-line
       const { password, ...info } = user._doc;
@@ -264,10 +281,32 @@ class AuthController {
   static async verifyAndRefresh(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       /* Get tokens from request header */
-      const accessTokenHeader = req.headers.accessToken as string;
-      // const refreshTokenHeader = req.headers.refreshToken as string;
+      const accessTokenHeader = req.headers[ACCESS_TOKEN_HEADER] as string;
+      const refreshTokenHeader = req.headers[REFRESH_TOKEN_HEADER] as string;
+      const userId = req.headers[USER_ID_HEADER];
 
-      /* If access token is undefined */
+      /* Check if refresh token is undefined */
+      if (!refreshTokenHeader) {
+        logger.info(`Refresh token is undefined. JWT access token refresh failed.`);
+        res.status(401).json({
+          message: AUTH_RESPONSES._401_REFRESH_FAILED
+        });
+        return;
+      }
+
+      /* Check if the login session has expired (refresh token) */
+      const refreshToken = await RefreshTokenModel.findOne({
+        token: refreshTokenHeader.split(' ')[1]
+      });
+      if (!refreshToken) {
+        logger.info(`Refresh token has timed out. JWT access token refresh failed.`);
+        res.status(401).json({
+          message: AUTH_RESPONSES._401_REFRESH_FAILED
+        });
+        return;
+      }
+
+      /* Check if access token is undefined */
       if (!accessTokenHeader) {
         logger.info('Access token is undefined. JWT access token verification failed.');
         res.status(401).json({
@@ -277,20 +316,43 @@ class AuthController {
       }
 
       /* Verify access token */
-      const accessToken = accessTokenHeader.split(' ')[1];
       const secretKey: string = Config.get('SECRET_KEY');
-      jwt.verify(accessToken, secretKey, (err) => {
-        /* Try to refresh access token */
-        if (err) {
-          // TODO: verify refresh token, provide new access token, update lastUsed if refresh token is valid
+      const accessToken = accessTokenHeader.split(' ')[1];
 
-          // TODO: if refresh token invalid, response with 401 login expired.
-          return;
+      try {
+        jwt.verify(accessToken, secretKey);
+
+        /* Update last used time for refresh token */
+        refreshToken.lastUsed = new Date(Date.now()); /* updated last used */
+        await refreshToken.save();
+
+        logger.info(`Access token was successfully verified`);
+        next(); /* Go to next middleware function */
+      } catch (error) {
+        /* Verify JWT refresh token */
+        try {
+          jwt.verify(refreshTokenHeader, secretKey);
+
+          /* Update last used time for refresh token */
+          refreshToken.lastUsed = new Date(Date.now()); /* updated last used */
+          await refreshToken.save();
+
+          /* Issue a new access token */
+          const accessTokenLifetime: string = Config.get('AUTH.ACCESS_TOKEN_LIFETIME');
+          const newAccessToken = jwt.sign({ id: userId }, secretKey, {
+            expiresIn: accessTokenLifetime
+          });
+          res.setHeader(NEW_ACCESS_TOKEN_HEADER, newAccessToken);
+
+          logger.info(`Access token was successfully refreshed`);
+          next(); /* Go to next middleware function */
+        } catch (error) {
+          logger.error(`Refresh token is invalid. JWT access token refresh failed.`);
+          res.status(401).json({
+            message: AUTH_RESPONSES._401_REFRESH_FAILED
+          });
         }
-
-        /* Go to next function in call stack */
-        next();
-      });
+      }
     } catch (error) {
       logger.error('Server error occured: ' + error);
       res.status(500).json({

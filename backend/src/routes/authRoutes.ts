@@ -53,7 +53,5 @@ router.post('/register', rateLimitRegister, AuthController.register);
 /* Login route */
 router.post('/login', rateLimitLogin, AuthController.login);
 
-/* Verify and refresh JWT tokens are middleware functions, and not exposed APIs */
-
 /* Export router */
 export default router;
