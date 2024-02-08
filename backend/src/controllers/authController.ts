@@ -3,7 +3,7 @@ import { NextFunction, Request, Response } from 'express';
 import CryptoJS from 'crypto-js';
 import { HEADERS, AUTH_RESPONSES, PASSWORD_RULES, GENERIC_RESPONSES } from '../constants';
 import logger from '../logging/logger';
-import jwt, { JwtPayload } from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 import Config from 'simple-app-config';
 import { User } from '../models/user';
 import { FailedLoginUser } from '../models/failedLoginUser';
@@ -190,11 +190,11 @@ class AuthController {
       const accessTokenSecret: string = Config.get('ACCESS_TOKEN_SECRET');
       const refreshTokenSecret: string = Config.get('REFRESH_TOKEN_SECRET');
       const accessTokenLifetime: string = Config.get('AUTH.ACCESS_TOKEN_LIFETIME');
-      const accessToken = jwt.sign({ id: user._id }, accessTokenSecret, {
+      const accessToken = jwt.sign({ sub: user._id }, accessTokenSecret, {
         expiresIn: accessTokenLifetime
       });
       const refreshToken = jwt.sign(
-        { id: user._id },
+        { sub: user._id },
         refreshTokenSecret
         // - refresh tokens won't expire, but will be revoked by application logic if they've timed out and been removed from the
         //   refreshToken collection
@@ -287,18 +287,7 @@ class AuthController {
       const refreshTokenSecret: string = Config.get('REFRESH_TOKEN_SECRET');
       const accessToken = accessTokenHeader.split(' ')[1];
       try {
-        const payload = jwt.verify(accessToken, accessTokenSecret) as JwtPayload;
-
-        /* Check if id in payload matches userId in header */
-        if (userId !== payload.id) {
-          logger.info(
-            `id=${userId} in the HTTP header doesn't match id=${payload.id} in the access token. Access token verification failed.`
-          );
-          res.status(401).json({
-            message: AUTH_RESPONSES._401_NOT_AUTHENTICATED
-          });
-          return;
-        }
+        jwt.verify(accessToken, accessTokenSecret);
 
         /* Update last used time for refresh token (login session) */
         refreshTokenEntry.lastUsed = new Date(Date.now());
@@ -309,18 +298,7 @@ class AuthController {
       } catch (error) {
         /* Verify refresh token, throws error if token is invalid */
         try {
-          const payload = jwt.verify(refreshTokenHeader, refreshTokenSecret) as JwtPayload;
-
-          /* Check if id in payload matches userId in header */
-          if (userId !== payload.id) {
-            logger.info(
-              `id=${userId} in the HTTP header doesn't match id=${payload.id} in the refresh token. Access token verification failed.`
-            );
-            res.status(401).json({
-              message: AUTH_RESPONSES._401_NOT_AUTHENTICATED
-            });
-            return;
-          }
+          jwt.verify(refreshTokenHeader, refreshTokenSecret);
 
           /* Update last used time for refresh token (login session) */
           refreshTokenEntry.lastUsed = new Date(Date.now());
@@ -328,7 +306,7 @@ class AuthController {
 
           /* Attach a new access token to response header */
           const accessTokenLifetime: string = Config.get('AUTH.ACCESS_TOKEN_LIFETIME');
-          const newAccessToken = jwt.sign({ id: userId }, accessTokenSecret, {
+          const newAccessToken = jwt.sign({ sub: userId }, accessTokenSecret, {
             expiresIn: accessTokenLifetime
           });
           res.setHeader(HEADERS.NEW_ACCESS_TOKEN, newAccessToken);
