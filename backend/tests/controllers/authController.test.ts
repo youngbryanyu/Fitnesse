@@ -3,7 +3,12 @@ import { NextFunction, Request, Response } from 'express';
 import { UserModel } from '../../src/models/userModel';
 import AuthController from '../../src/controllers/authController';
 import { createRequest, createResponse, MockRequest, MockResponse } from 'node-mocks-http';
-import { API_URLS_V1, AUTH_RESPONSES, GENERIC_RESPONSES, NEW_ACCESS_TOKEN_HEADER } from '../../src/constants';
+import {
+  API_URLS_V1,
+  AUTH_RESPONSES,
+  GENERIC_RESPONSES,
+  NEW_ACCESS_TOKEN_HEADER
+} from '../../src/constants';
 import { LockedOutUserModel } from '../../src/models/lockedOutUserModel';
 import CryptoJS from 'crypto-js';
 import mongoose from 'mongoose';
@@ -628,7 +633,7 @@ describe('Auth Controller Tests', () => {
           throw new Error('access token invalid');
         })
         .mockImplementationOnce(() => () => ({ verified: 'true' }));
-      const newAccessToken = 'test access token'
+      const newAccessToken = 'test access token';
       jwt.sign = jest.fn().mockImplementationOnce(() => {
         return newAccessToken;
       });
@@ -676,7 +681,7 @@ describe('Auth Controller Tests', () => {
         })
         .mockImplementationOnce(() => {
           throw new Error('refresh token invalid');
-        })
+        });
       const testFunctionSpy = jest.spyOn(TestController, 'testFunction');
 
       /* Call function */

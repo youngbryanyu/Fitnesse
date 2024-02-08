@@ -1,5 +1,3 @@
-import { Request, Response } from 'express';
-
 /**
  * A test controller class
  */
@@ -9,7 +7,7 @@ export class TestController {
    * @param req HTTP request.
    * @param res HTTP response.
    */
-  static async testFunction(req: Request, res: Response): Promise<void> {
+  static async testFunction(): Promise<void> {
     /* Response will default to 200 status code */
     return;
   }
