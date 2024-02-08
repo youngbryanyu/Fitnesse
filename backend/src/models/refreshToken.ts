@@ -32,5 +32,8 @@ const refreshTokenSchema = new Schema<IRefreshToken>({
   }
 });
 
+/* Create compound index on userId and token */
+refreshTokenSchema.index({ userId: 1, token: 1 }, { unique: true });
+
 /* Create and export the refresh token model */
 export const RefreshToken = mongoose.model<IRefreshToken>('RefreshToken', refreshTokenSchema);

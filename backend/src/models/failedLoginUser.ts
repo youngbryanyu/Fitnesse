@@ -19,7 +19,8 @@ const failedLoginUserSchema = new Schema<IFailedLoginUser>({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
-    ref: 'User'
+    ref: 'User',
+    unique: true
   },
   numFailed: {
     type: Number,

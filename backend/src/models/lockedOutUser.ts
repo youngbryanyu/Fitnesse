@@ -18,7 +18,8 @@ const lockedOutUserSchema = new Schema<ILockedOutUser>({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
-    ref: 'User'
+    ref: 'User',
+    unique: true
   },
   createdAt: {
     type: Date,
