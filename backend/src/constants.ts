@@ -32,19 +32,19 @@ export const GENERIC_RESPONSES = {
 /* Response messages for auth endpoints */
 export const AUTH_RESPONSES = {
   _200_LOGIN_SUCCESSFUL: 'Logged in successfully.',
-  _201_REGISTER_SUCCESSFUL: 'User successfully registered.',
+  _201_REGISTER_SUCCESSFUL: 'Registered successfully.',
   _409_USERNAME_TAKEN: 'The username is already taken.',
-  _401_INVALID_CREDENTIALS:
-    'Invalid login credentials.' /* When the login combination is invalid */,
+  _401_INVALID_CREDENTIALS: 'Invalid login credentials.',
   _401_NOT_AUTHENTICATED:
     'You are not authenticated with a valid JWT access token.' /* When the JWT access token is invalid */,
-  _401_REFRESH_FAILED:
-    'Session expired. Refresh token is invalid. Please log in again.' /* When the JWT refresh token is invalid */,
+  _401_SESSION_EXPIRED:
+    'Session expired. Refresh token is invalid. Please log in again.' /* When the JWT refresh token is invalid (login session expired) */,
   _409_EMAIL_TAKEN: 'The email is already taken.',
   _422_INVALID_PASSWORD:
     "The password is invalid and doesn't meet the requirements." /* During account creation */,
   _429_RATE_LIMIT_EXCEEDED: 'Too many requests from this API, please try again later.',
-  _429_TOO_MANY_FAILED_LOGINS: 'Too many failed login attempts, please try again later.'
+  _429_LOCKED_OUT:
+    'User is locked out due to too many failed login attempts, please try again later.'
 };
 
 // ----------------------------
@@ -52,10 +52,12 @@ export const AUTH_RESPONSES = {
 // ----------------------------
 
 /* Header for new access tokens upon refresh */
-export const NEW_ACCESS_TOKEN_HEADER = 'x-new-access-token';
-export const ACCESS_TOKEN_HEADER = 'x-access-token';
-export const REFRESH_TOKEN_HEADER = 'x-refresh-token';
-export const USER_ID_HEADER = 'x-user-id';
+export const HEADERS = {
+  NEW_ACCESS_TOKEN: 'x-new-access-token',
+  ACCESS_TOKEN: 'x-access-token',
+  REFRESH_TOKEN: 'x-refresh-token',
+  USER_ID: 'x-user-id'
+};
 
 // ---------------------------
 // PASSWORD AND AUTHENTICATION

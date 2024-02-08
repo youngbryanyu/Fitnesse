@@ -32,8 +32,8 @@ const failedLoginUserSchema = new Schema<IFailedLoginUser>({
   }
 });
 
-/* Create and export the user schema */
-export const FailedLoginUserModel = mongoose.model<IFailedLoginUser>(
+/* Create and export the failed login user schema */
+export const FailedLoginUser = mongoose.model<IFailedLoginUser>(
   'FailedLoginUser',
   failedLoginUserSchema
 );

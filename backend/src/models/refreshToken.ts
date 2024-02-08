@@ -1,4 +1,4 @@
-/* Schema definition for refresh tokens (login tokens) */
+/* Schema definition for refresh tokens (login session tokens) */
 import mongoose, { Schema } from 'mongoose';
 import { BaseDocument } from './baseDocument';
 import Config from 'simple-app-config';
@@ -8,7 +8,7 @@ import Config from 'simple-app-config';
  */
 export interface IRefreshToken extends BaseDocument<IRefreshToken> {
   userId: mongoose.Schema.Types.ObjectId;
-  lastUsed: Date /* Last successful refresh */;
+  lastUsed: Date /* Last refresh or successful access token verification */;
   token: string;
 }
 
@@ -32,5 +32,5 @@ const refreshTokenSchema = new Schema<IRefreshToken>({
   }
 });
 
-/* Create and export the user schema */
-export const RefreshTokenModel = mongoose.model<IRefreshToken>('RefreshToken', refreshTokenSchema);
+/* Create and export the refresh token model */
+export const RefreshToken = mongoose.model<IRefreshToken>('RefreshToken', refreshTokenSchema);

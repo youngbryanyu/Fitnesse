@@ -6,6 +6,7 @@ import { API_URLS_V1 } from './constants';
 import logger from './logging/logger';
 import Config from 'simple-app-config';
 import helmet from 'helmet';
+
 /**
  * The backend application server.
  */
@@ -24,7 +25,6 @@ class App {
    * Initialize middlewares for the application.
    */
   public initializeMiddleWares(): void {
-    /* Use express middleware to parse HTTP requests in JSON format */
     this.express.use(express.json());
     this.express.use(helmet());
   }
@@ -37,7 +37,8 @@ class App {
   }
 
   /**
-   * Connect to the MongoDB using the connection URL in the environmental variables. Exits with error if connection fails.
+   * Connect to the MongoDB using the connection URL in the configuration object. Exits with error if connection fails.
+   * @returns Returns a promise indicating completion of the async function.
    */
   public async connectToDatabase(): Promise<void> {
     /* Get connection URL from environment variables */
@@ -59,7 +60,8 @@ class App {
           logger.error(`Maximum connection attempts of ${maxAttempts} reached for MongoDB.`);
           process.exit(1);
         }
-        // Wait for 1 second before retrying
+
+        /* Wait for 1 second before retrying */
         logger.info('Retrying connection to MongoDB...');
         await new Promise((resolve) => setTimeout(resolve, retryTimeout));
       }
@@ -69,6 +71,7 @@ class App {
   /**
    * Starts the backend server and listens for incoming connections. Exits with error if server fails to start.
    * @param port port number that the backend server listens on.
+   * @returns Returns a promise indicating completion of the async function.
    */
   public async startServer(port: number): Promise<void> {
     try {
@@ -82,7 +85,4 @@ class App {
   }
 }
 
-/**
- * Export App class
- */
 export default App;

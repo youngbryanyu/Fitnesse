@@ -8,8 +8,8 @@ const fileTransport = new DailyRotateFile({
   filename: 'logs/app-%DATE%.log',
   datePattern: 'YYYY-MM-DD-HH-MM',
   zippedArchive: true,
-  maxSize: '20m' /* File size before rotating */,
-  maxFiles: '14d' /* How long to keep files */
+  maxSize: '20m' /* File size before rotating to a new file */,
+  maxFiles: '14d' /* How long to keep files before auto-deleting */
 });
 
 /* Handle log rotation */
@@ -50,5 +50,4 @@ if (process.env.NODE_ENV !== ENVIRONMENTS.PROD) {
   logger.add(consoleTransport);
 }
 
-/* Create default export */
 export default logger;

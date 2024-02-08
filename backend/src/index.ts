@@ -3,7 +3,7 @@ import App from './app';
 import logger from './logging/logger';
 import Config from 'simple-app-config';
 
-/* Get the server port from config */
+/* Get the server port from configuration object */
 const PORT: number = Config.get('PORT');
 
 /* Start application */

@@ -27,8 +27,5 @@ const lockedOutUserSchema = new Schema<ILockedOutUser>({
   }
 });
 
-/* Create and export the user schema */
-export const LockedOutUserModel = mongoose.model<ILockedOutUser>(
-  'LockedOutUser',
-  lockedOutUserSchema
-);
+/* Create and export the locked out user model */
+export const LockedOutUser = mongoose.model<ILockedOutUser>('LockedOutUser', lockedOutUserSchema);

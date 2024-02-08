@@ -2,7 +2,7 @@
 import mongoose from 'mongoose';
 
 /**
- * Base interface for a document result
+ * Base interface for a document
  */
 export interface BaseDocument<T> extends Document {
   _id: mongoose.Schema.Types.ObjectId;
