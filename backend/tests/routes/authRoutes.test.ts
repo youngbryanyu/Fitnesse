@@ -73,7 +73,9 @@ describe('Auth Routes Tests', () => {
       }
 
       /* Call API */
-      const response = await request(appInstance.express).post(`${API_URLS_V1.AUTH}/login`).send({});
+      const response = await request(appInstance.express)
+        .post(`${API_URLS_V1.AUTH}/login`)
+        .send({});
 
       /* Test against expected */
       expect(AuthController.login).toHaveBeenCalled();
