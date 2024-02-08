@@ -38,4 +38,6 @@ router.post('/register', rateLimitRegister, AuthController.register);
 /* Login route */
 router.post('/login', rateLimitLogin, AuthController.login);
 
+// router.post('/test', AuthController.verifyAndRefresh, AuthController.test);
+
 export default router;

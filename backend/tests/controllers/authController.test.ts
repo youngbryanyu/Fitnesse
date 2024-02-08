@@ -524,6 +524,41 @@ describe('Auth Controller Tests', () => {
       expect(testFunctionSpy).toHaveBeenCalled();
     });
 
+    it("should fail if the userId in the HTTP header doesn't match the id in the access token payload", async () => {
+      /* Create mock request */
+      request = createRequest({
+        headers: {
+          'x-access-token': 'test_access_token',
+          'x-refresh-token': 'test_refresh_token',
+          'x-user-id': 'test_user_id'
+        }
+      });
+
+      /* Set up mocks and spies */
+      const refreshToken = new RefreshToken();
+      RefreshToken.findOne = jest.fn().mockImplementationOnce(() => {
+        return refreshToken;
+      });
+      RefreshToken.prototype.save = jest.fn().mockImplementationOnce(() => {
+        return;
+      });
+      jwt.verify = jest
+        .fn()
+        .mockImplementationOnce(() => () => ({ verified: 'true', id: 'unmatching_test_user_id' }));
+      const testFunctionSpy = jest.spyOn(TestController, 'testFunction');
+
+      /* Call function */
+      await AuthController.verifyAndRefresh(
+        request,
+        response,
+        TestController.testFunction as unknown as NextFunction
+      );
+
+      /* Test values against expected */
+      expect(response.statusCode).toBe(401);
+      expect(testFunctionSpy).not.toHaveBeenCalled();
+    });
+
     it('should fail if there is a server-side error', async () => {
       /* Create mock request */
       request = createRequest({
@@ -595,6 +630,53 @@ describe('Auth Controller Tests', () => {
       expect(response.statusCode).toBe(200);
       expect(testFunctionSpy).toHaveBeenCalled();
       expect(response.getHeaders()[HEADERS.NEW_ACCESS_TOKEN]).toBe(newAccessToken);
+    });
+
+    it("should fail if the userId in the HTTP header doesn't match the id in the refresh token payload", async () => {
+      /* Create mock request */
+      request = createRequest({
+        headers: {
+          'x-access-token': 'test_access_token',
+          'x-refresh-token': 'test_refresh_token',
+          'x-user-id': 'test_user_id'
+        }
+      });
+
+      /* Set up mocks and spies */
+      const refreshToken = new RefreshToken();
+      RefreshToken.findOne = jest.fn().mockImplementationOnce(() => {
+        return refreshToken;
+      });
+      RefreshToken.prototype.save = jest
+        .fn()
+        .mockImplementationOnce(() => {
+          return;
+        })
+        .mockImplementationOnce(() => {
+          return;
+        });
+      jwt.verify = jest
+        .fn()
+        .mockImplementationOnce(() => {
+          throw new Error('access token invalid');
+        })
+        .mockImplementationOnce(() => () => ({ verified: 'true', id: 'unmatching_user_id' }));
+      const newAccessToken = 'test access token';
+      jwt.sign = jest.fn().mockImplementationOnce(() => {
+        return newAccessToken;
+      });
+      const testFunctionSpy = jest.spyOn(TestController, 'testFunction');
+
+      /* Call function */
+      await AuthController.verifyAndRefresh(
+        request,
+        response,
+        TestController.testFunction as unknown as NextFunction
+      );
+
+      /* Test values against expected */
+      expect(response.statusCode).toBe(401);
+      expect(testFunctionSpy).not.toHaveBeenCalled();
     });
 
     it('should fail if the refresh token is invalid', async () => {
