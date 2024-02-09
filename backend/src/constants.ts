@@ -68,3 +68,10 @@ export const HEADERS = {
 export const PASSWORD_RULES = {
   MIN_LENGTH: 8
 };
+
+// -------
+// NETWORK
+// -------
+
+/* Directory where certificates from CA are located*/
+export const CERT_DIR = '/etc/ssl/certs/';

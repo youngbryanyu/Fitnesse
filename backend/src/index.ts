@@ -15,8 +15,6 @@ startApp(PORT);
  */
 async function startApp(port: number) {
   const appInstance = new App();
-  appInstance.initializeMiddleWares();
-  appInstance.mountRoutes();
 
   try {
     /* Wait for the MongoDB connection to be established */
@@ -26,6 +24,7 @@ async function startApp(port: number) {
     await appInstance.startServer(port);
   } catch (error) {
     logger.error('Failed to start the application:', error);
+    appInstance.closeServer(port);
     process.exit(1);
   }
 }

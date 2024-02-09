@@ -2,29 +2,52 @@
 import express, { Express } from 'express';
 import mongoose from 'mongoose';
 import authRoute from './routes/authRoutes';
-import { API_URLS_V1 } from './constants';
+import { API_URLS_V1, CERT_DIR, ENVIRONMENTS } from './constants';
 import logger from './logging/logger';
-import Config from 'simple-app-config';
+import Config, { EnvParser } from 'simple-app-config';
 import helmet from 'helmet';
+import https from 'https';
+import fs from 'fs';
 
 /**
  * The backend application server.
  */
 class App {
-  /* Express middleware */
-  public readonly express: Express;
+  /**
+   * Express middleware
+   */
+  private readonly express: Express;
+  /**
+   * Private key for HTTPS
+   */
+  private privateKey: string = '';
+  /**
+   * Certificate for HTTPS
+   */
+  private certificate: string = '';
+  /**
+   * Certificate authority who issued certificate
+   */
+  private certAuth: string = '';
+  /**
+   * Pool of servers where we map port to server
+   */
+  private serverPool: Map<number, https.Server>;
 
   /**
    * Constructor for the backend application server {@link App}.
    */
   constructor() {
     this.express = express();
+    this.initializeMiddleWares();
+    this.mountRoutes();
+    this.serverPool = new Map<number, https.Server>();
   }
 
   /**
    * Initialize middlewares for the application.
    */
-  public initializeMiddleWares(): void {
+  private initializeMiddleWares(): void {
     this.express.use(express.json());
     this.express.use(helmet());
   }
@@ -32,8 +55,37 @@ class App {
   /**
    * Mounts the routes for the backend API endpoints.
    */
-  public mountRoutes(): void {
+  private mountRoutes(): void {
     this.express.use(API_URLS_V1.AUTH, authRoute);
+  }
+
+  /**
+   * Get the signed certificate used for HTTPS.
+   */
+  private getCertificate(): void {
+    const env = EnvParser.getString('NODE_ENV');
+    switch (env) {
+      case ENVIRONMENTS.TEST:
+      case ENVIRONMENTS.DEV:
+        /* get self-signed certificate */
+        if (fs.existsSync('./server.key') && fs.existsSync('./server.cert')) {
+          this.privateKey = fs.readFileSync('./server.key', 'utf-8');
+          this.certificate = fs.readFileSync('./server.cert', 'utf-8');
+        }
+        return;
+      case ENVIRONMENTS.PROD:
+        /* Get certificates provided by cert auth from docker container */
+        if (
+          fs.existsSync(`${CERT_DIR}server.key`) &&
+          fs.existsSync(`${CERT_DIR}server.cert`) &&
+          fs.existsSync(`${CERT_DIR}ca_bundle.crt`)
+        ) {
+          this.privateKey = fs.readFileSync(`${CERT_DIR}server.key`, 'utf-8');
+          this.certificate = fs.readFileSync(`${CERT_DIR}server.cert`, 'utf-8');
+          this.certAuth = fs.readFileSync(`${CERT_DIR}ca_bundle.crt`, 'utf-8');
+        }
+        return;
+    }
   }
 
   /**
@@ -75,13 +127,40 @@ class App {
    */
   public async startServer(port: number): Promise<void> {
     try {
-      /* Listen for connections */
-      this.express.listen(port);
+      /* Get credentials for HTTPS */
+      this.getCertificate();
+      const credentials = { key: this.privateKey, cert: this.certificate };
+
+      /* Add server to server pool and listen for connections */
+      const server = https.createServer(credentials, this.express);
+      this.serverPool.set(port, server);
+      server.listen(port);
       logger.info(`Server is listening on port ${port}`);
     } catch (error) {
       logger.error('Error starting the server.', error);
       process.exit(1);
     }
+  }
+
+  /**
+   * Closes a server at a port
+   * @param port The port that the server is listening on.
+   */
+  public closeServer(port: number): void {
+    if (this.serverPool.has(port)) {
+      const server = this.serverPool.get(port);
+      if (server) {
+        server.close();
+      }
+    }
+  }
+
+  /**
+   * Returns the express middleware.
+   * @returns The express middleware.
+   */
+  public getExpress(): Express {
+    return this.express;
   }
 }
 

@@ -1,10 +1,11 @@
 /* Unit tests for the backend application server class */
 import mongoose from 'mongoose';
 import App from '../src/app';
-import { Express } from 'express';
-import { API_URLS_V1 } from '../src/constants';
+import { ENVIRONMENTS } from '../src/constants';
 import logger from '../src/logging/logger';
-import Config from 'simple-app-config';
+import Config, { EnvParser } from 'simple-app-config';
+import https from 'https';
+import fs from 'fs';
 
 /* Dummy port for backend server */
 const PORT = 3000;
@@ -20,20 +21,8 @@ describe('App Tests', () => {
     jest.restoreAllMocks();
   });
 
-  describe('initializeMiddlewares', () => {
-    it('should initialize JSON middleware', () => {
-      jest.spyOn(appInstance.express, 'use');
-      appInstance.initializeMiddleWares();
-      expect(appInstance.express.use).toHaveBeenCalledWith(expect.any(Function));
-    });
-  });
-
-  describe('mountRoutes', () => {
-    it('should mount API routes', () => {
-      jest.spyOn(appInstance.express, 'use');
-      appInstance.mountRoutes();
-      expect(appInstance.express.use).toHaveBeenCalledWith(API_URLS_V1.AUTH, expect.any(Function));
-    });
+  afterEach(() => {
+    appInstance.closeServer(PORT);
   });
 
   describe('connectToDatabase', () => {
@@ -84,16 +73,45 @@ describe('App Tests', () => {
 
   describe('startServer', () => {
     it('should start the server and have it listen successfully', async () => {
-      jest.spyOn(appInstance.express, 'listen').mockImplementation(() => {
-        return { close: jest.fn() } as unknown as ReturnType<Express['listen']>;
+      jest.spyOn(https.Server.prototype, 'listen').mockImplementation(function (
+        this: https.Server,
+        // eslint-disable-next-line
+        ...args: any[]
+      ) {
+        const callback = args.find((arg) => typeof arg === 'function');
+        if (callback) callback();
+        return this;
       });
       await appInstance.startServer(PORT);
-      expect(appInstance.express.listen).toHaveBeenCalled();
+      expect(https.Server.prototype.listen).toHaveBeenCalled();
+    });
+
+    it('should start the server and have it listen successfully when the environment is production', async () => {
+      EnvParser.getString = jest.fn().mockImplementationOnce(() => {
+        return ENVIRONMENTS.PROD;
+      });
+      fs.existsSync = jest.fn().mockImplementation(() => {
+        return true;
+      });
+      fs.readFileSync = jest.fn().mockImplementation(() => {
+        return '';
+      });
+      jest.spyOn(https.Server.prototype, 'listen').mockImplementation(function (
+        this: https.Server,
+        // eslint-disable-next-line
+        ...args: any[]
+      ) {
+        const callback = args.find((arg) => typeof arg === 'function');
+        if (callback) callback();
+        return this;
+      });
+      await appInstance.startServer(PORT);
+      expect(https.Server.prototype.listen).toHaveBeenCalled();
     });
 
     it('should fail if express has an error when the server is started ', async () => {
-      /* Set up spies */
-      jest.spyOn(appInstance.express, 'listen').mockImplementation(() => {
+      /* Set up mocks and spies */
+      jest.spyOn(https.Server.prototype, 'listen').mockImplementation(() => {
         throw new Error();
       });
       jest.spyOn(logger, 'error');

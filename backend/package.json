@@ -26,7 +26,7 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.0.3",
     "pnpm": "^8.12.1",
-    "simple-app-config": "^1.1.2",
+    "simple-app-config": "^1.2.0",
     "supertest": "^6.3.3",
     "winston": "^3.11.0",
     "winston-daily-rotate-file": "^4.7.1"

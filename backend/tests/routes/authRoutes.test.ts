@@ -23,8 +23,6 @@ describe('Auth Routes Tests', () => {
 
   beforeAll(() => {
     appInstance = new App();
-    appInstance.initializeMiddleWares();
-    appInstance.mountRoutes();
   });
 
   beforeEach(() => {
@@ -34,7 +32,8 @@ describe('Auth Routes Tests', () => {
   describe('POST /register', () => {
     it('should call AuthController.register', async () => {
       /* Make the API call */
-      await request(appInstance.express).post(`${API_URLS_V1.AUTH}/register`).send({});
+      const expressInstance = appInstance.getExpress();
+      await request(expressInstance).post(`${API_URLS_V1.AUTH}/register`).send({});
 
       /* Test against expected */
       expect(AuthController.register).toHaveBeenCalled();
@@ -42,15 +41,14 @@ describe('Auth Routes Tests', () => {
 
     it('should fail when the rate limit is exceeded', async () => {
       /* Call API `threshold` times so that next call will cause rating limiting */
+      const expressInstance = appInstance.getExpress();
       const threshold: number = Config.get('RATE_LIMITING.AUTH.REGISTER.THRESHOLD');
       for (let i = 0; i < threshold; i++) {
-        await request(appInstance.express).post(`${API_URLS_V1.AUTH}/register`).send({});
+        await request(expressInstance).post(`${API_URLS_V1.AUTH}/register`).send({});
       }
 
       /* Call API */
-      const response = await request(appInstance.express)
-        .post(`${API_URLS_V1.AUTH}/register`)
-        .send({});
+      const response = await request(expressInstance).post(`${API_URLS_V1.AUTH}/register`).send({});
 
       /* Test against expected */
       expect(AuthController.register).toHaveBeenCalled();
@@ -62,7 +60,8 @@ describe('Auth Routes Tests', () => {
   describe('POST /login', () => {
     it('should call AuthController.register', async () => {
       /* Make the API call */
-      await request(appInstance.express).post(`${API_URLS_V1.AUTH}/login`).send({});
+      const expressInstance = appInstance.getExpress();
+      await request(expressInstance).post(`${API_URLS_V1.AUTH}/login`).send({});
 
       /* Test against expected */
       expect(AuthController.login).toHaveBeenCalled();
@@ -70,15 +69,14 @@ describe('Auth Routes Tests', () => {
 
     it('should fail when the rate limit is exceeded', async () => {
       /* Call API `threshold` times so that next call will cause rating limiting */
+      const expressInstance = appInstance.getExpress();
       const threshold: number = Config.get('RATE_LIMITING.AUTH.LOGIN.THRESHOLD');
       for (let i = 0; i < threshold; i++) {
-        await request(appInstance.express).post(`${API_URLS_V1.AUTH}/login`).send({});
+        await request(expressInstance).post(`${API_URLS_V1.AUTH}/login`).send({});
       }
 
       /* Call API */
-      const response = await request(appInstance.express)
-        .post(`${API_URLS_V1.AUTH}/login`)
-        .send({});
+      const response = await request(expressInstance).post(`${API_URLS_V1.AUTH}/login`).send({});
 
       /* Test against expected */
       expect(AuthController.login).toHaveBeenCalled();
@@ -90,7 +88,8 @@ describe('Auth Routes Tests', () => {
   describe('DELETE /logout', () => {
     it('should call AuthController.logout', async () => {
       /* Make the API call */
-      await request(appInstance.express).delete(`${API_URLS_V1.AUTH}/logout`).send({});
+      const expressInstance = appInstance.getExpress();
+      await request(expressInstance).delete(`${API_URLS_V1.AUTH}/logout`).send({});
 
       /* Test against expected */
       expect(AuthController.logout).toHaveBeenCalled();
@@ -98,15 +97,14 @@ describe('Auth Routes Tests', () => {
 
     it('should fail when the rate limit is exceeded', async () => {
       /* Call API `threshold` times so that next call will cause rating limiting */
+      const expressInstance = appInstance.getExpress();
       const threshold: number = Config.get('RATE_LIMITING.AUTH.LOGOUT.THRESHOLD');
       for (let i = 0; i < threshold; i++) {
-        await request(appInstance.express).delete(`${API_URLS_V1.AUTH}/logout`).send({});
+        await request(expressInstance).delete(`${API_URLS_V1.AUTH}/logout`).send({});
       }
 
       /* Call API */
-      const response = await request(appInstance.express)
-        .delete(`${API_URLS_V1.AUTH}/logout`)
-        .send({});
+      const response = await request(expressInstance).delete(`${API_URLS_V1.AUTH}/logout`).send({});
 
       /* Test against expected */
       expect(AuthController.logout).toHaveBeenCalled();

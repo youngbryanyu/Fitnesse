@@ -36,8 +36,8 @@ dependencies:
     specifier: ^8.12.1
     version: 8.12.1
   simple-app-config:
-    specifier: ^1.1.2
-    version: 1.1.2
+    specifier: ^1.2.0
+    version: 1.2.0
   supertest:
     specifier: ^6.3.3
     version: 6.3.3
@@ -4579,8 +4579,8 @@ packages:
     resolution: {integrity: sha512-wnD2ZE+l+SPC/uoS0vXeE9L1+0wuaMqKlfz9AMUo38JsyLSBWSFcHR1Rri62LZc12vLr1gb3jl7iwQhgwpAbGQ==}
     dev: true
 
-  /simple-app-config@1.1.2:
-    resolution: {integrity: sha512-nnarMujcTo6glp+M7uLpetHjAIiBrIuUX8ZtFrFn+boeahxd3OsH0IKv1I/KAO3U4DZ3SarwKlCOVVExa3rH+w==}
+  /simple-app-config@1.2.0:
+    resolution: {integrity: sha512-nhAsjtG6P+TszR4uvYQ05JJbABC5lXAr59Ge/LrNLmerHDu0pdXz9TGg/pywTUJD2h1fLeejeavPMv8jE+e2nA==}
     dependencies:
       app-root-path: 3.1.0
       dotenv: 16.3.1
