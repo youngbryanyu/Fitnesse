@@ -230,6 +230,37 @@ class AuthController {
   }
 
   /**
+   * Attempts to log out a user by deleting their refresh token from the DB.
+   * @param req incoming request from client.
+   * @param res response to return to client.
+   * @returns Returns a promise indicating completion of the async function.
+   */
+  static async logout(req: Request, res: Response): Promise<void> {
+    try {
+      /* Get userId and refresh token from headers */
+      const refreshTokenHeader = req.headers[HEADERS.REFRESH_TOKEN] as string;
+      const userId = req.headers[HEADERS.USER_ID];
+
+      /* Try to delete login session from DB */
+      if (refreshTokenHeader) {
+        const refreshToken = refreshTokenHeader.split(' ')[1];
+        await RefreshToken.findOneAndDelete({ userId: userId, token: refreshToken });
+      }
+
+      /* Respond to client */
+      logger.info(`Successfully logged out user with id=${userId}`);
+      res.status(200).json({
+        message: AUTH_RESPONSES._200_LOGOUT_SUCCESSFUL
+      });
+    } catch (error) {
+      logger.error('Server error occured during logout: ' + error);
+      res.status(500).json({
+        message: GENERIC_RESPONSES[500]
+      });
+    }
+  }
+
+  /**
    * Verifies if an access token is valid. If not, it attempts to refresh it. If refresh is successful, attaches the new access token
    * to the `x-new-access-token` response header.
    * @param req The request.

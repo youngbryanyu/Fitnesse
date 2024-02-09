@@ -17,6 +17,10 @@
       "LOGIN": {
         "THRESHOLD": 5,
         "WINDOW": 5000
+      },
+      "LOGOUT": {
+        "THRESHOLD": 5,
+        "WINDOW": 5000
       }
     }
   },

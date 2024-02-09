@@ -11,7 +11,10 @@ jest.mock('../../src/controllers/authController', () => ({
     res.sendStatus(201);
   }),
   login: jest.fn().mockImplementation((req, res) => {
-    res.sendStatus(201);
+    res.sendStatus(200);
+  }),
+  logout: jest.fn().mockImplementation((req, res) => {
+    res.sendStatus(200);
   })
 }));
 
@@ -79,6 +82,34 @@ describe('Auth Routes Tests', () => {
 
       /* Test against expected */
       expect(AuthController.login).toHaveBeenCalled();
+      expect(response.statusCode).toBe(429);
+      expect(response.body.message).toBe(AUTH_RESPONSES._429_RATE_LIMIT_EXCEEDED);
+    });
+  });
+
+  describe('DELETE /logout', () => {
+    it('should call AuthController.logout', async () => {
+      /* Make the API call */
+      await request(appInstance.express).delete(`${API_URLS_V1.AUTH}/logout`).send({});
+
+      /* Test against expected */
+      expect(AuthController.logout).toHaveBeenCalled();
+    });
+
+    it('should fail when the rate limit is exceeded', async () => {
+      /* Call API `threshold` times so that next call will cause rating limiting */
+      const threshold: number = Config.get('RATE_LIMITING.AUTH.LOGOUT.THRESHOLD');
+      for (let i = 0; i < threshold; i++) {
+        await request(appInstance.express).delete(`${API_URLS_V1.AUTH}/logout`).send({});
+      }
+
+      /* Call API */
+      const response = await request(appInstance.express)
+        .delete(`${API_URLS_V1.AUTH}/logout`)
+        .send({});
+
+      /* Test against expected */
+      expect(AuthController.logout).toHaveBeenCalled();
       expect(response.statusCode).toBe(429);
       expect(response.body.message).toBe(AUTH_RESPONSES._429_RATE_LIMIT_EXCEEDED);
     });

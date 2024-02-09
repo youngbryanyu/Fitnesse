@@ -32,11 +32,26 @@ const rateLimitLogin = rateLimit({
   }
 });
 
+/* Rate limit logout API based on IP */
+const rateLimitLogout = rateLimit({
+  windowMs: Config.get('RATE_LIMITING.AUTH.LOGOUT.WINDOW'),
+  max: Config.get('RATE_LIMITING.AUTH.LOGOUT.THRESHOLD'),
+  handler: (req, res) => {
+    logger.info(`The logout rate limit has been reached for IP ${req.socket.remoteAddress}`);
+    res.status(429).json({
+      message: AUTH_RESPONSES._429_RATE_LIMIT_EXCEEDED
+    });
+  }
+});
+
 /* Register route */
 router.post('/register', rateLimitRegister, AuthController.register);
 
 /* Login route */
 router.post('/login', rateLimitLogin, AuthController.login);
+
+/* Logout route */
+router.delete('/logout', rateLimitLogout, AuthController.logout);
 
 // router.post('/test', AuthController.verifyAndRefresh, AuthController.test);
 
