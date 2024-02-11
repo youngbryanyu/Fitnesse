@@ -261,14 +261,119 @@ class AuthController {
   }
 
   /**
-   * Verifies if an access token is valid. If not, it attempts to refresh it. If refresh is successful, attaches the new access token
-   * to the `x-new-access-token` response header.
+   * Verifies if an access token is valid for a non-sensitive API endpoint. If not, it attempts to refresh it. If refresh is
+   * successful, attaches the new access token to the `X-New-Access-Token` response header. For less sensitive API endpoints since
+   * the login session is only checked on refresh, meaning the DB doesn't need to be queried on all checks.
    * @param req The request.
    * @param res The response.
    * @param next The next function to call in the middleware function stack.
    * @returns Returns a promise indicating completion of the async function.
    */
   static async verifyAndRefresh(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      /* Get tokens and userId from request header */
+      const accessTokenHeader = req.headers[HEADERS.ACCESS_TOKEN] as string;
+      const refreshTokenHeader = req.headers[HEADERS.REFRESH_TOKEN] as string;
+      const userId = req.headers[HEADERS.USER_ID];
+
+      /* Check if access token is undefined */
+      if (!accessTokenHeader) {
+        logger.info(
+          `Access token is undefined for user with id=${userId}. Access token verification failed.`
+        );
+        res.status(401).json({
+          message: AUTH_RESPONSES._401_NOT_AUTHENTICATED
+        });
+        return;
+      }
+
+      /* Verify access token, throws error if token is invalid */
+      const accessTokenSecret: string = Config.get('ACCESS_TOKEN_SECRET');
+      const refreshTokenSecret: string = Config.get('REFRESH_TOKEN_SECRET');
+      const accessToken = accessTokenHeader.split(' ')[1];
+      try {
+        /* Check validity of access token */
+        jwt.verify(accessToken, accessTokenSecret);
+
+        /* Go to next middleware function */
+        next();
+      } catch (error) {
+        /* Verify refresh token, throws error if token is invalid */
+        try {
+          /* Check if refresh token is undefined */
+          if (!refreshTokenHeader) {
+            logger.info(
+              `Refresh token is undefined for user with id=${userId}. Access token verification failed.`
+            );
+            res.status(401).json({
+              message: AUTH_RESPONSES._401_SESSION_EXPIRED
+            });
+            return;
+          }
+
+          /* Check if the login session has expired (refresh token) */
+          const refreshToken = refreshTokenHeader.split(' ')[1];
+          const refreshTokenEntry = await RefreshToken.findOne({
+            userId: userId,
+            token: refreshToken
+          });
+          if (!refreshTokenEntry) {
+            logger.info(
+              `Refresh token has idled out or doesn't exist for user with id=${userId}. Access token verification failed.`
+            );
+            res.status(401).json({
+              message: AUTH_RESPONSES._401_SESSION_EXPIRED
+            });
+            return;
+          }
+
+          /* Check validity of refresh token */
+          jwt.verify(refreshToken, refreshTokenSecret);
+
+          /* Update last used time for refresh token (login session) */
+          refreshTokenEntry.lastUsed = new Date(Date.now());
+          await refreshTokenEntry.save();
+
+          /* Attach a new access token to response header */
+          const accessTokenLifetime: string = Config.get('AUTH.ACCESS_TOKEN_LIFETIME');
+          const newAccessToken = jwt.sign({ sub: userId }, accessTokenSecret, {
+            expiresIn: accessTokenLifetime
+          });
+          res.setHeader(HEADERS.NEW_ACCESS_TOKEN, newAccessToken);
+
+          /* Go to next middleware function */
+          next();
+        } catch (error) {
+          logger.error(
+            `Refresh token is invalid for user with id=${userId}. Access token refresh failed.`
+          );
+          res.status(401).json({
+            message: AUTH_RESPONSES._401_SESSION_EXPIRED
+          });
+        }
+      }
+    } catch (error) {
+      logger.error('Server error occured during JWT token verification or refresh: ' + error);
+      res.status(500).json({
+        message: GENERIC_RESPONSES[500]
+      });
+    }
+  }
+
+  /**
+   * Verifies if an access token is valid for a sensitive API endpoint. If not, it attempts to refresh it. If refresh is successful,
+   * attaches the new access token to the `x-new-access-token` response header. For more sensitive API endpoints since the login
+   * session is always checked before verifying the access token and all other checks.
+   * @param req The request.
+   * @param res The response.
+   * @param next The next function to call in the middleware function stack.
+   * @returns Returns a promise indicating completion of the async function.
+   */
+  static async verifyAndRefreshSensitive(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
     try {
       /* Get tokens and userId from request header */
       const accessTokenHeader = req.headers[HEADERS.ACCESS_TOKEN] as string;
@@ -318,18 +423,16 @@ class AuthController {
       const refreshTokenSecret: string = Config.get('REFRESH_TOKEN_SECRET');
       const accessToken = accessTokenHeader.split(' ')[1];
       try {
+        /* Check validity of access token */
         jwt.verify(accessToken, accessTokenSecret);
-
-        /* Update last used time for refresh token (login session) */
-        refreshTokenEntry.lastUsed = new Date(Date.now());
-        await refreshTokenEntry.save();
 
         /* Go to next middleware function */
         next();
       } catch (error) {
         /* Verify refresh token, throws error if token is invalid */
         try {
-          jwt.verify(refreshTokenHeader, refreshTokenSecret);
+          /* Check validity of refresh token */
+          jwt.verify(refreshToken, refreshTokenSecret);
 
           /* Update last used time for refresh token (login session) */
           refreshTokenEntry.lastUsed = new Date(Date.now());

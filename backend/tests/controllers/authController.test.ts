@@ -415,7 +415,7 @@ describe('Auth Controller Tests', () => {
   });
 
   describe('verifyAndRefresh', () => {
-    it('should fail if the refresh token is undefined', async () => {
+    it('should fail if the access token is undefined', async () => {
       /* Create mock request*/
       request = createRequest({
         headers: {}
@@ -426,6 +426,217 @@ describe('Auth Controller Tests', () => {
 
       /* Call function */
       await AuthController.verifyAndRefresh(
+        request,
+        response,
+        TestController.testFunction as unknown as NextFunction
+      );
+
+      /* Test values against expected */
+      expect(response.statusCode).toBe(401);
+      expect(response._getJSONData().message).toBe(AUTH_RESPONSES._401_NOT_AUTHENTICATED);
+      expect(spy).not.toHaveBeenCalled();
+    });
+
+    it('should go to the next function if the access token is valid', async () => {
+      /* Create mock request */
+      request = createRequest({
+        headers: {
+          authorization: 'test_access_token'
+        }
+      });
+
+      /* Set up mocks and spies */
+      jwt.verify = jest.fn().mockImplementationOnce(() => () => ({ verified: 'true' }));
+      const testFunctionSpy = jest.spyOn(TestController, 'testFunction');
+
+      /* Call function */
+      await AuthController.verifyAndRefresh(
+        request,
+        response,
+        TestController.testFunction as unknown as NextFunction
+      );
+
+      /* Test values against expected */
+      expect(response.statusCode).toBe(200);
+      expect(testFunctionSpy).toHaveBeenCalled();
+    });
+
+    it('should fail if the refresh token header is undefined when refreshing', async () => {
+      /* Create mock request */
+      request = createRequest({
+        headers: {
+          authorization: 'test_access_token'
+        }
+      });
+
+      /* Set up mocks and spies */
+      jwt.verify = jest.fn().mockImplementationOnce(() => {
+        throw new Error('access token invalid');
+      });
+      const testFunctionSpy = jest.spyOn(TestController, 'testFunction');
+
+      /* Call function */
+      await AuthController.verifyAndRefresh(
+        request,
+        response,
+        TestController.testFunction as unknown as NextFunction
+      );
+
+      /* Test values against expected */
+      expect(response.statusCode).toBe(401);
+      expect(response._getJSONData().message).toBe(AUTH_RESPONSES._401_SESSION_EXPIRED);
+      expect(testFunctionSpy).not.toHaveBeenCalled();
+    });
+
+    it('should fail if the refresh token is not in the database when refreshing (login session expired)', async () => {
+      /* Create mock request */
+      request = createRequest({
+        headers: {
+          authorization: 'test_access_token',
+          'x-refresh-token': 'test_refresh_token'
+        }
+      });
+
+      /* Set up mocks and spies */
+      jwt.verify = jest.fn().mockImplementationOnce(() => {
+        throw new Error('access token invalid');
+      });
+      RefreshToken.findOne = jest.fn().mockImplementationOnce(() => {
+        return undefined;
+      });
+      const testFunctionSpy = jest.spyOn(TestController, 'testFunction');
+
+      /* Call function */
+      await AuthController.verifyAndRefresh(
+        request,
+        response,
+        TestController.testFunction as unknown as NextFunction
+      );
+
+      /* Test values against expected */
+      expect(response.statusCode).toBe(401);
+      expect(response._getJSONData().message).toBe(AUTH_RESPONSES._401_SESSION_EXPIRED);
+      expect(testFunctionSpy).not.toHaveBeenCalled();
+    });
+
+    it('should fail if the refresh token is invalid when refreshing (login session expired)', async () => {
+      /* Create mock request */
+      request = createRequest({
+        headers: {
+          authorization: 'test_access_token',
+          'x-refresh-token': 'test_refresh_token'
+        }
+      });
+
+      /* Set up mocks and spies */
+      jwt.verify = jest
+        .fn()
+        .mockImplementationOnce(() => {
+          throw new Error('access token invalid');
+        })
+        .mockImplementationOnce(() => {
+          throw new Error('refresh token invalid');
+        });
+      RefreshToken.findOne = jest.fn().mockImplementationOnce(() => {
+        return new RefreshToken();
+      });
+      const testFunctionSpy = jest.spyOn(TestController, 'testFunction');
+
+      /* Call function */
+      await AuthController.verifyAndRefresh(
+        request,
+        response,
+        TestController.testFunction as unknown as NextFunction
+      );
+
+      /* Test values against expected */
+      expect(response.statusCode).toBe(401);
+      expect(response._getJSONData().message).toBe(AUTH_RESPONSES._401_SESSION_EXPIRED);
+      expect(testFunctionSpy).not.toHaveBeenCalled();
+    });
+
+    it('should provide a new access token and call the next function when refresh is successful', async () => {
+      /* Create mock request */
+      request = createRequest({
+        headers: {
+          authorization: 'test_access_token',
+          'x-refresh-token': 'test_refresh_token',
+          'x-user-id': 'test_user_id'
+        }
+      });
+
+      /* Set up mocks and spies */
+      jwt.verify = jest
+        .fn()
+        .mockImplementationOnce(() => {
+          throw new Error('access token invalid');
+        })
+        .mockImplementationOnce(() => () => ({ verified: 'true' }));
+      RefreshToken.findOne = jest.fn().mockImplementationOnce(() => {
+        return new RefreshToken();
+      });
+      const testFunctionSpy = jest.spyOn(TestController, 'testFunction');
+      RefreshToken.prototype.save = jest.fn().mockImplementationOnce(() => {
+        return;
+      });
+      const newAccessToken = 'test access token';
+      jwt.sign = jest.fn().mockImplementationOnce(() => {
+        return newAccessToken;
+      });
+
+      /* Call function */
+      await AuthController.verifyAndRefresh(
+        request,
+        response,
+        TestController.testFunction as unknown as NextFunction
+      );
+
+      /* Test values against expected */
+      expect(response.statusCode).toBe(200);
+      expect(testFunctionSpy).toHaveBeenCalled();
+      expect(response.getHeaders()[HEADERS.NEW_ACCESS_TOKEN]).toBe(newAccessToken);
+      expect(RefreshToken.prototype.save).toHaveBeenCalled();
+    });
+
+    it('should fail if there is a server-side error', async () => {
+      /* Create mock request */
+      request = createRequest({
+        headers: {
+          authorization: 'test_access_token',
+          'x-refresh-token': 'test_refresh_token'
+        }
+      });
+
+      /* Set up mocks and spies */
+      Config.get = jest.fn().mockImplementationOnce(() => {
+        throw new Error();
+      });
+
+      /* Call function */
+      await AuthController.verifyAndRefresh(
+        request,
+        response,
+        TestController.testFunction as unknown as NextFunction
+      );
+
+      /* Test values against expected */
+      expect(response.statusCode).toBe(500);
+      expect(response._getJSONData().message).toBe(GENERIC_RESPONSES[500]);
+    });
+  });
+
+  describe('verifyAndRefreshSensitive', () => {
+    it('should fail if the refresh token is undefined', async () => {
+      /* Create mock request*/
+      request = createRequest({
+        headers: {}
+      });
+
+      /* Set up mocks and spies */
+      const spy = jest.spyOn(TestController, 'testFunction');
+
+      /* Call function */
+      await AuthController.verifyAndRefreshSensitive(
         request,
         response,
         TestController.testFunction as unknown as NextFunction
@@ -452,7 +663,7 @@ describe('Auth Controller Tests', () => {
       const spy = jest.spyOn(TestController, 'testFunction');
 
       /* Call function */
-      await AuthController.verifyAndRefresh(
+      await AuthController.verifyAndRefreshSensitive(
         request,
         response,
         TestController.testFunction as unknown as NextFunction
@@ -480,7 +691,7 @@ describe('Auth Controller Tests', () => {
       const spy = jest.spyOn(TestController, 'testFunction');
 
       /* Call function */
-      await AuthController.verifyAndRefresh(
+      await AuthController.verifyAndRefreshSensitive(
         request,
         response,
         TestController.testFunction as unknown as NextFunction
@@ -496,7 +707,7 @@ describe('Auth Controller Tests', () => {
       /* Create mock request */
       request = createRequest({
         headers: {
-          'x-access-token': 'test_access_token',
+          authorization: 'test_access_token',
           'x-refresh-token': 'test_refresh_token'
         }
       });
@@ -506,14 +717,11 @@ describe('Auth Controller Tests', () => {
       RefreshToken.findOne = jest.fn().mockImplementationOnce(() => {
         return refreshToken;
       });
-      RefreshToken.prototype.save = jest.fn().mockImplementationOnce(() => {
-        return;
-      });
       jwt.verify = jest.fn().mockImplementationOnce(() => () => ({ verified: 'true' }));
       const testFunctionSpy = jest.spyOn(TestController, 'testFunction');
 
       /* Call function */
-      await AuthController.verifyAndRefresh(
+      await AuthController.verifyAndRefreshSensitive(
         request,
         response,
         TestController.testFunction as unknown as NextFunction
@@ -528,7 +736,7 @@ describe('Auth Controller Tests', () => {
       /* Create mock request */
       request = createRequest({
         headers: {
-          'x-access-token': 'test_access_token',
+          authorization: 'test_access_token',
           'x-refresh-token': 'test_refresh_token'
         }
       });
@@ -539,7 +747,7 @@ describe('Auth Controller Tests', () => {
       });
 
       /* Call function */
-      await AuthController.verifyAndRefresh(
+      await AuthController.verifyAndRefreshSensitive(
         request,
         response,
         TestController.testFunction as unknown as NextFunction
@@ -554,7 +762,7 @@ describe('Auth Controller Tests', () => {
       /* Create mock request */
       request = createRequest({
         headers: {
-          'x-access-token': 'test_access_token',
+          authorization: 'test_access_token',
           'x-refresh-token': 'test_refresh_token'
         }
       });
@@ -564,14 +772,9 @@ describe('Auth Controller Tests', () => {
       RefreshToken.findOne = jest.fn().mockImplementationOnce(() => {
         return refreshToken;
       });
-      RefreshToken.prototype.save = jest
-        .fn()
-        .mockImplementationOnce(() => {
-          return;
-        })
-        .mockImplementationOnce(() => {
-          return;
-        });
+      RefreshToken.prototype.save = jest.fn().mockImplementationOnce(() => {
+        return;
+      });
       jwt.verify = jest
         .fn()
         .mockImplementationOnce(() => {
@@ -585,7 +788,7 @@ describe('Auth Controller Tests', () => {
       const testFunctionSpy = jest.spyOn(TestController, 'testFunction');
 
       /* Call function */
-      await AuthController.verifyAndRefresh(
+      await AuthController.verifyAndRefreshSensitive(
         request,
         response,
         TestController.testFunction as unknown as NextFunction
@@ -595,13 +798,14 @@ describe('Auth Controller Tests', () => {
       expect(response.statusCode).toBe(200);
       expect(testFunctionSpy).toHaveBeenCalled();
       expect(response.getHeaders()[HEADERS.NEW_ACCESS_TOKEN]).toBe(newAccessToken);
+      expect(RefreshToken.prototype.save).toHaveBeenCalled();
     });
 
     it('should fail if the refresh token is invalid', async () => {
       /* Create mock request */
       request = createRequest({
         headers: {
-          'x-access-token': 'test_access_token',
+          authorization: 'test_access_token',
           'x-refresh-token': 'test_refresh_token'
         }
       });
@@ -630,7 +834,7 @@ describe('Auth Controller Tests', () => {
       const testFunctionSpy = jest.spyOn(TestController, 'testFunction');
 
       /* Call function */
-      await AuthController.verifyAndRefresh(
+      await AuthController.verifyAndRefreshSensitive(
         request,
         response,
         TestController.testFunction as unknown as NextFunction

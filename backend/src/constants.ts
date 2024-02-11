@@ -52,10 +52,10 @@ export const AUTH_RESPONSES = {
 // CUSTOM HTTP RESPONSE HEADERS
 // ----------------------------
 
-/* Header for new access tokens upon refresh */
+/* Header for new access tokens upon refresh --> SHOULD BE LOWER CASE SINCE HTTP CONVERTS TO LOWER CASE */
 export const HEADERS = {
   NEW_ACCESS_TOKEN: 'x-new-access-token',
-  ACCESS_TOKEN: 'x-access-token',
+  ACCESS_TOKEN: 'authorization',
   REFRESH_TOKEN: 'x-refresh-token',
   USER_ID: 'x-user-id'
 };

@@ -1,3 +1,7 @@
+###########
+# BACKEND #
+###########
+
 # ignore /node_modules folder
 node_modules
 
@@ -16,6 +20,14 @@ dist
 
 # ignore jest code coverage folder
 coverage
+
+# ignore self-signed certificates for HTTPS
+server.cert
+server.key
+
+############
+# FRONTEND #
+############
 
 # Miscellaneous
 *.class
