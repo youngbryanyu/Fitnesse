@@ -28,6 +28,7 @@ class App {
     this.expressApp = express();
     this.initializeMiddleWares();
     this.mountRoutes();
+    this.setNetworkConfigs();
     this.serverPool = new Map<number, http.Server>();
   }
 
@@ -37,6 +38,16 @@ class App {
   private initializeMiddleWares(): void {
     this.expressApp.use(express.json());
     this.expressApp.use(helmet());
+  }
+
+  /**
+   * Set network communication configurations.
+   */
+  private setNetworkConfigs() {
+    /* Set trust proxy IPs */
+    const trustedIps: Set<string> = Config.get('TRUSTED_IPS');
+    const trustedIpList = Array.from(trustedIps);
+    this.expressApp.set('trust proxy', trustedIpList);
   }
 
   /**

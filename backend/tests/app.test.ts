@@ -31,12 +31,15 @@ describe('App Tests', () => {
       jest.spyOn(mongoose, 'connect').mockImplementation(() => {
         return { close: jest.fn() } as unknown as Promise<typeof import('mongoose')>;
       });
-      jest.spyOn(Config, 'get').mockImplementation(() => {
-        return 'dummy connection string';
-      });
-      jest.spyOn(Config, 'get').mockImplementation(() => {
-        return 2;
-      });
+
+      jest
+        .spyOn(Config, 'get')
+        .mockImplementationOnce(() => {
+          return 'dummy connection string';
+        })
+        .mockImplementationOnce(() => {
+          return 2;
+        });
 
       /* Connect to DB */
       await appInstance.connectToDatabase();
