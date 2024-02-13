@@ -33,7 +33,8 @@ class App {
   /**
    * Pool of servers where we map port to server
    */
-  private serverPool: Map<number, https.Server>;
+  // private serverPool: Map<number, https.Server>;
+  private serverPool: Map<number, express.Express>;
 
   /**
    * Constructor for the backend application server {@link App}.
@@ -43,7 +44,8 @@ class App {
     this.initializeMiddleWares();
     this.mountRoutes();
     // this.createProxy();
-    this.serverPool = new Map<number, https.Server>();
+    // this.serverPool = new Map<number, https.Server>();
+    this.serverPool = new Map<number, express.Express>();
   }
 
   /**
@@ -148,9 +150,10 @@ class App {
       const credentials = { key: this.privateKey, cert: this.certificate };
 
       /* Add server to server pool and listen for connections */
-      const server = https.createServer(credentials, this.expressApp);
-      this.serverPool.set(port, server);
-      server.listen(port);
+      // const server = https.createServer(credentials, this.expressApp);
+      this.serverPool.set(port, this.expressApp);
+      this.expressApp.listen(port);
+      // server.listen(port);
       logger.info(`Server is listening on port ${port}`);
     } catch (error) {
       logger.error('Error starting the server.', error);
@@ -166,7 +169,7 @@ class App {
     if (this.serverPool.has(port)) {
       const server = this.serverPool.get(port);
       if (server) {
-        server.close();
+        // server.close();
       }
     }
   }
