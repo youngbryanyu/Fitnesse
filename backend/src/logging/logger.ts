@@ -50,4 +50,6 @@ if (process.env.NODE_ENV !== ENVIRONMENTS.PROD) {
   logger.add(consoleTransport);
 }
 
+console.log('set up the debugger');
+
 export default logger;
