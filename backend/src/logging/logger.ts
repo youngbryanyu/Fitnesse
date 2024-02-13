@@ -55,6 +55,9 @@ if (process.env.NODE_ENV !== ENVIRONMENTS.TEST) {
 }
 
 /* Enable console logging in non-production environments */
+console.log(process.env.NODE_ENV);
+console.log(ENVIRONMENTS.PROD);
+console.log(process.env.NODE_ENV !== ENVIRONMENTS.PROD);
 if (process.env.NODE_ENV !== ENVIRONMENTS.PROD) {
   console.log('added console transport for environment: ' + process.env.NODE_ENV);
   logger.add(consoleTransport);
