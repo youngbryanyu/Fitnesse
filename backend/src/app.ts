@@ -110,25 +110,31 @@ class App {
     /* Get connection URL from environment variables */
     const mongoUrl: string = Config.get('MONGO_DB.CONNECTION_URL');
 
+    console.log('url=' + mongoUrl);
     /* Try connecting to the database specified by the connection URL, with retries */
     let attempts = 0;
     const maxAttempts: number = Config.get('MONGO_DB.CONNECTION_RETRIES');
     const retryTimeout: number = Config.get('MONGO_DB.CONNECTION_RETRY_TIMEOUT');
     while (attempts < maxAttempts) {
       try {
+        console.log('connecting to mongo ');
         await mongoose.connect(mongoUrl);
+        console.log('success connect mongo');
         logger.info('Successfully connected to MongoDB.');
         return;
       } catch (error) {
         logger.error('Failed to connect to MongoDB: ', error);
+        console.log('failed mongo connection');
         attempts++;
         if (attempts >= maxAttempts) {
           logger.error(`Maximum connection attempts of ${maxAttempts} reached for MongoDB.`);
+          console.log('exiting');
           process.exit(1);
         }
 
         /* Wait for 1 second before retrying */
         logger.info('Retrying connection to MongoDB...');
+        console.log('retrying');
         await new Promise((resolve) => setTimeout(resolve, retryTimeout));
       }
     }
