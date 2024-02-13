@@ -47,7 +47,7 @@ class App {
     /* Set trust proxy IPs */
     this.expressApp.set(
       'trust proxy',
-      1
+      true
     ); /* trust proxy 1 layer out --> this should be render.com's proxy */
   }
 
