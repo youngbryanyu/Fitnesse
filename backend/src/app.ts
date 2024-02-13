@@ -17,7 +17,7 @@ class App {
   /**
    * Express middleware
    */
-  private readonly express: Express;
+  private readonly expressApp: Express;
   /**
    * Private key for HTTPS
    */
@@ -39,7 +39,7 @@ class App {
    * Constructor for the backend application server {@link App}.
    */
   constructor() {
-    this.express = express();
+    this.expressApp = express();
     this.initializeMiddleWares();
     this.mountRoutes();
     this.createProxy();
@@ -50,24 +50,27 @@ class App {
    * Initialize middlewares for the application.
    */
   private initializeMiddleWares(): void {
-    this.express.use(express.json());
-    this.express.use(helmet());
+    this.expressApp.use(express.json());
+    this.expressApp.use(helmet());
   }
 
   /**
    * Mounts the routes for the backend API endpoints.
    */
   private mountRoutes(): void {
-    this.express.use(API_URLS_V1.AUTH, authRoute);
+    this.expressApp.use(API_URLS_V1.AUTH, authRoute);
   }
 
   private createProxy(): void {
     const port: number = Config.get('PORT');
-    this.express.use(API_URLS_V1.PREFIX, createProxyMiddleware({
-      target: `http://localhost:${port}`, /* localhost since proxy is deployed in same environment as backend APIs */
-      changeOrigin: true,
-      // Optional: pathRewrite: {'^/fitnesse/v1': ''}, if you need to remove the base path
-    }));
+    this.expressApp.use(
+      API_URLS_V1.PREFIX,
+      createProxyMiddleware({
+        target: `http://localhost:${port}` /* localhost since proxy is deployed in same environment as backend APIs */,
+        changeOrigin: true
+        // Optional: pathRewrite: {'^/fitnesse/v1': ''}, if you need to remove the base path
+      })
+    );
   }
 
   /**
@@ -143,7 +146,7 @@ class App {
       const credentials = { key: this.privateKey, cert: this.certificate };
 
       /* Add server to server pool and listen for connections */
-      const server = https.createServer(credentials, this.express);
+      const server = https.createServer(credentials, this.expressApp);
       this.serverPool.set(port, server);
       server.listen(port);
       logger.info(`Server is listening on port ${port}`);
@@ -170,8 +173,8 @@ class App {
    * Returns the express middleware.
    * @returns The express middleware.
    */
-  public getExpress(): Express {
-    return this.express;
+  public getExpressApp(): Express {
+    return this.expressApp;
   }
 }
 

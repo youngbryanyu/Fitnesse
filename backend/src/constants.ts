@@ -17,7 +17,7 @@ export const ENVIRONMENTS = {
 
 /* API URLs version 1 */
 export const API_URLS_V1 = {
-  PREFIX: '/fitness/v1', /* prefix for the API endpoints */
+  PREFIX: '/fitness/v1' /* prefix for the API endpoints */,
   AUTH: '/fitnesse/v1/auth'
 };
 
