@@ -39,21 +39,21 @@ class App {
     this.expressApp.use(express.json());
     this.expressApp.use(helmet());
 
-    this.expressApp.use((req, res, next) => {
-      const xForwardedFor = req.headers['x-forwarded-for'] as string;
-      if (xForwardedFor) {
-        console.log(`X-Forwarded-For: ${xForwardedFor}`);
-        // Splits the IPs in the header and logs them individually
-        const ips = xForwardedFor.split(',');
-        ips.forEach((ip, index) => {
-          console.log(`Proxy ${index + 1}: ${ip.trim()}`);
-        });
-      } else {
-        console.log('No X-Forwarded-For header found.');
-      }
-      next();
-    });
-    
+    /* Display proxies that the request went through */
+    // this.expressApp.use((req, res, next) => {
+    //   const xForwardedFor = req.headers['x-forwarded-for'] as string;
+    //   if (xForwardedFor) {
+    //     console.log(`X-Forwarded-For: ${xForwardedFor}`);
+    //     // Splits the IPs in the header and logs them individually
+    //     const ips = xForwardedFor.split(',');
+    //     ips.forEach((ip, index) => {
+    //       console.log(`Proxy ${index + 1}: ${ip.trim()}`);
+    //     });
+    //   } else {
+    //     console.log('No X-Forwarded-For header found.');
+    //   }
+    //   next();
+    // });
   }
 
   /**
@@ -63,7 +63,7 @@ class App {
     /* Set trust proxy IPs */
     this.expressApp.set(
       'trust proxy',
-      true
+      3
     ); /* trust proxy 1 layer out --> this should be render.com's proxy */
   }
 
