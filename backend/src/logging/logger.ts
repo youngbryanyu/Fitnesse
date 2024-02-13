@@ -40,9 +40,9 @@ const logger = winston.createLogger({
   ]
 });
 
-logger.stream({ start: -1 }).on('log', (log) => {
-  process.stdout.write(log.message + '\n');
-});
+// logger.stream({ start: -1 }).on('log', (log) => {
+//   process.stdout.write(log.message + '\n');
+// });
 
 /* Print logging errors */
 logger.on('error', (error) => {
@@ -54,15 +54,7 @@ if (process.env.NODE_ENV !== ENVIRONMENTS.TEST) {
   logger.add(fileTransport);
 }
 
-/* Enable console logging in non-production environments */
-console.log(process.env.NODE_ENV);
-console.log(ENVIRONMENTS.PROD);
-console.log(process.env.NODE_ENV !== ENVIRONMENTS.PROD);
-if (process.env.NODE_ENV !== ENVIRONMENTS.PROD) {
-  console.log('added console transport for environment: ' + process.env.NODE_ENV);
-  logger.add(consoleTransport);
-}
-
-console.log('set up the debugger');
+/* Enable console logging in all environments */
+logger.add(consoleTransport);
 
 export default logger;
