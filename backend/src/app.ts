@@ -8,6 +8,7 @@ import Config, { EnvParser } from 'simple-app-config';
 import helmet from 'helmet';
 import https from 'https';
 import fs from 'fs';
+import { createProxyMiddleware } from 'http-proxy-middleware';
 
 /**
  * The backend application server.
@@ -41,6 +42,7 @@ class App {
     this.express = express();
     this.initializeMiddleWares();
     this.mountRoutes();
+    this.createProxy();
     this.serverPool = new Map<number, https.Server>();
   }
 
@@ -57,6 +59,15 @@ class App {
    */
   private mountRoutes(): void {
     this.express.use(API_URLS_V1.AUTH, authRoute);
+  }
+
+  private createProxy(): void {
+    const port: number = Config.get('PORT');
+    this.express.use(API_URLS_V1.PREFIX, createProxyMiddleware({
+      target: `http://localhost:${port}`, /* localhost since proxy is deployed in same environment as backend APIs */
+      changeOrigin: true,
+      // Optional: pathRewrite: {'^/fitnesse/v1': ''}, if you need to remove the base path
+    }));
   }
 
   /**
