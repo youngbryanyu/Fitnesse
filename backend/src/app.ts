@@ -1,4 +1,7 @@
 /* Application setup */
+console.log('START');
+logger.info('START info');
+logger.debug('START debug');
 import express, { Express } from 'express';
 import mongoose from 'mongoose';
 import authRoute from './routes/authRoutes';
