@@ -39,16 +39,11 @@ class App {
     this.expressApp.use(express.json());
     this.expressApp.use(helmet());
 
-    /* Display proxies that the request went through */
+    /* Display proxies that the request went through --> to test how many proxy layers */
     // this.expressApp.use((req, res, next) => {
     //   const xForwardedFor = req.headers['x-forwarded-for'] as string;
     //   if (xForwardedFor) {
     //     console.log(`X-Forwarded-For: ${xForwardedFor}`);
-    //     // Splits the IPs in the header and logs them individually
-    //     const ips = xForwardedFor.split(',');
-    //     ips.forEach((ip, index) => {
-    //       console.log(`Proxy ${index + 1}: ${ip.trim()}`);
-    //     });
     //   } else {
     //     console.log('No X-Forwarded-For header found.');
     //   }
@@ -64,7 +59,7 @@ class App {
     this.expressApp.set(
       'trust proxy',
       3
-    ); /* trust proxy 1 layer out --> this should be render.com's proxy */
+    ); /* trust proxy 3 layers out --> render.com appears to use 3 layers of proxies */
   }
 
   /**
