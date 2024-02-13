@@ -2,13 +2,11 @@
 import express, { Express } from 'express';
 import mongoose from 'mongoose';
 import authRoute from './routes/authRoutes';
-import { API_URLS_V1, CERT_DIR, ENVIRONMENTS } from './constants';
+import { API_URLS_V1 } from './constants';
 import logger from './logging/logger';
-import Config, { EnvParser } from 'simple-app-config';
+import Config from 'simple-app-config';
 import helmet from 'helmet';
-import https from 'https';
-import fs from 'fs';
-import { createProxyMiddleware } from 'http-proxy-middleware';
+import http from 'http';
 
 /**
  * The backend application server.
@@ -19,22 +17,9 @@ class App {
    */
   private readonly expressApp: Express;
   /**
-   * Private key for HTTPS
-   */
-  private privateKey: string = '';
-  /**
-   * Certificate for HTTPS
-   */
-  private certificate: string = '';
-  /**
-   * Certificate authority who issued certificate
-   */
-  private certAuth: string = '';
-  /**
    * Pool of servers where we map port to server
    */
-  // private serverPool: Map<number, https.Server>;
-  private serverPool: Map<number, express.Express>;
+  private serverPool: Map<number, http.Server>;
 
   /**
    * Constructor for the backend application server {@link App}.
@@ -43,9 +28,7 @@ class App {
     this.expressApp = express();
     this.initializeMiddleWares();
     this.mountRoutes();
-    // this.createProxy();
-    // this.serverPool = new Map<number, https.Server>();
-    this.serverPool = new Map<number, express.Express>();
+    this.serverPool = new Map<number, http.Server>();
   }
 
   /**
@@ -61,49 +44,6 @@ class App {
    */
   private mountRoutes(): void {
     this.expressApp.use(API_URLS_V1.AUTH, authRoute);
-  }
-
-  private createProxy(): void {
-    const port: number = Config.get('PORT');
-    this.expressApp.use(
-      API_URLS_V1.PREFIX,
-      createProxyMiddleware({
-        target: `http://localhost:${port}` /* localhost since proxy is deployed in same environment as backend APIs */,
-        changeOrigin: true
-        // Optional: pathRewrite: {'^/fitnesse/v1': ''}, if you need to remove the base path
-      })
-    );
-  }
-
-  /**
-   * Get the signed certificate used for HTTPS.
-   */
-  private getCertificate(): void {
-    const env = EnvParser.getString('NODE_ENV');
-    switch (env) {
-      case ENVIRONMENTS.TEST:
-      case ENVIRONMENTS.DEV:
-        /* get self-signed certificate */
-        if (fs.existsSync(`${CERT_DIR}server.key`) && fs.existsSync(`${CERT_DIR}server.cert`)) {
-          this.privateKey = fs.readFileSync(`${CERT_DIR}server.key`, 'utf-8');
-          this.certificate = fs.readFileSync(`${CERT_DIR}server.cert`, 'utf-8');
-        }
-        logger.info(this.privateKey);
-        logger.info(this.certificate);
-        return;
-      case ENVIRONMENTS.PROD:
-        /* Get certificates provided by cert auth from docker container */
-        if (
-          fs.existsSync(`${CERT_DIR}server.key`) &&
-          fs.existsSync(`${CERT_DIR}server.cert`) &&
-          fs.existsSync(`${CERT_DIR}ca_bundle.crt`)
-        ) {
-          this.privateKey = fs.readFileSync(`${CERT_DIR}server.key`, 'utf-8');
-          this.certificate = fs.readFileSync(`${CERT_DIR}server.cert`, 'utf-8');
-          this.certAuth = fs.readFileSync(`${CERT_DIR}ca_bundle.crt`, 'utf-8');
-        }
-        return;
-    }
   }
 
   /**
@@ -145,15 +85,9 @@ class App {
    */
   public async startServer(port: number): Promise<void> {
     try {
-      /* Get credentials for HTTPS */
-      this.getCertificate();
-      const credentials = { key: this.privateKey, cert: this.certificate };
-
       /* Add server to server pool and listen for connections */
-      // const server = https.createServer(credentials, this.expressApp);
-      this.serverPool.set(port, this.expressApp);
-      this.expressApp.listen(port);
-      // server.listen(port);
+      const server = this.expressApp.listen(port);
+      this.serverPool.set(port, server);
       logger.info(`Server is listening on port ${port}`);
     } catch (error) {
       logger.error('Error starting the server.', error);
@@ -169,7 +103,7 @@ class App {
     if (this.serverPool.has(port)) {
       const server = this.serverPool.get(port);
       if (server) {
-        // server.close();
+        server.close();
       }
     }
   }

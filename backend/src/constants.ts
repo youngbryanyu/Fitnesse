@@ -69,11 +69,3 @@ export const HEADERS = {
 export const PASSWORD_RULES = {
   MIN_LENGTH: 8
 };
-
-// -------
-// NETWORK
-// -------
-
-/* Directory where certificates from CA are located in render.io environment */
-// export const CERT_DIR = '/etc/ssl/certs/';
-export const CERT_DIR = '/etc/secrets/';

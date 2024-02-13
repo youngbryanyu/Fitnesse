@@ -4,7 +4,7 @@ import App from '../src/app';
 import { ENVIRONMENTS } from '../src/constants';
 import logger from '../src/logging/logger';
 import Config, { EnvParser } from 'simple-app-config';
-import https from 'https';
+import http from 'http';
 import fs from 'fs';
 
 /* Dummy port for backend server */
@@ -73,8 +73,8 @@ describe('App Tests', () => {
 
   describe('startServer', () => {
     it('should start the server and have it listen successfully', async () => {
-      jest.spyOn(https.Server.prototype, 'listen').mockImplementation(function (
-        this: https.Server,
+      jest.spyOn(http.Server.prototype, 'listen').mockImplementation(function (
+        this: http.Server,
         // eslint-disable-next-line
         ...args: any[]
       ) {
@@ -83,7 +83,7 @@ describe('App Tests', () => {
         return this;
       });
       await appInstance.startServer(PORT);
-      expect(https.Server.prototype.listen).toHaveBeenCalled();
+      expect(http.Server.prototype.listen).toHaveBeenCalled();
     });
 
     it('should start the server and have it listen successfully when the environment is production', async () => {
@@ -96,8 +96,8 @@ describe('App Tests', () => {
       fs.readFileSync = jest.fn().mockImplementation(() => {
         return '';
       });
-      jest.spyOn(https.Server.prototype, 'listen').mockImplementation(function (
-        this: https.Server,
+      jest.spyOn(http.Server.prototype, 'listen').mockImplementation(function (
+        this: http.Server,
         // eslint-disable-next-line
         ...args: any[]
       ) {
@@ -106,12 +106,12 @@ describe('App Tests', () => {
         return this;
       });
       await appInstance.startServer(PORT);
-      expect(https.Server.prototype.listen).toHaveBeenCalled();
+      expect(http.Server.prototype.listen).toHaveBeenCalled();
     });
 
     it('should fail if express has an error when the server is started ', async () => {
       /* Set up mocks and spies */
-      jest.spyOn(https.Server.prototype, 'listen').mockImplementation(() => {
+      jest.spyOn(http.Server.prototype, 'listen').mockImplementation(() => {
         throw new Error();
       });
       jest.spyOn(logger, 'error');
