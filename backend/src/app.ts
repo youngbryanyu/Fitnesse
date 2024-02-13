@@ -112,6 +112,7 @@ class App {
 
       /* Add server to server pool and listen for connections */
       const server = https.createServer(credentials, this.expressApp);
+      server.listen(port)
       // const server = this.expressApp.listen(port);
       this.serverPool.set(port, server);
       logger.info(`Server is listening on port ${port}`);
