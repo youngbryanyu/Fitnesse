@@ -1,7 +1,11 @@
 /* Backend server startup script and entry point */
+console.log('start of app');
 import App from './app';
+console.log('imported app');
 import logger from './logging/logger';
+console.log('imported logger');
 import Config from 'simple-app-config';
+console.log('imported simple-app-config');
 
 logger.info('starting the app');
 /* Get the server port from configuration object */
