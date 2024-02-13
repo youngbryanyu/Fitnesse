@@ -47,7 +47,7 @@ class App {
     /* Set trust proxy IPs */
     const trustedIps: Set<string> = Config.get('TRUSTED_IPS');
     const trustedIpList = Array.from(trustedIps);
-    this.expressApp.set('trust proxy', trustedIpList);
+    this.expressApp.set('trust proxy', true);
   }
 
   /**
