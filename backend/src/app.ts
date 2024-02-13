@@ -124,7 +124,7 @@ class App {
         return;
       } catch (error) {
         logger.error('Failed to connect to MongoDB: ', error);
-        console.log('failed mongo connection');
+        console.log('failed mongo connection', error);
         attempts++;
         if (attempts >= maxAttempts) {
           logger.error(`Maximum connection attempts of ${maxAttempts} reached for MongoDB.`);

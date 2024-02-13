@@ -40,6 +40,11 @@ const logger = winston.createLogger({
   ]
 });
 
+/* Print logging errors */
+logger.on('error', (error) => {
+  console.error('Logging error:', error);
+});
+
 /* Enable file logging in non-test environments */
 if (process.env.NODE_ENV !== ENVIRONMENTS.TEST) {
   logger.add(fileTransport);
