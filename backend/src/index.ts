@@ -8,9 +8,10 @@ import Config from 'simple-app-config';
 console.log('imported simple-app-config');
 
 logger.info('starting the app');
+console.log('after first log statement');
 /* Get the server port from configuration object */
 const PORT: number = Config.get('PORT');
-logger.info('port is ' + PORT);
+console.log('port is ' + PORT);
 
 /* Start application */
 startApp(PORT);
