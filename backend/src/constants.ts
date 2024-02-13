@@ -74,5 +74,6 @@ export const PASSWORD_RULES = {
 // NETWORK
 // -------
 
-/* Directory where certificates from CA are located*/
-export const CERT_DIR = '/etc/ssl/certs/';
+/* Directory where certificates from CA are located in render.io environment */
+// export const CERT_DIR = '/etc/ssl/certs/';
+export const CERT_DIR = '/etc/secrets/';

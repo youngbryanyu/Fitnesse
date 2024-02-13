@@ -82,9 +82,12 @@ class App {
       case ENVIRONMENTS.TEST:
       case ENVIRONMENTS.DEV:
         /* get self-signed certificate */
-        if (fs.existsSync('./server.key') && fs.existsSync('./server.cert')) {
-          this.privateKey = fs.readFileSync('./server.key', 'utf-8');
-          this.certificate = fs.readFileSync('./server.cert', 'utf-8');
+        if (
+          fs.existsSync(`${CERT_DIR}server.key`) &&
+          fs.existsSync(`${CERT_DIR}server.cert`)
+        ) {
+          this.privateKey = fs.readFileSync(`${CERT_DIR}server.key`, 'utf-8');
+          this.certificate = fs.readFileSync(`${CERT_DIR}server.cert`, 'utf-8');
         }
         return;
       case ENVIRONMENTS.PROD:
