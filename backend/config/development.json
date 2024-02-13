@@ -30,6 +30,5 @@
     "FAILED_LOGIN_ATTEMPTS_WINDOW": 900,
     "ACCESS_TOKEN_LIFETIME": "15m",
     "IDLE_TIMEOUT": 604800
-  },
-  "TRUSTED_IPS": "$TRUSTED_IPS::set:string"
+  }
 }

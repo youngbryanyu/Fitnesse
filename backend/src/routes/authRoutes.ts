@@ -25,7 +25,7 @@ const rateLimitLogin = rateLimit({
   windowMs: Config.get('RATE_LIMITING.AUTH.LOGIN.WINDOW'),
   max: Config.get('RATE_LIMITING.AUTH.LOGIN.THRESHOLD'),
   handler: (req, res) => {
-    logger.info(`The login rate limit has been reached for IP ${req.socket.remoteAddress}`);
+    logger.info(`The login rate limit has been reached for IP ${req.ip}`);
     res.status(429).json({
       message: AUTH_RESPONSES._429_RATE_LIMIT_EXCEEDED
     });
@@ -37,7 +37,7 @@ const rateLimitLogout = rateLimit({
   windowMs: Config.get('RATE_LIMITING.AUTH.LOGOUT.WINDOW'),
   max: Config.get('RATE_LIMITING.AUTH.LOGOUT.THRESHOLD'),
   handler: (req, res) => {
-    logger.info(`The logout rate limit has been reached for IP ${req.socket.remoteAddress}`);
+    logger.info(`The logout rate limit has been reached for IP ${req.ip}`);
     res.status(429).json({
       message: AUTH_RESPONSES._429_RATE_LIMIT_EXCEEDED
     });
