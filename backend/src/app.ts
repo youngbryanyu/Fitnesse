@@ -86,6 +86,8 @@ class App {
           this.privateKey = fs.readFileSync(`${CERT_DIR}server.key`, 'utf-8');
           this.certificate = fs.readFileSync(`${CERT_DIR}server.cert`, 'utf-8');
         }
+        logger.info(this.privateKey);
+        logger.info(this.certificate);
         return;
       case ENVIRONMENTS.PROD:
         /* Get certificates provided by cert auth from docker container */
