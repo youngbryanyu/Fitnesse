@@ -51,7 +51,12 @@ router.post('/register', rateLimitRegister, AuthController.register);
 router.post('/login', rateLimitLogin, AuthController.login);
 
 /* Logout route */
-router.delete('/logout', rateLimitLogout, AuthController.logout);
+router.delete(
+  '/logout',
+  rateLimitLogout,
+  AuthController.verifyAndRefreshSensitive,
+  AuthController.logout
+);
 
 // router.post('/test', AuthController.verifyAndRefresh, AuthController.test);
 

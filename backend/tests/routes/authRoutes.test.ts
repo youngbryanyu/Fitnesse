@@ -5,7 +5,7 @@ import { API_URLS_V1, AUTH_RESPONSES } from '../../src/constants';
 import App from '../../src/app';
 import Config from 'simple-app-config';
 
-/* Mock the API endpoints to do nothing */
+/* Mock the controller functions */
 jest.mock('../../src/controllers/authController', () => ({
   register: jest.fn().mockImplementation((req, res) => {
     res.sendStatus(201);
@@ -15,6 +15,9 @@ jest.mock('../../src/controllers/authController', () => ({
   }),
   logout: jest.fn().mockImplementation((req, res) => {
     res.sendStatus(200);
+  }),
+  verifyAndRefreshSensitive: jest.fn().mockImplementation((req, res, next) => {
+    next();
   })
 }));
 

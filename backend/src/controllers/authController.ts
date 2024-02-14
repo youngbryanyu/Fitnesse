@@ -230,8 +230,8 @@ class AuthController {
   }
 
   /**
-   * Attempts to log out a user by deleting their refresh token from the DB. This endpoint must be authenticated by the {@link
-   * AuthController.verifyAndRefreshSensitive} middleware function.
+   * Attempts to log out a user by deleting their refresh token from the DB. This endpoint is authenticated by the
+   * {@link AuthController.verifyAndRefreshSensitive} middleware function.
    * @param req incoming request from client.
    * @param res response to return to client.
    * @returns Returns a promise indicating completion of the async function.
@@ -275,13 +275,9 @@ class AuthController {
       /* Get tokens and userId from request header */
       const accessTokenHeader = req.headers[HEADERS.ACCESS_TOKEN] as string;
       const refreshTokenHeader = req.headers[HEADERS.REFRESH_TOKEN] as string;
-      const userId = req.headers[HEADERS.USER_ID];
 
       /* Check if access token is undefined */
       if (!accessTokenHeader) {
-        logger.info(
-          `Access token is undefined for user with id=${userId}. Access token verification failed.`
-        );
         res.status(401).json({
           message: AUTH_RESPONSES._401_NOT_AUTHENTICATED
         });
@@ -303,33 +299,28 @@ class AuthController {
         try {
           /* Check if refresh token is undefined */
           if (!refreshTokenHeader) {
-            logger.info(
-              `Refresh token is undefined for user with id=${userId}. Access token verification failed.`
-            );
             res.status(401).json({
               message: AUTH_RESPONSES._401_SESSION_EXPIRED
             });
             return;
           }
 
-          /* Check if the login session has expired (refresh token) */
+          /* Check validity of refresh token and get userId from payload */
           const refreshToken = refreshTokenHeader.split(' ')[1];
+          const payload = jwt.verify(refreshToken, refreshTokenSecret) as jwt.JwtPayload;
+          const userId = payload.sub;
+
+          /* Check if the login session has expired (refresh token) */
           const refreshTokenEntry = await RefreshToken.findOne({
             userId: userId,
             token: refreshToken
           });
           if (!refreshTokenEntry) {
-            logger.info(
-              `Refresh token has idled out or doesn't exist for user with id=${userId}. Access token verification failed.`
-            );
             res.status(401).json({
               message: AUTH_RESPONSES._401_SESSION_EXPIRED
             });
             return;
           }
-
-          /* Check validity of refresh token */
-          jwt.verify(refreshToken, refreshTokenSecret);
 
           /* Update last used time for refresh token (login session) */
           refreshTokenEntry.lastUsed = new Date(Date.now());
@@ -345,12 +336,10 @@ class AuthController {
           /* Go to next middleware function */
           next();
         } catch (error) {
-          logger.error(
-            `Refresh token is invalid for user with id=${userId}. Access token refresh failed.`
-          );
           res.status(401).json({
             message: AUTH_RESPONSES._401_SESSION_EXPIRED
           });
+          return;
         }
       }
     } catch (error) {
@@ -399,9 +388,6 @@ class AuthController {
         token: refreshToken
       });
       if (!refreshTokenEntry) {
-        logger.info(
-          `Refresh token has idled out or doesn't exist for user with id=${userId}. Access token verification failed.`
-        );
         res.status(401).json({
           message: AUTH_RESPONSES._401_SESSION_EXPIRED
         });
@@ -410,9 +396,6 @@ class AuthController {
 
       /* Check if access token is undefined */
       if (!accessTokenHeader) {
-        logger.info(
-          `Access token is undefined for user with id=${userId}. Access token verification failed.`
-        );
         res.status(401).json({
           message: AUTH_RESPONSES._401_NOT_AUTHENTICATED
         });
@@ -449,12 +432,10 @@ class AuthController {
           /* Go to next middleware function */
           next();
         } catch (error) {
-          logger.error(
-            `Refresh token is invalid for user with id=${userId}. Access token refresh failed.`
-          );
           res.status(401).json({
             message: AUTH_RESPONSES._401_SESSION_EXPIRED
           });
+          return;
         }
       }
     } catch (error) {

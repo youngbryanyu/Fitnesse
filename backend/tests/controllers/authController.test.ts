@@ -498,9 +498,12 @@ describe('Auth Controller Tests', () => {
       });
 
       /* Set up mocks and spies */
-      jwt.verify = jest.fn().mockImplementationOnce(() => {
-        throw new Error('access token invalid');
-      });
+      jwt.verify = jest
+        .fn()
+        .mockImplementationOnce(() => {
+          throw new Error('access token invalid');
+        })
+        .mockImplementationOnce(() => () => ({ verified: 'true' }));
       RefreshToken.findOne = jest.fn().mockImplementationOnce(() => {
         return undefined;
       });
@@ -560,8 +563,7 @@ describe('Auth Controller Tests', () => {
       request = createRequest({
         headers: {
           authorization: 'test_access_token',
-          'x-refresh-token': 'test_refresh_token',
-          'x-user-id': 'test_user_id'
+          'x-refresh-token': 'test_refresh_token'
         }
       });
 
