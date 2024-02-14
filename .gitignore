@@ -21,9 +21,9 @@ dist
 # ignore jest code coverage folder
 coverage
 
-# ignore self-signed certificates for HTTPS
-server.cert
-server.key
+# ignore Docker files
+Dockerfile.*
+docker-compose.*.yml
 
 ############
 # FRONTEND #
