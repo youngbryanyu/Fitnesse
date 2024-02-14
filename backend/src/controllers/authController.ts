@@ -215,11 +215,9 @@ class AuthController {
       logger.info(`Login successful for user with id=${user._id}`);
       res.status(200).json({
         message: AUTH_RESPONSES._200_LOGIN_SUCCESSFUL,
-        info: {
-          ...info,
-          accessToken: accessToken,
-          refreshToken: refreshToken
-        }
+        ...info,
+        accessToken: accessToken,
+        refreshToken: refreshToken
       });
     } catch (error) {
       logger.error('Server error occured during login: ' + error);
@@ -379,7 +377,7 @@ class AuthController {
         return;
       }
 
-      /* Verify refresh token, throws error if token is invalid */
+      /* Verify refresh token */
       const refreshToken = refreshTokenHeader.split(' ')[1];
       const refreshTokenSecret: string = Config.get('REFRESH_TOKEN_SECRET');
       let userId: string | undefined;
