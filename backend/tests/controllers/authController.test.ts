@@ -659,6 +659,7 @@ describe('Auth Controller Tests', () => {
       });
 
       /* Set up mocks and spies */
+      jwt.verify = jest.fn().mockImplementationOnce(() => () => ({ verified: 'true' }));
       RefreshToken.findOne = jest.fn().mockImplementationOnce(() => {
         return undefined;
       });
@@ -686,6 +687,7 @@ describe('Auth Controller Tests', () => {
       });
 
       /* Set up mocks and spies */
+      jwt.verify = jest.fn().mockImplementationOnce(() => () => ({ verified: 'true' }));
       const refreshToken = {};
       RefreshToken.findOne = jest.fn().mockImplementationOnce(() => {
         return refreshToken;
@@ -744,6 +746,7 @@ describe('Auth Controller Tests', () => {
       });
 
       /* Set up mocks and spies */
+      jwt.verify = jest.fn().mockImplementationOnce(() => () => ({ verified: 'true' }));
       RefreshToken.findOne = jest.fn().mockImplementationOnce(() => {
         throw new Error('test error');
       });
@@ -779,10 +782,10 @@ describe('Auth Controller Tests', () => {
       });
       jwt.verify = jest
         .fn()
+        .mockImplementationOnce(() => () => ({ verified: 'true' }))
         .mockImplementationOnce(() => {
           throw new Error('access token invalid');
-        })
-        .mockImplementationOnce(() => () => ({ verified: 'true' }));
+        });
       const newAccessToken = 'test access token';
       jwt.sign = jest.fn().mockImplementationOnce(() => {
         return newAccessToken;

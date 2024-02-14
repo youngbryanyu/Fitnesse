@@ -288,6 +288,7 @@ class AuthController {
       const accessTokenSecret: string = Config.get('ACCESS_TOKEN_SECRET');
       const refreshTokenSecret: string = Config.get('REFRESH_TOKEN_SECRET');
       const accessToken = accessTokenHeader.split(' ')[1];
+
       try {
         /* Check validity of access token */
         jwt.verify(accessToken, accessTokenSecret);
@@ -295,52 +296,53 @@ class AuthController {
         /* Go to next middleware function */
         next();
       } catch (error) {
-        /* Verify refresh token, throws error if token is invalid */
+        /* Check if refresh token is undefined */
+        if (!refreshTokenHeader) {
+          res.status(401).json({
+            message: AUTH_RESPONSES._401_SESSION_EXPIRED
+          });
+          return;
+        }
+
+        let userId: string | undefined;
+        let refreshToken: string;
         try {
-          /* Check if refresh token is undefined */
-          if (!refreshTokenHeader) {
-            res.status(401).json({
-              message: AUTH_RESPONSES._401_SESSION_EXPIRED
-            });
-            return;
-          }
-
           /* Check validity of refresh token and get userId from payload */
-          const refreshToken = refreshTokenHeader.split(' ')[1];
+          refreshToken = refreshTokenHeader.split(' ')[1];
           const payload = jwt.verify(refreshToken, refreshTokenSecret) as jwt.JwtPayload;
-          const userId = payload.sub;
-
-          /* Check if the login session has expired (refresh token) */
-          const refreshTokenEntry = await RefreshToken.findOne({
-            userId: userId,
-            token: refreshToken
-          });
-          if (!refreshTokenEntry) {
-            res.status(401).json({
-              message: AUTH_RESPONSES._401_SESSION_EXPIRED
-            });
-            return;
-          }
-
-          /* Update last used time for refresh token (login session) */
-          refreshTokenEntry.lastUsed = new Date(Date.now());
-          await refreshTokenEntry.save();
-
-          /* Attach a new access token to response header */
-          const accessTokenLifetime: string = Config.get('AUTH.ACCESS_TOKEN_LIFETIME');
-          const newAccessToken = jwt.sign({ sub: userId }, accessTokenSecret, {
-            expiresIn: accessTokenLifetime
-          });
-          res.setHeader(HEADERS.NEW_ACCESS_TOKEN, newAccessToken);
-
-          /* Go to next middleware function */
-          next();
+          userId = payload.sub;
         } catch (error) {
           res.status(401).json({
             message: AUTH_RESPONSES._401_SESSION_EXPIRED
           });
           return;
         }
+
+        /* Check if the login session has expired (refresh token) */
+        const refreshTokenEntry = await RefreshToken.findOne({
+          userId: userId,
+          token: refreshToken
+        });
+        if (!refreshTokenEntry) {
+          res.status(401).json({
+            message: AUTH_RESPONSES._401_SESSION_EXPIRED
+          });
+          return;
+        }
+
+        /* Update last used time for refresh token (login session) */
+        refreshTokenEntry.lastUsed = new Date(Date.now());
+        await refreshTokenEntry.save();
+
+        /* Attach a new access token to response header */
+        const accessTokenLifetime: string = Config.get('AUTH.ACCESS_TOKEN_LIFETIME');
+        const newAccessToken = jwt.sign({ sub: userId }, accessTokenSecret, {
+          expiresIn: accessTokenLifetime
+        });
+        res.setHeader(HEADERS.NEW_ACCESS_TOKEN, newAccessToken);
+
+        /* Go to next middleware function */
+        next();
       }
     } catch (error) {
       logger.error('Server error occured during JWT token verification or refresh: ' + error);
@@ -368,13 +370,23 @@ class AuthController {
       /* Get tokens and userId from request header */
       const accessTokenHeader = req.headers[HEADERS.ACCESS_TOKEN] as string;
       const refreshTokenHeader = req.headers[HEADERS.REFRESH_TOKEN] as string;
-      const userId = req.headers[HEADERS.USER_ID];
 
       /* Check if refresh token is undefined */
       if (!refreshTokenHeader) {
-        logger.info(
-          `Refresh token is undefined for user with id=${userId}. Access token verification failed.`
-        );
+        res.status(401).json({
+          message: AUTH_RESPONSES._401_SESSION_EXPIRED
+        });
+        return;
+      }
+
+      /* Verify refresh token, throws error if token is invalid */
+      const refreshToken = refreshTokenHeader.split(' ')[1];
+      const refreshTokenSecret: string = Config.get('REFRESH_TOKEN_SECRET');
+      let userId: string | undefined;
+      try {
+        const payload = jwt.verify(refreshToken, refreshTokenSecret) as jwt.JwtPayload;
+        userId = payload.sub;
+      } catch (error) {
         res.status(401).json({
           message: AUTH_RESPONSES._401_SESSION_EXPIRED
         });
@@ -382,7 +394,6 @@ class AuthController {
       }
 
       /* Check if the login session has expired (refresh token) */
-      const refreshToken = refreshTokenHeader.split(' ')[1];
       const refreshTokenEntry = await RefreshToken.findOne({
         userId: userId,
         token: refreshToken
@@ -402,9 +413,7 @@ class AuthController {
         return;
       }
 
-      /* Verify access token, throws error if token is invalid */
       const accessTokenSecret: string = Config.get('ACCESS_TOKEN_SECRET');
-      const refreshTokenSecret: string = Config.get('REFRESH_TOKEN_SECRET');
       const accessToken = accessTokenHeader.split(' ')[1];
       try {
         /* Check validity of access token */
@@ -413,30 +422,19 @@ class AuthController {
         /* Go to next middleware function */
         next();
       } catch (error) {
-        /* Verify refresh token, throws error if token is invalid */
-        try {
-          /* Check validity of refresh token */
-          jwt.verify(refreshToken, refreshTokenSecret);
+        /* Update last used time for refresh token (login session) */
+        refreshTokenEntry.lastUsed = new Date(Date.now());
+        await refreshTokenEntry.save();
 
-          /* Update last used time for refresh token (login session) */
-          refreshTokenEntry.lastUsed = new Date(Date.now());
-          await refreshTokenEntry.save();
+        /* Attach a new access token to response header */
+        const accessTokenLifetime: string = Config.get('AUTH.ACCESS_TOKEN_LIFETIME');
+        const newAccessToken = jwt.sign({ sub: userId }, accessTokenSecret, {
+          expiresIn: accessTokenLifetime
+        });
+        res.setHeader(HEADERS.NEW_ACCESS_TOKEN, newAccessToken);
 
-          /* Attach a new access token to response header */
-          const accessTokenLifetime: string = Config.get('AUTH.ACCESS_TOKEN_LIFETIME');
-          const newAccessToken = jwt.sign({ sub: userId }, accessTokenSecret, {
-            expiresIn: accessTokenLifetime
-          });
-          res.setHeader(HEADERS.NEW_ACCESS_TOKEN, newAccessToken);
-
-          /* Go to next middleware function */
-          next();
-        } catch (error) {
-          res.status(401).json({
-            message: AUTH_RESPONSES._401_SESSION_EXPIRED
-          });
-          return;
-        }
+        /* Go to next middleware function */
+        next();
       }
     } catch (error) {
       logger.error('Server error occured during JWT token verification or refresh: ' + error);
