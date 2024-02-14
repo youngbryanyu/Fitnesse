@@ -230,22 +230,23 @@ class AuthController {
   }
 
   /**
-   * Attempts to log out a user by deleting their refresh token from the DB.
+   * Attempts to log out a user by deleting their refresh token from the DB. This endpoint must be authenticated by the {@link
+   * AuthController.verifyAndRefreshSensitive} middleware function.
    * @param req incoming request from client.
    * @param res response to return to client.
    * @returns Returns a promise indicating completion of the async function.
    */
   static async logout(req: Request, res: Response): Promise<void> {
     try {
-      /* Get userId and refresh token from headers */
+      /* Get refresh token from headers */
       const refreshTokenHeader = req.headers[HEADERS.REFRESH_TOKEN] as string;
-      const userId = req.headers[HEADERS.USER_ID];
 
-      /* Try to delete login session from DB */
-      if (refreshTokenHeader) {
-        const refreshToken = refreshTokenHeader.split(' ')[1];
-        await RefreshToken.findOneAndDelete({ userId: userId, token: refreshToken });
-      }
+      /* Delete user's refresh token from DB */
+      const refreshToken = refreshTokenHeader.split(' ')[1];
+      const refreshTokenSecret: string = Config.get('REFRESH_TOKEN_SECRET');
+      const payload = jwt.verify(refreshToken, refreshTokenSecret) as jwt.JwtPayload;
+      const userId = payload.sub;
+      await RefreshToken.findOneAndDelete({ userId: userId, token: refreshToken });
 
       /* Respond to client */
       logger.info(`Successfully logged out user with id=${userId}`);

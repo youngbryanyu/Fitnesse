@@ -852,12 +852,12 @@ describe('Auth Controller Tests', () => {
       /* Create mock request */
       request = createRequest({
         headers: {
-          'x-refresh-token': 'test_refresh_token',
-          'x-user-id': 'test_refresh_token'
+          'x-refresh-token': 'test_refresh_token'
         }
       });
 
       /* Set up mocks and spies */
+      jwt.verify = jest.fn().mockImplementationOnce(() => () => ({ verified: 'true' }));
       jest.spyOn(RefreshToken, 'findOneAndDelete').mockResolvedValueOnce(undefined);
 
       /* Call function */
@@ -869,36 +869,16 @@ describe('Auth Controller Tests', () => {
       expect(RefreshToken.findOneAndDelete).toHaveBeenCalled();
     });
 
-    it('should work without fail even if the refresh token header is undefined', async () => {
-      /* Create mock request */
-      request = createRequest({
-        headers: {
-          'x-user-id': 'test_refresh_token'
-        }
-      });
-
-      /* Set up mocks and spies */
-      jest.spyOn(RefreshToken, 'findOneAndDelete').mockResolvedValueOnce(undefined);
-
-      /* Call function */
-      await AuthController.logout(request, response);
-
-      /* Test values against expected */
-      expect(response.statusCode).toBe(200);
-      expect(response._getJSONData().message).toBe(AUTH_RESPONSES._200_LOGOUT_SUCCESSFUL);
-      expect(RefreshToken.findOneAndDelete).not.toHaveBeenCalled();
-    });
-
     it('should fail if there is a server error', async () => {
       /* Create mock request */
       request = createRequest({
         headers: {
-          'x-refresh-token': 'test_refresh_token',
-          'x-user-id': 'test_refresh_token'
+          'x-refresh-token': 'test_refresh_token'
         }
       });
 
       /* Set up mocks and spies */
+      jwt.verify = jest.fn().mockImplementationOnce(() => () => ({ verified: 'true' }));
       jest.spyOn(RefreshToken, 'findOneAndDelete').mockImplementationOnce(() => {
         throw new Error('test');
       });

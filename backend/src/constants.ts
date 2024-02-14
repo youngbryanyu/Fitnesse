@@ -40,6 +40,8 @@ export const AUTH_RESPONSES = {
     'You are not authenticated with a valid JWT access token.' /* When the JWT access token is invalid */,
   _401_SESSION_EXPIRED:
     'Session expired. Refresh token is invalid. Please log in again.' /* When the JWT refresh token is invalid (login session expired) */,
+  _401_TOKEN_SUB_MISMATCH:
+    "The owner of the access and refresh tokens don't match. The `sub` field in the payload must be the same userId." /* When the userId in the `sub` field of the access and refresh tokens don't match */,
   _409_EMAIL_TAKEN: 'The email is already taken.',
   _409_USERNAME_TAKEN: 'The username is already taken.',
   _422_INVALID_PASSWORD:
@@ -58,7 +60,7 @@ export const HEADERS = {
   NEW_ACCESS_TOKEN: 'x-new-access-token',
   ACCESS_TOKEN: 'authorization',
   REFRESH_TOKEN: 'x-refresh-token',
-  USER_ID: 'x-user-id'
+  USER_ID: 'x-user-id' // TODO: delete
 };
 
 // ---------------------------
