@@ -6,11 +6,9 @@ on:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
-  # Schedule pipeline to run monday midnight after sunday ends
   schedule:
-    - cron: 0 0 * * MON
-  # Enable manual runs of workflow
-  workflow_dispatch:
+    - cron: 0 0 * * MON   # Schedule pipeline to run monday midnight after sunday ends
+  workflow_dispatch:      # Enable manual runs of workflow
 
 # Workflow stages
 jobs:      
@@ -77,8 +75,8 @@ jobs:
   # Deploy Application to Development Environment
   deploy-dev:
     name: Deploy to Development Environment
-    needs: [lint, test, build]
-    if: github.event_name == 'schedule' || github.event_name == 'push'
+    needs: [lint, test, build]  # lint, test, and build must pass before deployment
+    if: github.event_name == 'schedule' || github.event_name == 'push' # only deploy on push and weekly CRON job
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
