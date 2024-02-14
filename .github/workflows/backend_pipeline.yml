@@ -79,7 +79,7 @@ jobs:
   # Deploy Application to Development Environment
   deploy-dev:
     name: Deploy to Development Environment
-    needs: build
+    needs: [lint, test, build]
     if: github.event_name == 'schedule' || github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
@@ -92,7 +92,7 @@ jobs:
         username: ${{ secrets.DOCKER_USERNAME_DEV }}
         password: ${{ secrets.DOCKER_PASSWORD_DEV }}
     - name: Build and Push Docker image
-      uses: docker/build-push-action@v2
+      uses: docker/build-push-action@v5
       with:
         context: ./backend
         file: ./backend/Dockerfile.dev

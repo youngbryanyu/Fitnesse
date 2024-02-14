@@ -1,0 +1,29 @@
+# Use node runtime 
+FROM node:20
+
+# Set the working directory
+WORKDIR /usr/src/app
+
+# Copy package.json and pnpm-lock.yaml to working dir
+COPY pnpm-lock.yaml package.json ./
+
+# Install dependencies
+RUN npm install -g pnpm && pnpm install
+
+# Bundle app's source code inside docker image
+COPY . .
+
+# Build application
+RUN pnpm run build
+
+# Expose port from container (does nothing since accessing through host)
+EXPOSE 8000
+
+# Give write permissions to log directory
+# RUN chown node:node logs
+
+# Switch to user 'node' (default non-root user in official Node images)
+# USER node
+
+# Define command to run app
+CMD ["node", "dist/index.js"]

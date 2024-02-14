@@ -22,7 +22,6 @@ dist
 coverage
 
 # ignore Docker files
-Dockerfile.*
 docker-compose.*.yml
 
 ############
