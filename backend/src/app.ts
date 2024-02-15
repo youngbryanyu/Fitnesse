@@ -2,6 +2,7 @@
 import express, { Express } from 'express';
 import mongoose from 'mongoose';
 import authRoute from './routes/authRoutes';
+import healthCheckRoute from './routes/healthCheckRoutes';
 import { API_URLS_V1 } from './constants';
 import logger from './logging/logger';
 import Config from 'simple-app-config';
@@ -67,6 +68,7 @@ class App {
    */
   private mountRoutes(): void {
     this.expressApp.use(API_URLS_V1.AUTH, authRoute);
+    this.expressApp.use(API_URLS_V1.HEALTH_CHECK, healthCheckRoute);
   }
 
   /**

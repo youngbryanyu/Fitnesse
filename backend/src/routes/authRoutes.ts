@@ -13,7 +13,7 @@ const rateLimitRegister = rateLimit({
   windowMs: Config.get('RATE_LIMITING.AUTH.REGISTER.WINDOW'),
   max: Config.get('RATE_LIMITING.AUTH.REGISTER.THRESHOLD'),
   handler: (req, res) => {
-    logger.info(`The register rate limit has been reached for IP ${req.socket.remoteAddress}`);
+    logger.info(`The register rate limit has been reached for IP ${req.ip}`);
     res.status(429).json({
       message: AUTH_RESPONSES._429_RATE_LIMIT_EXCEEDED
     });

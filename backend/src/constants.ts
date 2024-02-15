@@ -16,9 +16,10 @@ export const ENVIRONMENTS = {
 // -----------------
 
 /* API URLs version 1 */
+const API_URLS_V1_PREFIX = '/fitnesse/v1';
 export const API_URLS_V1 = {
-  PREFIX: '/fitness/v1' /* prefix for the API endpoints */,
-  AUTH: '/fitnesse/v1/auth'
+  AUTH: `${API_URLS_V1_PREFIX}/auth`,
+  HEALTH_CHECK: `${API_URLS_V1_PREFIX}/healthCheck`
 };
 
 // ------------------------------
@@ -49,6 +50,12 @@ export const AUTH_RESPONSES = {
     'User is locked out due to too many failed login attempts, please try again later.'
 };
 
+/* Response messages for auth endpoints */
+export const HEALTH_CHECK_RESPONSES = {
+  _200_SUCCESS: 'Health check successful',
+  _503_FAILURE: 'Health check failed'
+};
+
 // ----------------------------
 // CUSTOM HTTP RESPONSE HEADERS
 // ----------------------------
@@ -57,8 +64,7 @@ export const AUTH_RESPONSES = {
 export const HEADERS = {
   NEW_ACCESS_TOKEN: 'x-new-access-token',
   ACCESS_TOKEN: 'authorization',
-  REFRESH_TOKEN: 'x-refresh-token',
-  USER_ID: 'x-user-id' // TODO: delete
+  REFRESH_TOKEN: 'x-refresh-token'
 };
 
 // ---------------------------

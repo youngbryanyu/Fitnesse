@@ -22,6 +22,12 @@
         "THRESHOLD": 5,
         "WINDOW": 5000
       }
+    },
+    "HEALTH_CHECKS": {
+      "HEALTH_CHECK": {
+        "THRESHOLD": 5,
+        "WINDOW": 5000
+      }
     }
   },
   "AUTH": {
