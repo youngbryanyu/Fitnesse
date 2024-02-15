@@ -23,6 +23,10 @@ describe('Health Check Routes Tests', () => {
     jest.restoreAllMocks();
   });
 
+  afterAll(() => {
+    global.gc && global.gc()
+  })
+
   describe('GET /healthCheck', () => {
     it('should call HealthCheckController.checkHealth', async () => {
       /* Make the API call */

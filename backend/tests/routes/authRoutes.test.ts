@@ -32,6 +32,10 @@ describe('Auth Routes Tests', () => {
     jest.restoreAllMocks();
   });
 
+  afterAll(() => {
+    global.gc && global.gc()
+  })
+
   describe('POST /register', () => {
     it('should call AuthController.register', async () => {
       /* Make the API call */
