@@ -49,7 +49,7 @@ jobs:
       run: npm install -g pnpm
     - name: Install dependencies
       run: pnpm install
-    - name: Clear cache
+    - name: Clear jest cache
       run: pnpm jest --clearCache
     - name: Run unit tests with jest
       run: pnpm run test
