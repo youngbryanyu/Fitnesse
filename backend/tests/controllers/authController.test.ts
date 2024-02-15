@@ -1,15 +1,15 @@
 /* Unit tests for the auth routes */
+import Config from 'simple-app-config';
 import { NextFunction, Request, Response } from 'express';
+import { createRequest, createResponse, MockRequest, MockResponse } from 'node-mocks-http';
 import { User } from '../../src/models/user';
 import { FailedLoginUser } from '../../src/models/failedLoginUser';
 import { RefreshToken } from '../../src/models/refreshToken';
 import { LockedOutUser } from '../../src/models/lockedOutUser';
 import AuthController from '../../src/controllers/authController';
-import { createRequest, createResponse, MockRequest, MockResponse } from 'node-mocks-http';
 import { API_URLS_V1, AUTH_RESPONSES, GENERIC_RESPONSES, HEADERS } from '../../src/constants';
 import CryptoJS from 'crypto-js';
 import mongoose from 'mongoose';
-import Config from 'simple-app-config';
 import jwt from 'jsonwebtoken';
 import { TestController } from '../testController';
 
