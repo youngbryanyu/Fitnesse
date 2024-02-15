@@ -19,5 +19,6 @@ module.exports = {
     '!src/config/**',     /* exclude config and constants */
     '!src/logging/**'     /* exclude logging setup */
   ],
-  setupFilesAfterEnv: ['./jest.setup.js'] /* Global set up file */
+  setupFilesAfterEnv: ['./jest.setup.js'] /* Global set up file */,
+  workerIdleMemoryLimit: '512mb'
 };
