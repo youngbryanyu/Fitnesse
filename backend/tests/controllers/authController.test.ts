@@ -36,10 +36,6 @@ describe('Auth Controller Tests', () => {
     jest.restoreAllMocks();
   });
 
-  afterAll(() => {
-    global.gc && global.gc();
-  });
-
   describe('register', () => {
     it('should create a new user successfully with valid input', async () => {
       /* Set up mocks and spies */

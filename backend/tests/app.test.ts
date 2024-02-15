@@ -25,10 +25,6 @@ describe('App Tests', () => {
     appInstance.closeServer(PORT);
   });
 
-  afterAll(() => {
-    global.gc && global.gc();
-  });
-
   describe('connectToDatabase', () => {
     it('should successfully connect to MongoDB', async () => {
       /* Set up mocks and spies */

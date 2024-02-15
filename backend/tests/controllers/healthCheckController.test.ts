@@ -25,7 +25,6 @@ describe('Health Check Controller Tests', () => {
   afterAll(async () => {
     await mongoose.disconnect();
     await mongoServer.stop();
-    global.gc && global.gc();
   });
 
   describe('checkHealth', () => {
