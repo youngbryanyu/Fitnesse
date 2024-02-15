@@ -33,8 +33,8 @@ describe('Auth Routes Tests', () => {
   });
 
   afterAll(() => {
-    global.gc && global.gc()
-  })
+    global.gc && global.gc();
+  });
 
   describe('POST /register', () => {
     it('should call AuthController.register', async () => {

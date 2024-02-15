@@ -26,8 +26,8 @@ describe('App Tests', () => {
   });
 
   afterAll(() => {
-    global.gc && global.gc()
-  })
+    global.gc && global.gc();
+  });
 
   describe('connectToDatabase', () => {
     it('should successfully connect to MongoDB', async () => {

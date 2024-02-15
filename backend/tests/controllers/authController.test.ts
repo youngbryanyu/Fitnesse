@@ -37,8 +37,8 @@ describe('Auth Controller Tests', () => {
   });
 
   afterAll(() => {
-    global.gc && global.gc()
-  })
+    global.gc && global.gc();
+  });
 
   describe('register', () => {
     it('should create a new user successfully with valid input', async () => {

@@ -24,8 +24,8 @@ describe('Health Check Routes Tests', () => {
   });
 
   afterAll(() => {
-    global.gc && global.gc()
-  })
+    global.gc && global.gc();
+  });
 
   describe('GET /healthCheck', () => {
     it('should call HealthCheckController.checkHealth', async () => {
