@@ -92,7 +92,7 @@ describe('Auth Routes Tests', () => {
     it('should call AuthController.logout', async () => {
       /* Make the API call */
       const expressInstance = appInstance.getExpressApp();
-      await request(expressInstance).delete(`${API_URLS_V1.AUTH}/logout`).send({});
+      await request(expressInstance).post(`${API_URLS_V1.AUTH}/logout`).send({});
 
       /* Test against expected */
       expect(AuthController.logout).toHaveBeenCalled();
@@ -103,11 +103,11 @@ describe('Auth Routes Tests', () => {
       const expressInstance = appInstance.getExpressApp();
       const threshold: number = Config.get('RATE_LIMITING.AUTH.LOGOUT.THRESHOLD');
       for (let i = 0; i < threshold; i++) {
-        await request(expressInstance).delete(`${API_URLS_V1.AUTH}/logout`).send({});
+        await request(expressInstance).post(`${API_URLS_V1.AUTH}/logout`).send({});
       }
 
       /* Call API */
-      const response = await request(expressInstance).delete(`${API_URLS_V1.AUTH}/logout`).send({});
+      const response = await request(expressInstance).post(`${API_URLS_V1.AUTH}/logout`).send({});
 
       /* Test against expected */
       expect(AuthController.logout).toHaveBeenCalled();
