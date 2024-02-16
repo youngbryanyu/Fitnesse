@@ -1,8 +1,8 @@
 /* Application setup */
 import express, { Express } from 'express';
 import mongoose from 'mongoose';
-import authRoute from './routes/authRoutes';
-import healthCheckRoute from './routes/healthCheckRoutes';
+import authRoute from './auth/routes/authRoutes';
+import healthCheckRoute from './healthCheck/routes/healthCheckRoutes';
 import { API_URLS_V1 } from './constants';
 import logger from './logging/logger';
 import Config from 'simple-app-config';

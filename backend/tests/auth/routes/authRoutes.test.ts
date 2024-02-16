@@ -1,12 +1,12 @@
 /* Unit tests for the auth routes */
 import request from 'supertest';
-import AuthController from '../../src/controllers/authController';
-import { API_URLS_V1, AUTH_RESPONSES } from '../../src/constants';
-import App from '../../src/app';
+import AuthController from '../../../src/auth/controllers/authController';
+import { API_URLS_V1, AUTH_RESPONSES } from '../../../src/constants';
+import App from '../../../src/app';
 import Config from 'simple-app-config';
 
 /* Mock the controller functions */
-jest.mock('../../src/controllers/authController', () => ({
+jest.mock('../../../src/auth/controllers/authController', () => ({
   register: jest.fn().mockImplementation((req, res) => {
     res.sendStatus(201);
   }),

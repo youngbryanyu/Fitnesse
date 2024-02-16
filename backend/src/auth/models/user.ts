@@ -1,6 +1,6 @@
 /* Schema definition for a user */
 import mongoose, { Schema } from 'mongoose';
-import { BaseDocument } from './baseDocument';
+import { BaseDocument } from '../../baseDocument';
 
 /**
  * Interface for user document

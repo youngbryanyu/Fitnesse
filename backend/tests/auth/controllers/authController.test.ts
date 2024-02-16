@@ -2,16 +2,16 @@
 import Config from 'simple-app-config';
 import { NextFunction, Request, Response } from 'express';
 import { createRequest, createResponse, MockRequest, MockResponse } from 'node-mocks-http';
-import { User } from '../../src/models/user';
-import { FailedLoginUser } from '../../src/models/failedLoginUser';
-import { RefreshToken } from '../../src/models/refreshToken';
-import { LockedOutUser } from '../../src/models/lockedOutUser';
-import AuthController from '../../src/controllers/authController';
-import { API_URLS_V1, AUTH_RESPONSES, GENERIC_RESPONSES, HEADERS } from '../../src/constants';
+import { User } from '../../../src/auth/models/user';
+import { FailedLoginUser } from '../../../src/auth/models/failedLoginUser';
+import { RefreshToken } from '../../../src/auth/models/refreshToken';
+import { LockedOutUser } from '../../../src/auth/models/lockedOutUser';
+import AuthController from '../../../src/auth/controllers/authController';
+import { API_URLS_V1, AUTH_RESPONSES, GENERIC_RESPONSES, HEADERS } from '../../../src/constants';
 import CryptoJS from 'crypto-js';
 import mongoose from 'mongoose';
 import jwt from 'jsonwebtoken';
-import { TestController } from '../testController';
+import { TestController } from '../../testController';
 
 /* Mock user used across tests */
 const mockUser = {

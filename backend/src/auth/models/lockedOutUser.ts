@@ -1,6 +1,6 @@
 /* Schema definition for a users that have recently been locked out due to too many failed login attempts */
 import mongoose, { Schema } from 'mongoose';
-import { BaseDocument } from './baseDocument';
+import { BaseDocument } from '../../baseDocument';
 import Config from 'simple-app-config';
 
 /**

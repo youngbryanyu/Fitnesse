@@ -1,6 +1,6 @@
 /* Schema definition for refresh tokens (login session tokens) */
 import mongoose, { Schema } from 'mongoose';
-import { BaseDocument } from './baseDocument';
+import { BaseDocument } from '../../baseDocument';
 import Config from 'simple-app-config';
 
 /**

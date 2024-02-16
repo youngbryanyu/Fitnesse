@@ -1,8 +1,8 @@
 /* Routes for application health checks */
 import express from 'express';
 import rateLimit from 'express-rate-limit';
-import { AUTH_RESPONSES } from '../constants';
-import logger from '../logging/logger';
+import { AUTH_RESPONSES } from '../../constants';
+import logger from '../../logging/logger';
 import Config from 'simple-app-config';
 import HealthCheckController from '../controllers/healthCheckController';
 
