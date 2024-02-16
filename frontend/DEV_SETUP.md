@@ -49,6 +49,9 @@ $ which flutter dart
 If this output is incorrect, please update the path to use the commands from `/path-to-flutter-sdk` before commands from `/usr/local/bin` (in this case).
 
 ### MacOS
+1. Install [homebrew](https://brew.sh/) as your package manager if you haven't yet. 
+2. Run `brew install flutter`.
+3. See [this](https://docs.flutter.dev/get-started/install/macos/mobile-ios) link for how to set up and develop with flutter for developing iOS on macOS.
 
 ## Android Studio Setup
 Android Studio is necessary on Windows and Linux for building and testing Flutter mobile code. 
@@ -96,3 +99,4 @@ Doctor summary (to see all details, run flutter doctor -v):
 ```
 
 ## MacOS
+N/A
