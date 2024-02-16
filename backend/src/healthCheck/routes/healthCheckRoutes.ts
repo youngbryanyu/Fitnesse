@@ -1,10 +1,10 @@
 /* Routes for application health checks */
 import express from 'express';
 import rateLimit from 'express-rate-limit';
-import { AUTH_RESPONSES } from '../../constants';
 import logger from '../../logging/logger';
 import Config from 'simple-app-config';
 import HealthCheckController from '../controllers/healthCheckController';
+import { GENERIC_RESPONSES } from '../../constants';
 
 const router = express.Router();
 
@@ -15,7 +15,7 @@ const rateLimitHealthCheck = rateLimit({
   handler: (req, res) => {
     logger.info(`The register rate limit has been reached for IP ${req.ip}`);
     res.status(429).json({
-      message: AUTH_RESPONSES._429_RATE_LIMIT_EXCEEDED
+      message: GENERIC_RESPONSES[429]
     });
   }
 });

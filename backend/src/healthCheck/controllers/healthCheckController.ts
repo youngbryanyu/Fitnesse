@@ -2,7 +2,7 @@
 import { Request, Response } from 'express';
 import mongoose, { STATES } from 'mongoose';
 import logger from '../../logging/logger';
-import { HEALTH_CHECK_RESPONSES } from '../../constants';
+import { HEALTH_CHECK_RESPONSES } from '../constants';
 
 /**
  * Business logic for application health checks

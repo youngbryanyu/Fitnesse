@@ -1,7 +1,8 @@
 /* Business logic for authentication */
 import { NextFunction, Request, Response } from 'express';
 import CryptoJS from 'crypto-js';
-import { HEADERS, AUTH_RESPONSES, PASSWORD_RULES, GENERIC_RESPONSES } from '../../constants';
+import { GENERIC_RESPONSES } from '../../constants';
+import { AUTH_RESPONSES, HEADERS, PASSWORD_RULES } from '../../../src/auth/constants';
 import logger from '../../logging/logger';
 import jwt from 'jsonwebtoken';
 import Config from 'simple-app-config';

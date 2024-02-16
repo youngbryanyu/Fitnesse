@@ -1,6 +1,6 @@
 /* Unit tests for the health check routes */
 import request from 'supertest';
-import { API_URLS_V1, AUTH_RESPONSES } from '../../../src/constants';
+import { API_URLS_V1, GENERIC_RESPONSES } from '../../../src/constants';
 import App from '../../../src/app';
 import Config from 'simple-app-config';
 import HealthCheckController from '../../../src/healthCheck/controllers/healthCheckController';
@@ -49,7 +49,7 @@ describe('Health Check Routes Tests', () => {
       /* Test against expected */
       expect(HealthCheckController.checkHealth).toHaveBeenCalled();
       expect(response.statusCode).toBe(429);
-      expect(response.body.message).toBe(AUTH_RESPONSES._429_RATE_LIMIT_EXCEEDED);
+      expect(response.body.message).toBe(GENERIC_RESPONSES[429]);
     });
   });
 });
