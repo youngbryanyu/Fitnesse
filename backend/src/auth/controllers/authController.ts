@@ -2,7 +2,7 @@
 import { NextFunction, Request, Response } from 'express';
 import CryptoJS from 'crypto-js';
 import { GENERIC_RESPONSES } from '../../constants';
-import { AUTH_RESPONSES, HEADERS, PASSWORD_RULES } from '../../../src/auth/constants';
+import { AUTH_RESPONSES, HEADERS, PASSWORD_RULES } from '../constants';
 import logger from '../../logging/logger';
 import jwt from 'jsonwebtoken';
 import Config from 'simple-app-config';
