@@ -22,7 +22,8 @@ export const AUTH_RESPONSES = {
 export const HEADERS = {
   NEW_ACCESS_TOKEN: 'x-new-access-token',
   ACCESS_TOKEN: 'authorization',
-  REFRESH_TOKEN: 'x-refresh-token'
+  REFRESH_TOKEN: 'x-refresh-token',
+  REFRESH_TOKEN_EXPIRATION: 'x-refresh-token-expiration'
 };
 
 /* Password creation rules */

@@ -187,10 +187,12 @@ class AuthController {
         userId: user._id
       });
 
-      /* Sign access token and refresh tokens */
+      /* Sign access token and refresh tokens, and send auto logout sync time to frontend (the refresh token TTL time) */
       const accessTokenSecret: string = Config.get('ACCESS_TOKEN_SECRET');
       const refreshTokenSecret: string = Config.get('REFRESH_TOKEN_SECRET');
       const accessTokenLifetime: string = Config.get('AUTH.ACCESS_TOKEN_LIFETIME');
+      const refreshTokenTTLSeconds: number = Config.get('AUTH.IDLE_TIMEOUT');
+      const refreshTokenExpiration = new Date(Date.now() + refreshTokenTTLSeconds * 1000);
       const accessToken = jwt.sign({ sub: user._id }, accessTokenSecret, {
         expiresIn: accessTokenLifetime
       });
@@ -218,7 +220,8 @@ class AuthController {
         message: AUTH_RESPONSES._200_LOGIN_SUCCESSFUL,
         ...info,
         accessToken: accessToken,
-        refreshToken: refreshToken
+        refreshToken: refreshToken,
+        refreshTokenExpiration: refreshTokenExpiration.toISOString() // ISO 8601 for UTC and standardization
       });
     } catch (error) {
       logger.error('Server error occured during login: ' + error);
@@ -246,6 +249,10 @@ class AuthController {
       const payload = jwt.verify(refreshToken, refreshTokenSecret) as jwt.JwtPayload;
       const userId = payload.sub;
       await RefreshToken.findOneAndDelete({ userId: userId, token: refreshToken });
+
+      /* Renove headers set when access token is successfully refreshed */
+      res.removeHeader(HEADERS.NEW_ACCESS_TOKEN);
+      res.removeHeader(HEADERS.REFRESH_TOKEN_EXPIRATION);
 
       /* Respond to client */
       logger.info(`Successfully logged out user with id=${userId}`);
@@ -329,7 +336,10 @@ class AuthController {
           return;
         }
 
-        /* Update last used time for refresh token (login session) */
+        /* Update last used time for refresh token, and send the new expiration time to client for auto-logout sync */
+        const refreshTokenTTLSeconds: number = Config.get('AUTH.IDLE_TIMEOUT');
+        const refreshTokenExpiration = new Date(Date.now() + refreshTokenTTLSeconds * 1000);
+        res.setHeader(HEADERS.REFRESH_TOKEN_EXPIRATION, refreshTokenExpiration.toISOString()); // ISO 8601 for UTC standardization
         refreshTokenEntry.lastUsed = new Date(Date.now());
         await refreshTokenEntry.save();
 
@@ -421,7 +431,10 @@ class AuthController {
         /* Go to next middleware function */
         next();
       } catch (error) {
-        /* Update last used time for refresh token (login session) */
+        /* Update last used time for refresh token, and send the new expiration time to client for auto-logout sync */
+        const refreshTokenTTLSeconds: number = Config.get('AUTH.IDLE_TIMEOUT');
+        const refreshTokenExpiration = new Date(Date.now() + refreshTokenTTLSeconds * 1000);
+        res.setHeader(HEADERS.REFRESH_TOKEN_EXPIRATION, refreshTokenExpiration.toISOString()); // ISO 8601 for UTC standardization
         refreshTokenEntry.lastUsed = new Date(Date.now());
         await refreshTokenEntry.save();
 

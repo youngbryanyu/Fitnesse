@@ -204,6 +204,9 @@ describe('Auth Controller Tests', () => {
       /* Test values against expected */
       expect(response.statusCode).toBe(200);
       expect(response._getJSONData().message).toBe(AUTH_RESPONSES._200_LOGIN_SUCCESSFUL);
+      expect(response._getJSONData().accessToken).not.toBeUndefined();
+      expect(response._getJSONData().refreshToken).not.toBeUndefined();
+      expect(response._getJSONData().refreshTokenExpiration).not.toBeUndefined();
     });
 
     it("should fail when the username or email doesn't belong to an account", async () => {
@@ -227,6 +230,9 @@ describe('Auth Controller Tests', () => {
       /* Test values against expected */
       expect(response.statusCode).toBe(401);
       expect(response._getJSONData().message).toBe(AUTH_RESPONSES._401_INVALID_CREDENTIALS);
+      expect(response._getJSONData().accessToken).toBeUndefined();
+      expect(response._getJSONData().refreshToken).toBeUndefined();
+      expect(response._getJSONData().refreshTokenExpiration).toBeUndefined();
     });
 
     it('should fail when the user is locked out due to too many failed attempts.', async () => {
@@ -251,6 +257,9 @@ describe('Auth Controller Tests', () => {
       /* Test values against expected */
       expect(response.statusCode).toBe(429);
       expect(response._getJSONData().message).toBe(AUTH_RESPONSES._429_LOCKED_OUT);
+      expect(response._getJSONData().accessToken).toBeUndefined();
+      expect(response._getJSONData().refreshToken).toBeUndefined();
+      expect(response._getJSONData().refreshTokenExpiration).toBeUndefined();
     });
 
     it("should fail and create an entry in the FailedLoginUser collection if the user hasn't failed any recent login attempts, and the password is invalid", async () => {
@@ -284,6 +293,9 @@ describe('Auth Controller Tests', () => {
       expect(response.statusCode).toBe(401);
       expect(response._getJSONData().message).toBe(AUTH_RESPONSES._401_INVALID_CREDENTIALS);
       expect(FailedLoginUser.prototype.save).toHaveBeenCalled();
+      expect(response._getJSONData().accessToken).toBeUndefined();
+      expect(response._getJSONData().refreshToken).toBeUndefined();
+      expect(response._getJSONData().refreshTokenExpiration).toBeUndefined();
     });
 
     it('should fail and increment an entry in the FailedLoginUser collection if the user has failed recent login attempts, and the password is invalid', async () => {
@@ -335,6 +347,9 @@ describe('Auth Controller Tests', () => {
       /* Test values against expected */
       expect(response.statusCode).toBe(401);
       expect(response._getJSONData().message).toBe(AUTH_RESPONSES._401_INVALID_CREDENTIALS);
+      expect(response._getJSONData().accessToken).toBeUndefined();
+      expect(response._getJSONData().refreshToken).toBeUndefined();
+      expect(response._getJSONData().refreshTokenExpiration).toBeUndefined();
     });
 
     it("should fail and add an entry in the LockedOutUser collection if the user's recently failed attempts reached the limit", async () => {
@@ -386,6 +401,9 @@ describe('Auth Controller Tests', () => {
       expect(response.statusCode).toBe(401);
       expect(response._getJSONData().message).toBe(AUTH_RESPONSES._401_INVALID_CREDENTIALS);
       expect(LockedOutUser.prototype.save).toHaveBeenCalled();
+      expect(response._getJSONData().accessToken).toBeUndefined();
+      expect(response._getJSONData().refreshToken).toBeUndefined();
+      expect(response._getJSONData().refreshTokenExpiration).toBeUndefined();
     });
 
     it('should fail when there is a server error.', async () => {
@@ -412,6 +430,9 @@ describe('Auth Controller Tests', () => {
       /* Test values against expected */
       expect(response.statusCode).toBe(500);
       expect(response._getJSONData().message).toBe(GENERIC_RESPONSES[500]);
+      expect(response._getJSONData().accessToken).toBeUndefined();
+      expect(response._getJSONData().refreshToken).toBeUndefined();
+      expect(response._getJSONData().refreshTokenExpiration).toBeUndefined();
     });
   });
 
@@ -436,6 +457,8 @@ describe('Auth Controller Tests', () => {
       expect(response.statusCode).toBe(401);
       expect(response._getJSONData().message).toBe(AUTH_RESPONSES._401_NOT_AUTHENTICATED);
       expect(spy).not.toHaveBeenCalled();
+      expect(response._getHeaders()[HEADERS.NEW_ACCESS_TOKEN]).toBeUndefined();
+      expect(response._getHeaders()[HEADERS.REFRESH_TOKEN_EXPIRATION]).toBeUndefined();
     });
 
     it('should go to the next function if the access token is valid', async () => {
@@ -460,6 +483,8 @@ describe('Auth Controller Tests', () => {
       /* Test values against expected */
       expect(response.statusCode).toBe(200);
       expect(testFunctionSpy).toHaveBeenCalled();
+      expect(response._getHeaders()[HEADERS.NEW_ACCESS_TOKEN]).toBeUndefined();
+      expect(response._getHeaders()[HEADERS.REFRESH_TOKEN_EXPIRATION]).toBeUndefined();
     });
 
     it('should fail if the refresh token header is undefined when refreshing', async () => {
@@ -487,6 +512,8 @@ describe('Auth Controller Tests', () => {
       expect(response.statusCode).toBe(401);
       expect(response._getJSONData().message).toBe(AUTH_RESPONSES._401_SESSION_EXPIRED);
       expect(testFunctionSpy).not.toHaveBeenCalled();
+      expect(response._getHeaders()[HEADERS.NEW_ACCESS_TOKEN]).toBeUndefined();
+      expect(response._getHeaders()[HEADERS.REFRESH_TOKEN_EXPIRATION]).toBeUndefined();
     });
 
     it('should fail if the refresh token is not in the database when refreshing (login session expired)', async () => {
@@ -521,6 +548,8 @@ describe('Auth Controller Tests', () => {
       expect(response.statusCode).toBe(401);
       expect(response._getJSONData().message).toBe(AUTH_RESPONSES._401_SESSION_EXPIRED);
       expect(testFunctionSpy).not.toHaveBeenCalled();
+      expect(response._getHeaders()[HEADERS.NEW_ACCESS_TOKEN]).toBeUndefined();
+      expect(response._getHeaders()[HEADERS.REFRESH_TOKEN_EXPIRATION]).toBeUndefined();
     });
 
     it('should fail if the refresh token is invalid when refreshing (login session expired)', async () => {
@@ -557,6 +586,8 @@ describe('Auth Controller Tests', () => {
       expect(response.statusCode).toBe(401);
       expect(response._getJSONData().message).toBe(AUTH_RESPONSES._401_SESSION_EXPIRED);
       expect(testFunctionSpy).not.toHaveBeenCalled();
+      expect(response._getHeaders()[HEADERS.NEW_ACCESS_TOKEN]).toBeUndefined();
+      expect(response._getHeaders()[HEADERS.REFRESH_TOKEN_EXPIRATION]).toBeUndefined();
     });
 
     it('should provide a new access token and call the next function when refresh is successful', async () => {
@@ -599,6 +630,7 @@ describe('Auth Controller Tests', () => {
       expect(testFunctionSpy).toHaveBeenCalled();
       expect(response.getHeaders()[HEADERS.NEW_ACCESS_TOKEN]).toBe(newAccessToken);
       expect(RefreshToken.prototype.save).toHaveBeenCalled();
+      expect(response._getHeaders()[HEADERS.REFRESH_TOKEN_EXPIRATION]).not.toBeUndefined();
     });
 
     it('should fail if there is a server-side error', async () => {
@@ -611,7 +643,13 @@ describe('Auth Controller Tests', () => {
       });
 
       /* Set up mocks and spies */
-      Config.get = jest.fn().mockImplementationOnce(() => {
+      jwt.verify = jest
+        .fn()
+        .mockImplementationOnce(() => {
+          throw new Error();
+        })
+        .mockImplementationOnce(() => () => ({ verified: 'true' }));
+      RefreshToken.findOne = jest.fn().mockImplementationOnce(() => {
         throw new Error();
       });
 
@@ -625,6 +663,8 @@ describe('Auth Controller Tests', () => {
       /* Test values against expected */
       expect(response.statusCode).toBe(500);
       expect(response._getJSONData().message).toBe(GENERIC_RESPONSES[500]);
+      expect(response._getHeaders()[HEADERS.NEW_ACCESS_TOKEN]).toBeUndefined();
+      expect(response._getHeaders()[HEADERS.REFRESH_TOKEN_EXPIRATION]).toBeUndefined();
     });
   });
 
@@ -649,6 +689,8 @@ describe('Auth Controller Tests', () => {
       expect(response.statusCode).toBe(401);
       expect(response._getJSONData().message).toBe(AUTH_RESPONSES._401_SESSION_EXPIRED);
       expect(spy).not.toHaveBeenCalled();
+      expect(response._getHeaders()[HEADERS.NEW_ACCESS_TOKEN]).toBeUndefined();
+      expect(response._getHeaders()[HEADERS.REFRESH_TOKEN_EXPIRATION]).toBeUndefined();
     });
 
     it('should fail if the refresh token is not in the database (login session expired)', async () => {
@@ -677,6 +719,8 @@ describe('Auth Controller Tests', () => {
       expect(response.statusCode).toBe(401);
       expect(response._getJSONData().message).toBe(AUTH_RESPONSES._401_SESSION_EXPIRED);
       expect(spy).not.toHaveBeenCalled();
+      expect(response._getHeaders()[HEADERS.NEW_ACCESS_TOKEN]).toBeUndefined();
+      expect(response._getHeaders()[HEADERS.REFRESH_TOKEN_EXPIRATION]).toBeUndefined();
     });
 
     it('should fail if the access token is undefined', async () => {
@@ -706,6 +750,8 @@ describe('Auth Controller Tests', () => {
       expect(response.statusCode).toBe(401);
       expect(response._getJSONData().message).toBe(AUTH_RESPONSES._401_NOT_AUTHENTICATED);
       expect(spy).not.toHaveBeenCalled();
+      expect(response._getHeaders()[HEADERS.NEW_ACCESS_TOKEN]).toBeUndefined();
+      expect(response._getHeaders()[HEADERS.REFRESH_TOKEN_EXPIRATION]).toBeUndefined();
     });
 
     it('should go to the next function if the access token is valid', async () => {
@@ -735,6 +781,8 @@ describe('Auth Controller Tests', () => {
       /* Test values against expected */
       expect(response.statusCode).toBe(200);
       expect(testFunctionSpy).toHaveBeenCalled();
+      expect(response._getHeaders()[HEADERS.NEW_ACCESS_TOKEN]).toBeUndefined();
+      expect(response._getHeaders()[HEADERS.REFRESH_TOKEN_EXPIRATION]).toBeUndefined();
     });
 
     it('should fail if there is a server-side error', async () => {
@@ -762,6 +810,8 @@ describe('Auth Controller Tests', () => {
       /* Test values against expected */
       expect(response.statusCode).toBe(500);
       expect(response._getJSONData().message).toBe(GENERIC_RESPONSES[500]);
+      expect(response._getHeaders()[HEADERS.NEW_ACCESS_TOKEN]).toBeUndefined();
+      expect(response._getHeaders()[HEADERS.REFRESH_TOKEN_EXPIRATION]).toBeUndefined();
     });
 
     it('should attach a new refresh token to the response header if the refresh token is valid but access token is invalid, then call the next function', async () => {
@@ -805,6 +855,7 @@ describe('Auth Controller Tests', () => {
       expect(testFunctionSpy).toHaveBeenCalled();
       expect(response.getHeaders()[HEADERS.NEW_ACCESS_TOKEN]).toBe(newAccessToken);
       expect(RefreshToken.prototype.save).toHaveBeenCalled();
+      expect(response._getHeaders()[HEADERS.REFRESH_TOKEN_EXPIRATION]).not.toBeUndefined();
     });
 
     it('should fail if the refresh token is invalid', async () => {
@@ -850,6 +901,8 @@ describe('Auth Controller Tests', () => {
       expect(response.statusCode).toBe(401);
       expect(response._getJSONData().message).toBe(AUTH_RESPONSES._401_SESSION_EXPIRED);
       expect(testFunctionSpy).not.toHaveBeenCalled();
+      expect(response._getHeaders()[HEADERS.NEW_ACCESS_TOKEN]).toBeUndefined();
+      expect(response._getHeaders()[HEADERS.REFRESH_TOKEN_EXPIRATION]).toBeUndefined();
     });
   });
 
@@ -873,6 +926,8 @@ describe('Auth Controller Tests', () => {
       expect(response.statusCode).toBe(200);
       expect(response._getJSONData().message).toBe(AUTH_RESPONSES._200_LOGOUT_SUCCESSFUL);
       expect(RefreshToken.findOneAndDelete).toHaveBeenCalled();
+      expect(response._getHeaders()[HEADERS.NEW_ACCESS_TOKEN]).toBeUndefined();
+      expect(response._getHeaders()[HEADERS.REFRESH_TOKEN_EXPIRATION]).toBeUndefined();
     });
 
     it('should fail if there is a server error', async () => {
@@ -895,6 +950,8 @@ describe('Auth Controller Tests', () => {
       /* Test values against expected */
       expect(response.statusCode).toBe(500);
       expect(response._getJSONData().message).toBe(GENERIC_RESPONSES[500]);
+      expect(response._getHeaders()[HEADERS.NEW_ACCESS_TOKEN]).toBeUndefined();
+      expect(response._getHeaders()[HEADERS.REFRESH_TOKEN_EXPIRATION]).toBeUndefined();
     });
   });
 });
