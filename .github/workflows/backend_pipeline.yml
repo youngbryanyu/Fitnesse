@@ -2,10 +2,15 @@ name: Backend Pipeline
 
 # Workflow triggers
 on:
+
   push:
     branches: [ "main" ]
+    paths:
+      - 'backend/**'
   pull_request:
     branches: [ "main" ]
+    paths:
+      - 'backend/**'
   schedule:
     - cron: 0 0 * * MON   # Schedule pipeline to run monday midnight after sunday ends
   workflow_dispatch:      # Enable manual runs of workflow
