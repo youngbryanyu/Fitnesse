@@ -57,6 +57,9 @@ If this output is incorrect, please update the path to use the commands from `/p
 1. Run `open -a Simulator` to open the device simulator.
 2. Navigat to the root of the `/frontend` directory and run `flutter run` to connect to the simulator and run the application.
 
+#### Running unit tests
+Run `flutter test` to run the unit tests.
+
 ## Android Studio Setup
 Android Studio is necessary on Windows and Linux for building and testing Flutter mobile code. 
 
