@@ -46,9 +46,7 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
       - name: Run tests
-        run: |
-          flutter test \
-          echo "no tests yet"
+        run: flutter test
 
   build:
     name: Build
