@@ -1,5 +1,6 @@
 # OnTrack - Exercise and Macro Tracker
 ![Backend Pipeline](https://github.com/youngbryanyu/Fitnesse/actions/workflows/backend_pipeline.yml/badge.svg)
+![Frontend Pipeline](https://github.com/youngbryanyu/Fitnesse/actions/workflows/frontend_pipeline.yml/badge.svg)
 
 Fitnesse is an mobile app that provides a centralized fitness and nutrition platform for users to track both their food and workouts.
 
