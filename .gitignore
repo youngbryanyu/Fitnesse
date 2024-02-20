@@ -1,2 +1,6 @@
 # ignore .DS_Store
 .DS_Store
+
+# ------------------------------------------------------
+# See each directory for its respective git ignore files
+# ------------------------------------------------------
