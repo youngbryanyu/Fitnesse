@@ -1,0 +1,18 @@
+# ignore /node_modules folder
+node_modules
+
+# ignore .env file with environmental variables, but keep testing one
+.env**
+!.env.testing 
+
+# ignore logs
+logs
+
+# ignore /dst folder with compiled JavaScript from TypeScript
+dist
+
+# ignore jest code coverage folder
+coverage
+
+# ignore Docker files
+docker-compose.*.yml
