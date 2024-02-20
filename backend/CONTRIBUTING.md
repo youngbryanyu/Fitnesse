@@ -2,7 +2,7 @@
 
 ## How to make changes
 1. [Fork the repo](https://help.github.com/articles/fork-a-repo/) or clone it if you're a contributor.
-2. [Install pnpm](https://pnpm.io/installation) as the package manager. We recommend you install it globally using npm.
+2. See [DEV_SETUP.md](./DEV_SETUP.md) to see how to set up the development environment. 
 3. Make some changes in your local main branch (or create a new local feature branch using `git checkout -b <your-feature-branch-name>` and make changes in the local feature branch)
 4. Test your changes by running the test script in `package.json` using `pnpm run test`
 6. Ensure your code passes formatting and lint checks by running `pnpm run prettier` then `pnpm run lint`.
