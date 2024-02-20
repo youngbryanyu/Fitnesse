@@ -4,6 +4,15 @@ import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
 import 'package:flutter/foundation.dart'
     show defaultTargetPlatform, kIsWeb, TargetPlatform;
 
+/* 
+THIS FILE IS SAFE TO PUSH. IT CONTAINS A CLIENT-SIDE WEB API KEY, NOT AN API KEY FOR BACKEND USE.
+
+See:
+- https://stackoverflow.com/questions/71432691/flutter-should-firebase-options-dart-be-added-to-gitignore
+- https://firebase.google.com/docs/projects/api-keys#api-keys-for-firebase-are-different
+  - The sign up quota can be set in the auth console.
+*/
+
 /// Default [FirebaseOptions] for use with your Firebase apps.
 ///
 /// Example:

@@ -120,3 +120,4 @@ Run `flutter test` to run the unit tests.
 
 # Other Resources
 - [Firebase project setup](https://firebase.google.com/docs/flutter/setup?platform=ios): guide to install the firebase dependencies locally and setup firebase. 
+- [Why Firebase Web API keys are safe to push](https://firebase.google.com/docs/projects/api-keys#api-keys-for-firebase-are-different).

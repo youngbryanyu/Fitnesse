@@ -2,7 +2,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+  HomePage({super.key});
+
+  /* Get the current user if logged in */
+  final user = FirebaseAuth.instance.currentUser!;
 
   /* */
   void signOutUser() async {
@@ -18,7 +21,10 @@ class HomePage extends StatelessWidget {
         ],
       ),
       body: Center(
-        child: Text('LOGGED IN!'),
+        child: Text(
+          "LOGGED IN! for ${user.email!}",
+          style: const TextStyle(fontSize: 20),
+        ),
       ),
     );
   }
