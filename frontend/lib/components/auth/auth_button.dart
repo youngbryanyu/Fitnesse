@@ -11,11 +11,14 @@ class AuthButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Get the screen height
+    double screenHeight = MediaQuery.of(context).size.height;
+
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.all(25),
-        margin: const EdgeInsets.symmetric(horizontal: 25),
+        padding: EdgeInsets.all(screenHeight * .025),
+        margin: EdgeInsets.symmetric(horizontal: screenHeight * .03),
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.primary,
           borderRadius: BorderRadius.circular(8),

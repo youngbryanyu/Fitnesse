@@ -11,13 +11,16 @@ class LogoTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Get the screen height
+    double screenHeight = MediaQuery.of(context).size.height;
+
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: EdgeInsets.all(screenHeight * .02),
       decoration: BoxDecoration(
           border: Border.all(color: Theme.of(context).colorScheme.onPrimary),
           borderRadius: BorderRadius.circular(16),
           color: Theme.of(context).colorScheme.primary),
-      child: Image.asset(imagePath, height: 40),
+      child: Image.asset(imagePath, height: screenHeight * .04),
     );
   }
 }

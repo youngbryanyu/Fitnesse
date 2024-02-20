@@ -4,6 +4,10 @@ import 'pages/auth/login_page.dart';
 
 /* Starts the app */
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  /* Initialize HTTP package */
+
   runApp(const App());
 }
 

@@ -17,6 +17,9 @@ class LoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    /* Get the screen height */
+    double screenHeight = MediaQuery.of(context).size.height;
+
     /* Determine whether to use dark or light mode for icons */
     final isDarkMode =
         MediaQuery.of(context).platformBrightness == Brightness.dark;
@@ -35,15 +38,15 @@ class LoginPage extends StatelessWidget {
               child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const SizedBox(height: 50),
+                    SizedBox(height: screenHeight * .05),
 
                     /* Logo */
                     Image.asset(
                       onTrackLogoPath,
-                      height: 150,
-                      width: 150,
+                      height: screenHeight * .2,
+                      width: screenHeight * .2,
                     ),
-                    const SizedBox(height: 25),
+                    SizedBox(height: screenHeight * .01),
 
                     /* Welcome text*/
                     Text(
@@ -62,7 +65,7 @@ class LoginPage extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(height: 25),
+                    SizedBox(height: screenHeight * .02),
 
                     /* Username or email text field */
                     AuthTextField(
@@ -70,7 +73,7 @@ class LoginPage extends StatelessWidget {
                       hintText: 'Username or email',
                       obscureText: false,
                     ),
-                    const SizedBox(height: 10),
+                    SizedBox(height: screenHeight * .01),
 
                     /* Password text field */
                     AuthTextField(
@@ -78,7 +81,7 @@ class LoginPage extends StatelessWidget {
                       hintText: 'Password',
                       obscureText: true,
                     ),
-                    const SizedBox(height: 10),
+                    SizedBox(height: screenHeight * .01),
 
                     /* Forgot password? */
                     Padding(
@@ -95,13 +98,13 @@ class LoginPage extends StatelessWidget {
                         ],
                       ),
                     ),
-                    const SizedBox(height: 25),
+                    SizedBox(height: screenHeight * .03),
 
                     /* Sign in button */
                     AuthButton(
                       onTap: signInUser,
                     ),
-                    const SizedBox(height: 50),
+                    SizedBox(height: screenHeight * .03),
 
                     /* Continue with other login options */
                     Padding(
@@ -132,7 +135,9 @@ class LoginPage extends StatelessWidget {
                         ],
                       ),
                     ),
-                    const SizedBox(height: 50),
+                    SizedBox(height: screenHeight * .03),
+
+                    // TODO: only show apple login on apple devices, handle external logins
 
                     /* Google and Apple sign in buttons */
                     Row(
@@ -146,7 +151,7 @@ class LoginPage extends StatelessWidget {
                         LogoTile(imagePath: appleLogoPath),
                       ],
                     ),
-                    const SizedBox(height: 50),
+                    SizedBox(height: screenHeight * .05),
 
                     /* Link to register page */
                     Row(
@@ -168,6 +173,8 @@ class LoginPage extends StatelessWidget {
                         ),
                       ],
                     ),
+
+                    // SizedBox(height: screenHeight * .01),
                   ]),
             ),
           ),
