@@ -21,16 +21,24 @@ class AuthTextField extends StatelessWidget {
         controller: controller,
         obscureText: obscureText,
         decoration: InputDecoration(
-          enabledBorder: const OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.white),
+          enabledBorder: OutlineInputBorder(
+            borderSide: Theme.of(context)
+                    .inputDecorationTheme
+                    .enabledBorder
+                    ?.borderSide ??
+                BorderSide(color: Theme.of(context).colorScheme.primary),
           ),
           focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.grey.shade400),
+            borderSide: Theme.of(context)
+                    .inputDecorationTheme
+                    .focusedBorder
+                    ?.borderSide ??
+                BorderSide(color: Theme.of(context).colorScheme.primary),
           ),
-          fillColor: Colors.grey.shade200,
+          fillColor: Theme.of(context).inputDecorationTheme.fillColor,
           filled: true,
           hintText: hintText,
-          hintStyle: TextStyle(color: Colors.grey[500]),
+          hintStyle: Theme.of(context).inputDecorationTheme.hintStyle,
         ),
       ),
     );

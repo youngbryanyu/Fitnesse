@@ -60,6 +60,9 @@ If this output is incorrect, please update the path to use the commands from `/p
 #### Running unit tests
 Run `flutter test` to run the unit tests.
 
+#### Common issues
+- If you have issues importing assets after adding new assets and referencing them in `pubspec.yaml`, make sure to run `flutter pub get` then reload the emulator.
+
 ## Android Studio Setup
 Android Studio is necessary on Windows and Linux for building and testing Flutter mobile code. 
 

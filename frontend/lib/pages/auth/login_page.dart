@@ -17,8 +17,18 @@ class LoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    /* Determine whether to use dark or light mode for icons */
+    final isDarkMode =
+        MediaQuery.of(context).platformBrightness == Brightness.dark;
+    final String appleLogoPath = isDarkMode
+        ? 'lib/images/apple-logo-dark.png'
+        : 'lib/images/apple-logo-light.png';
+    final String onTrackLogoPath = isDarkMode
+        ? 'lib/images/ontrack-logo-dark.png'
+        : 'lib/images/ontrack-logo-light.png';
+
     return Scaffold(
-        backgroundColor: Colors.grey[300],
+        backgroundColor: Theme.of(context).colorScheme.background,
         body: SafeArea(
           child: Center(
             child: SingleChildScrollView(
@@ -29,16 +39,28 @@ class LoginPage extends StatelessWidget {
 
                     /* Logo */
                     Image.asset(
-                      'lib/images/ontrack-light.png',
+                      onTrackLogoPath,
                       height: 150,
                       width: 150,
                     ),
-                    const SizedBox(height: 50),
+                    const SizedBox(height: 25),
 
                     /* Welcome text*/
                     Text(
-                      'Welcome back to OnTrack!',
-                      style: TextStyle(color: Colors.grey[700], fontSize: 16),
+                      'Welcome to',
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onBackground,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      'OnTrack',
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onBackground,
+                        fontSize: 32,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     const SizedBox(height: 25),
 
@@ -66,7 +88,9 @@ class LoginPage extends StatelessWidget {
                         children: [
                           Text(
                             'Forgot Password?',
-                            style: TextStyle(color: Colors.grey[600]),
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.secondary,
+                            ),
                           ),
                         ],
                       ),
@@ -87,20 +111,22 @@ class LoginPage extends StatelessWidget {
                           Expanded(
                             child: Divider(
                               thickness: 0.5,
-                              color: Colors.grey[400],
+                              color: Theme.of(context).colorScheme.surface,
                             ),
                           ),
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 10),
                             child: Text(
                               'Or continue with',
-                              style: TextStyle(color: Colors.grey[700]),
+                              style: TextStyle(
+                                color: Theme.of(context).colorScheme.surface,
+                              ),
                             ),
                           ),
                           Expanded(
                             child: Divider(
                               thickness: 0.5,
-                              color: Colors.grey[400],
+                              color: Theme.of(context).colorScheme.surface,
                             ),
                           ),
                         ],
@@ -109,29 +135,34 @@ class LoginPage extends StatelessWidget {
                     const SizedBox(height: 50),
 
                     /* Google and Apple sign in buttons */
-                    const Row(
+                    Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         /* Google button */
-                        LogoTile(imagePath: 'lib/images/google-logo.png'),
-                        SizedBox(width: 25),
+                        const LogoTile(imagePath: 'lib/images/google-logo.png'),
+                        const SizedBox(width: 25),
 
                         /* Apple button */
-                        LogoTile(imagePath: 'lib/images/apple-logo.png'),
+                        LogoTile(imagePath: appleLogoPath),
                       ],
                     ),
                     const SizedBox(height: 50),
 
                     /* Link to register page */
-                    const Row(
+                    Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text('Not a member?'),
-                        SizedBox(width: 4),
+                        Text(
+                          'Not a member?',
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.surface,
+                          ),
+                        ),
+                        const SizedBox(width: 4),
                         Text(
                           'Register now',
                           style: TextStyle(
-                            color: Colors.black,
+                            color: Theme.of(context).colorScheme.onBackground,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
