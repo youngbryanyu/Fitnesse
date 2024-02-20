@@ -119,5 +119,11 @@ Run `flutter test` to run the unit tests.
 - If you have issues importing assets after adding new assets and referencing them in `pubspec.yaml`, make sure to run `flutter pub get` then reload the emulator.
 
 # Other Resources
-- [Firebase project setup](https://firebase.google.com/docs/flutter/setup?platform=ios): guide to install the firebase dependencies locally and setup firebase. 
-- [Why Firebase Web API keys are safe to push](https://firebase.google.com/docs/projects/api-keys#api-keys-for-firebase-are-different).
+- [Firebase project setup](https://firebase.google.com/docs/flutter/setup?platform=ios): guide to install the firebase dependencies locally and setup firebase.
+- Firebase Web API Keys are safe to push: 
+  - [Firebase docs](https://firebase.google.com/docs/projects/api-keys#api-keys-for-firebase-are-different).
+    - The sign up quota can be set in the auth console.
+  - [Stackoverflow reference](https://stackoverflow.com/questions/71432691/flutter-should-firebase-options-dart-be-added-to-gitignore)
+  - If we create some other firebase databases, we should configure least privilege though.
+- According to ChatGPT: Mobile apps are identified through their app identifiers (like the iOS bundle ID or Android package name) and are authenticated through the Firebase SDK integrated into your app. There is no need to authorize domains for mobile apps because they do not make requests from a web domain. Mobile apps are secured through the app's configuration and the Firebase SDK, which uses app-specific credentials (not related to web domains).
+  
