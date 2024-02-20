@@ -7,14 +7,14 @@ on:
     branches:
       - 'main'
     paths:
-      - 'backend/**'
-      - '.github/workflows/backend_pipeline.yml'
+      - 'frontend/**'
+      - '.github/workflows/frontend_pipeline.yml'
   pull_request:
     branches:
       - 'main'
     paths: 
-      - 'backend/**'
-      - '.github/workflows/backend_pipeline.yml'
+      - 'frontend/**'
+      - '.github/workflows/frontend_pipeline.yml'
   schedule:
     - cron: 0 0 * * MON   # Schedule pipeline to run monday midnight after sunday ends
   workflow_dispatch:      # Enable manual runs of workflow
