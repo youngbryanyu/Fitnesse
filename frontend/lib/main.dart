@@ -1,13 +1,21 @@
 /* Entry point into the frontend */
 import 'package:flutter/material.dart';
-import 'pages/auth/login_page.dart';
+import 'package:frontend/pages/auth/auth_page.dart';
+import 'package:firebase_core/firebase_core.dart';
+
+/* Determine which firebase config file to import depending on environment */
+import 'firebase_options_dev.dart'
+    if (dart.library.prod) 'firebase_options_prod.dart' as firebase_options;
 
 /* Starts the app */
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  /* Initialize HTTP package */
+  /* Initialize firebase app */
+  await Firebase.initializeApp(
+      options: firebase_options.DefaultFirebaseOptions.currentPlatform);
 
+  /* Start app */
   runApp(const App());
 }
 
@@ -19,7 +27,7 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: LoginPage(),
+      home: const AuthPage(),
       themeMode: ThemeMode.system,
       /* Use system theme for now */
       theme: lightTheme,

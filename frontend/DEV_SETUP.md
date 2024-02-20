@@ -52,10 +52,17 @@ If this output is incorrect, please update the path to use the commands from `/p
 1. Install [homebrew](https://brew.sh/) as your package manager if you haven't yet. 
 2. Run `brew install flutter`.
 3. See [this](https://docs.flutter.dev/get-started/install/macos/mobile-ios) link for how to set up and develop with flutter for developing iOS on macOS.
+4. See [this](https://firebase.google.com/docs/flutter/setup?platform=ios) guide to install the firebase dependencies locally and setup firebase. Make sure to connect with the existing project.
 
 #### Running the simulator
 1. Run `open -a Simulator` to open the device simulator.
-2. Navigat to the root of the `/frontend` directory and run `flutter run` to connect to the simulator and run the application.
+2. Navigate to the root of the `/frontend` directory and run `flutter run` to connect to the simulator and run the application.
+
+Depending on the environment, the commands to run are different for running or building:
+1. Run: `flutter run --dart-define=ENV=<environment>`
+2. Build: `flutter build apk --dart-define=ENV=<environment>`
+
+where environment can be `dev` or `prod`.
 
 #### Running unit tests
 Run `flutter test` to run the unit tests.

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "491996980228",
+    "project_id": "ontrack-dev-4da57",
+    "storage_bucket": "ontrack-dev-4da57.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:491996980228:android:cf62adafe8e7b3e2cfc151",
+        "android_client_info": {
+          "package_name": "com.example.frontend"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAVqoS-Yc86CzFXonZbCG-LrTC39SPQSo8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
