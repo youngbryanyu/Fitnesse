@@ -2,7 +2,7 @@
 This will determine if we show the user the login page or home page */
 import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
-import "package:frontend/pages/auth/login_page.dart";
+import "package:frontend/pages/auth/login_or_register_page.dart";
 import "package:frontend/pages/home/home_page.dart";
 
 class AuthPage extends StatelessWidget {
@@ -14,12 +14,16 @@ class AuthPage extends StatelessWidget {
       body: StreamBuilder<User?>(
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
-          /* User is logged in go to home page, else go to login page */
-          if (snapshot.hasData) {
-            return HomePage();
-          } else {
-            return LoginPage();
+          if (snapshot.connectionState == ConnectionState.active) {
+            /* User is logged in go to home page, else go to login page */
+            if (snapshot.hasData) {
+              return HomePage();
+            } else {
+              return const LoginOrRegisterPage();
+            }
           }
+
+          return const CircularProgressIndicator();
         },
       ),
     );

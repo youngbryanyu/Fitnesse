@@ -1,4 +1,4 @@
-/* The login page */
+/* The register page */
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/components/auth/auth_button.dart';
@@ -7,21 +7,22 @@ import 'package:frontend/components/auth/auth_text_field.dart';
 import 'package:frontend/components/auth/auth_logo_tile.dart';
 
 /* Login page widget */
-class LoginPage extends StatefulWidget {
+class RegisterPage extends StatefulWidget {
   final Function()? onTap;
-  const LoginPage({super.key, required this.onTap});
+  const RegisterPage({super.key, required this.onTap});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<RegisterPage> createState() => _RegisterPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _RegisterPageState extends State<RegisterPage> {
   /* Text box controllers */
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
 
   /* Sign in function */
-  Future<void> signInUser() async {
+  Future<void> registerUser() async {
     /* Show loading circle */
     showDialog(
       context: context,
@@ -33,8 +34,8 @@ class _LoginPageState extends State<LoginPage> {
     );
 
     try {
-      /* Await sign in */
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
+      /* Await sign up */
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: emailController.text,
         password: passwordController.text,
       );
@@ -43,20 +44,26 @@ class _LoginPageState extends State<LoginPage> {
       if (context.mounted) {
         Navigator.pop(context);
       }
-    } on FirebaseAuthException {
+    } on FirebaseAuthException catch (error) {
       /* Pop loading circle */
       if (context.mounted) {
         Navigator.pop(context);
       }
 
-      showErrorPopup('Invalid login credentials.');
+      if (error.code == 'email-already-in-use') {
+        showPopup('The email is already taken');
+      } else if (error.code == 'invalid-email') {
+        showPopup('The email is invalid');
+      } else if (error.code == 'weak-password') {
+        showPopup('Your password must be at least 6 characters long');
+      }
     } catch (error) {
-      showErrorPopup('Server error occurred');
+      showPopup('Server error occurred');
     }
   }
 
   /* Shows an error message popup */
-  void showErrorPopup(String message) {
+  void showPopup(String message) {
     showDialog(
       context: context,
       builder: (context) {
@@ -76,6 +83,9 @@ class _LoginPageState extends State<LoginPage> {
     final String appleLogoPath = isDarkMode
         ? 'lib/images/apple-logo-dark.png'
         : 'lib/images/apple-logo-light.png';
+    final String onTrackLogoPath = isDarkMode
+        ? 'lib/images/ontrack-logo-dark.png'
+        : 'lib/images/ontrack-logo-light.png';
 
     return Scaffold(
         backgroundColor: Theme.of(context).colorScheme.background,
@@ -85,9 +95,25 @@ class _LoginPageState extends State<LoginPage> {
               child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    /* Logo */
+                    Image.asset(
+                      onTrackLogoPath,
+                      height: screenHeight * .2,
+                      width: screenHeight * .2,
+                    ),
+                    SizedBox(height: screenHeight * .01),
+
                     /* Welcome text*/
                     Text(
-                      'Log in',
+                      'Welcome to',
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onBackground,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      'OnTrack',
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.onBackground,
                         fontSize: 32,
@@ -96,7 +122,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     SizedBox(height: screenHeight * .02),
 
-                    /* Username or email text field */
+                    /* Email text field */
                     AuthTextField(
                       controller: emailController,
                       hintText: 'Email',
@@ -112,27 +138,10 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     SizedBox(height: screenHeight * .01),
 
-                    /* Forgot password? */
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 25),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Text(
-                            'Forgot Password?',
-                            style: TextStyle(
-                              color: Theme.of(context).colorScheme.secondary,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: screenHeight * .03),
-
-                    /* Sign in button */
+                    /* Register button */
                     AuthButton(
-                      onTap: signInUser,
-                      message: 'Log In',
+                      onTap: registerUser,
+                      message: 'Sign up',
                     ),
                     SizedBox(height: screenHeight * .03),
 
@@ -179,14 +188,14 @@ class _LoginPageState extends State<LoginPage> {
                         LogoTile(imagePath: appleLogoPath),
                       ],
                     ),
-                    SizedBox(height: screenHeight * .03),
+                    SizedBox(height: screenHeight * .05),
 
                     /* Link to register page */
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          'Not a member?',
+                          'Already have an account?',
                           style: TextStyle(
                             color: Theme.of(context).colorScheme.surface,
                           ),
@@ -195,7 +204,7 @@ class _LoginPageState extends State<LoginPage> {
                         GestureDetector(
                           onTap: widget.onTap,
                           child: Text(
-                            'Register now',
+                            'Login now',
                             style: TextStyle(
                               color: Theme.of(context).colorScheme.onBackground,
                               fontWeight: FontWeight.bold,

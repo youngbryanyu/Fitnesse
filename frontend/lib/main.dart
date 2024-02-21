@@ -56,12 +56,65 @@ final ThemeData lightTheme = ThemeData(
   ),
   inputDecorationTheme: InputDecorationTheme(
     fillColor: Colors.grey.shade300,
-    hintStyle: TextStyle(color: Colors.grey.shade500),
+    hintStyle: TextStyle(
+      color: Colors.grey.shade500,
+    ),
     enabledBorder: OutlineInputBorder(
-      borderSide: BorderSide(color: Colors.grey.shade500),
+      borderSide: BorderSide(
+        color: Colors.grey.shade500,
+      ),
     ),
     focusedBorder: OutlineInputBorder(
-      borderSide: BorderSide(color: Colors.grey.shade700),
+      borderSide: BorderSide(
+        color: Colors.grey.shade700,
+      ),
+    ),
+  ),
+  textTheme: const TextTheme(
+    displayLarge: TextStyle(
+      fontSize: 24,
+      fontWeight: FontWeight.bold,
+      color: Colors.black,
+    ),
+    displayMedium: TextStyle(
+      fontSize: 22,
+      fontWeight: FontWeight.bold,
+      color: Colors.black,
+    ),
+    displaySmall: TextStyle(
+      fontSize: 20,
+      fontWeight: FontWeight.bold,
+      color: Colors.black,
+    ),
+    bodyLarge: TextStyle(
+      fontSize: 16,
+      fontWeight: FontWeight.normal,
+      color: Colors.black,
+    ),
+    bodyMedium: TextStyle(
+      fontSize: 14,
+      fontWeight: FontWeight.normal,
+      color: Colors.black,
+    ),
+    bodySmall: TextStyle(
+      fontSize: 12,
+      fontWeight: FontWeight.normal,
+      color: Colors.black,
+    ),
+    labelLarge: TextStyle(
+      fontSize: 16,
+      fontWeight: FontWeight.bold,
+      color: Colors.white,
+    ),
+    labelMedium: TextStyle(
+      fontSize: 14,
+      fontWeight: FontWeight.bold,
+      color: Colors.white,
+    ),
+    labelSmall: TextStyle(
+      fontSize: 20,
+      fontWeight: FontWeight.bold,
+      color: Colors.white,
     ),
   ),
 );
@@ -84,12 +137,65 @@ final ThemeData darkTheme = ThemeData(
   ),
   inputDecorationTheme: InputDecorationTheme(
     fillColor: Colors.grey.shade700,
-    hintStyle: TextStyle(color: Colors.grey.shade500),
+    hintStyle: TextStyle(
+      color: Colors.grey.shade500,
+    ),
     enabledBorder: OutlineInputBorder(
-      borderSide: BorderSide(color: Colors.grey.shade500),
+      borderSide: BorderSide(
+        color: Colors.grey.shade500,
+      ),
     ),
     focusedBorder: OutlineInputBorder(
-      borderSide: BorderSide(color: Colors.grey.shade300),
+      borderSide: BorderSide(
+        color: Colors.grey.shade300,
+      ),
+    ),
+  ),
+  textTheme: const TextTheme(
+    displayLarge: TextStyle(
+      fontSize: 24,
+      fontWeight: FontWeight.bold,
+      color: Colors.white,
+    ),
+    displayMedium: TextStyle(
+      fontSize: 22,
+      fontWeight: FontWeight.bold,
+      color: Colors.white,
+    ),
+    displaySmall: TextStyle(
+      fontSize: 20,
+      fontWeight: FontWeight.bold,
+      color: Colors.white,
+    ),
+    bodyLarge: TextStyle(
+      fontSize: 16,
+      fontWeight: FontWeight.normal,
+      color: Colors.white,
+    ),
+    bodyMedium: TextStyle(
+      fontSize: 14,
+      fontWeight: FontWeight.normal,
+      color: Colors.white,
+    ),
+    bodySmall: TextStyle(
+      fontSize: 12,
+      fontWeight: FontWeight.normal,
+      color: Colors.white,
+    ),
+    labelLarge: TextStyle(
+      fontSize: 16,
+      fontWeight: FontWeight.bold,
+      color: Colors.black,
+    ),
+    labelMedium: TextStyle(
+      fontSize: 14,
+      fontWeight: FontWeight.bold,
+      color: Colors.black,
+    ),
+    labelSmall: TextStyle(
+      fontSize: 20,
+      fontWeight: FontWeight.bold,
+      color: Colors.black,
     ),
   ),
 );

@@ -23,6 +23,7 @@ class AuthTextField extends StatelessWidget {
       child: TextField(
         controller: controller,
         obscureText: obscureText,
+        style: Theme.of(context).textTheme.bodyLarge,
         decoration: InputDecoration(
           enabledBorder: OutlineInputBorder(
             borderSide: Theme.of(context)
