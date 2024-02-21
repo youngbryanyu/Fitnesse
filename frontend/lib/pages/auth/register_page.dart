@@ -41,12 +41,12 @@ class _RegisterPageState extends State<RegisterPage> {
       );
 
       /* Pop loading circle */
-      if (context.mounted) {
+      if (mounted) {
         Navigator.pop(context);
       }
     } on FirebaseAuthException catch (error) {
       /* Pop loading circle */
-      if (context.mounted) {
+      if (mounted) {
         Navigator.pop(context);
       }
 
