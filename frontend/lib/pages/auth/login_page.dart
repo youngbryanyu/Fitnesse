@@ -21,6 +21,9 @@ class _LoginPageState extends State<LoginPage> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
+  /* whether to show password */
+  bool passwordVisible = false;
+
   /* Sign in function */
   Future<void> signInUser() async {
     /* Show loading circle */
@@ -50,18 +53,18 @@ class _LoginPageState extends State<LoginPage> {
         Navigator.pop(context);
       }
 
-      showErrorPopup('Invalid login credentials.');
+      showErrorPopup('Login failed', 'Invalid login credentials.');
     } catch (error) {
-      showErrorPopup('Server error occurred');
+      showErrorPopup('Login failed', 'Server error occurred');
     }
   }
 
   /* Shows an error message popup */
-  void showErrorPopup(String message) {
+  void showErrorPopup(String title, String message) {
     showDialog(
       context: context,
       builder: (context) {
-        return AuthErrorPopup(message: message);
+        return AuthErrorPopup(title: title, message: message);
       },
     );
   }
@@ -71,13 +74,6 @@ class _LoginPageState extends State<LoginPage> {
     /* Get the screen height */
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
-
-    /* Determine whether to use dark or light mode for icons */
-    final isDarkMode =
-        MediaQuery.of(context).platformBrightness == Brightness.dark;
-    final String appleLogoPath = isDarkMode
-        ? 'lib/images/apple-logo-dark.png'
-        : 'lib/images/apple-logo-light.png';
 
     return Scaffold(
         backgroundColor: Theme.of(context).colorScheme.background,
@@ -110,8 +106,21 @@ class _LoginPageState extends State<LoginPage> {
                     AuthTextField(
                       controller: passwordController,
                       hintText: 'Password',
-                      obscureText: true,
+                      obscureText: !passwordVisible,
+                      suffixIcon: Icon(
+                        passwordVisible
+                            ? Icons.visibility
+                            : Icons.visibility_off,
+                        color: Theme.of(context).colorScheme.surface,
+                      ),
+                      onTap: () {
+                        // Handle the icon tap
+                        setState(() {
+                          passwordVisible = !passwordVisible;
+                        });
+                      },
                     ),
+
                     SizedBox(height: screenHeight * .01),
 
                     /* Forgot password? */
@@ -169,7 +178,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     SizedBox(height: screenHeight * .03),
 
-                    /* Google and Apple sign in buttons */
+                    /* 3P sign in buttons */
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -177,13 +186,6 @@ class _LoginPageState extends State<LoginPage> {
                         LogoTile(
                           imagePath: 'lib/images/google-logo.png',
                           onTap: () => AuthService().signInWithGoogle(),
-                        ),
-                        SizedBox(width: screenWidth * .05),
-
-                        /* Apple button */
-                        LogoTile(
-                          imagePath: appleLogoPath,
-                          onTap: () => {},
                         ),
                       ],
                     ),

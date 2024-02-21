@@ -20,7 +20,9 @@ class _RegisterPageState extends State<RegisterPage> {
   /* Text box controllers */
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
-  final confirmPasswordController = TextEditingController();
+
+  /* whether to show password */
+  bool passwordVisible = false;
 
   /* Sign in function */
   Future<void> registerUser() async {
@@ -42,9 +44,11 @@ class _RegisterPageState extends State<RegisterPage> {
         password: passwordController.text,
       );
 
-      /* Send verification email in background */
+      /* Send verification email */
       final user = FirebaseAuth.instance.currentUser;
-      user?.sendEmailVerification();
+      if (user != null && !user.emailVerified) {
+        user.sendEmailVerification(); /* Send in background */
+      }
 
       /* Pop loading circle */
       if (mounted) {
@@ -57,23 +61,24 @@ class _RegisterPageState extends State<RegisterPage> {
       }
 
       if (error.code == 'email-already-in-use') {
-        showPopup('The email is already taken');
+        showPopup('Registration failed', 'The email is already taken');
       } else if (error.code == 'invalid-email') {
-        showPopup('The email is invalid');
+        showPopup('Registration failed', 'The email is invalid');
       } else if (error.code == 'weak-password') {
-        showPopup('Your password must be at least 6 characters long');
+        showPopup('Registration failed',
+            'Your password must be at least 6 characters long');
       }
     } catch (error) {
-      showPopup('Server error occurred');
+      showPopup('Registration failed', 'Server error occurred');
     }
   }
 
   /* Shows an error message popup */
-  void showPopup(String message) {
+  void showPopup(String title, String message) {
     showDialog(
       context: context,
       builder: (context) {
-        return AuthErrorPopup(message: message);
+        return AuthErrorPopup(title: title, message: message);
       },
     );
   }
@@ -87,9 +92,6 @@ class _RegisterPageState extends State<RegisterPage> {
     /* Determine whether to use dark or light mode for icons */
     final isDarkMode =
         MediaQuery.of(context).platformBrightness == Brightness.dark;
-    final String appleLogoPath = isDarkMode
-        ? 'lib/images/apple-logo-dark.png'
-        : 'lib/images/apple-logo-light.png';
     final String onTrackLogoPath = isDarkMode
         ? 'lib/images/ontrack-logo-dark.png'
         : 'lib/images/ontrack-logo-light.png';
@@ -141,7 +143,19 @@ class _RegisterPageState extends State<RegisterPage> {
                     AuthTextField(
                       controller: passwordController,
                       hintText: 'Password',
-                      obscureText: true,
+                      obscureText: !passwordVisible,
+                      suffixIcon: Icon(
+                        passwordVisible
+                            ? Icons.visibility
+                            : Icons.visibility_off,
+                        color: Theme.of(context).colorScheme.surface,
+                      ),
+                      onTap: () {
+                        // Handle the icon tap
+                        setState(() {
+                          passwordVisible = !passwordVisible;
+                        });
+                      },
                     ),
                     SizedBox(height: screenHeight * .01),
 
@@ -183,7 +197,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     ),
                     SizedBox(height: screenHeight * .03),
 
-                    /* Google and Apple sign in buttons */
+                    /* 3P sign in buttons */
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -191,13 +205,6 @@ class _RegisterPageState extends State<RegisterPage> {
                         LogoTile(
                           imagePath: 'lib/images/google-logo.png',
                           onTap: () => AuthService().signInWithGoogle(),
-                        ),
-                        SizedBox(width: screenWidth * .05),
-
-                        /* Apple button */
-                        LogoTile(
-                          imagePath: appleLogoPath,
-                          onTap: () => {},
                         ),
                       ],
                     ),

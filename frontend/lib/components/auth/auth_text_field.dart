@@ -5,12 +5,16 @@ class AuthTextField extends StatelessWidget {
   final TextEditingController controller;
   final String hintText;
   final bool obscureText;
+  final Widget? suffixIcon; // Optional icon widget
+  final VoidCallback? onTap; // Optional icon tap callback
 
   const AuthTextField({
     super.key,
     required this.controller,
     required this.hintText,
     required this.obscureText,
+    this.suffixIcon, // Receive the icon as a parameter
+    this.onTap, // Receive the tap callback as a parameter
   });
 
   @override
@@ -25,25 +29,27 @@ class AuthTextField extends StatelessWidget {
         obscureText: obscureText,
         style: Theme.of(context).textTheme.bodyLarge,
         decoration: InputDecoration(
-          enabledBorder: OutlineInputBorder(
-            borderSide: Theme.of(context)
-                    .inputDecorationTheme
-                    .enabledBorder
-                    ?.borderSide ??
-                BorderSide(color: Theme.of(context).colorScheme.primary),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderSide: Theme.of(context)
-                    .inputDecorationTheme
-                    .focusedBorder
-                    ?.borderSide ??
-                BorderSide(color: Theme.of(context).colorScheme.primary),
-          ),
-          fillColor: Theme.of(context).inputDecorationTheme.fillColor,
-          filled: true,
-          hintText: hintText,
-          hintStyle: Theme.of(context).inputDecorationTheme.hintStyle,
-        ),
+            enabledBorder: OutlineInputBorder(
+              borderSide: Theme.of(context)
+                      .inputDecorationTheme
+                      .enabledBorder
+                      ?.borderSide ??
+                  BorderSide(color: Theme.of(context).colorScheme.primary),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: Theme.of(context)
+                      .inputDecorationTheme
+                      .focusedBorder
+                      ?.borderSide ??
+                  BorderSide(color: Theme.of(context).colorScheme.primary),
+            ),
+            fillColor: Theme.of(context).inputDecorationTheme.fillColor,
+            filled: true,
+            hintText: hintText,
+            hintStyle: Theme.of(context).inputDecorationTheme.hintStyle,
+            suffixIcon: suffixIcon != null
+                ? GestureDetector(onTap: onTap, child: suffixIcon)
+                : null),
       ),
     );
   }
