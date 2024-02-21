@@ -5,6 +5,7 @@ import 'package:frontend/components/auth/auth_button.dart';
 import 'package:frontend/components/auth/auth_error_popup.dart';
 import 'package:frontend/components/auth/auth_text_field.dart';
 import 'package:frontend/components/auth/auth_logo_tile.dart';
+import 'package:frontend/services/auth_service.dart';
 
 /* Login page widget */
 class LoginPage extends StatefulWidget {
@@ -69,6 +70,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     /* Get the screen height */
     double screenHeight = MediaQuery.of(context).size.height;
+    double screenWidth = MediaQuery.of(context).size.width;
 
     /* Determine whether to use dark or light mode for icons */
     final isDarkMode =
@@ -172,11 +174,17 @@ class _LoginPageState extends State<LoginPage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         /* Google button */
-                        const LogoTile(imagePath: 'lib/images/google-logo.png'),
-                        const SizedBox(width: 25),
+                        LogoTile(
+                          imagePath: 'lib/images/google-logo.png',
+                          onTap: () => AuthService().signInWithGoogle(),
+                        ),
+                        SizedBox(width: screenWidth * .05),
 
                         /* Apple button */
-                        LogoTile(imagePath: appleLogoPath),
+                        LogoTile(
+                          imagePath: appleLogoPath,
+                          onTap: () => {},
+                        ),
                       ],
                     ),
                     SizedBox(height: screenHeight * .03),
@@ -191,7 +199,7 @@ class _LoginPageState extends State<LoginPage> {
                             color: Theme.of(context).colorScheme.surface,
                           ),
                         ),
-                        const SizedBox(width: 4),
+                        SizedBox(width: screenWidth * .01),
                         GestureDetector(
                           onTap: widget.onTap,
                           child: Text(
