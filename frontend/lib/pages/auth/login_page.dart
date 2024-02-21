@@ -47,13 +47,18 @@ class _LoginPageState extends State<LoginPage> {
       if (mounted) {
         Navigator.pop(context);
       }
-    } on FirebaseAuthException {
+    } on FirebaseAuthException catch (error) {
       /* Pop loading circle */
       if (mounted) {
         Navigator.pop(context);
       }
 
-      showErrorPopup('Login failed', 'Invalid login credentials.');
+      if (error.code == 'too-many-requests') {
+        showErrorPopup('Account temporarily locked',
+            'Too many failed login attempts. Try again later or reset your password.');
+      } else {
+        showErrorPopup('Login failed', 'Invalid login credentials.');
+      }
     } catch (error) {
       showErrorPopup('Login failed', 'Server error occurred');
     }
