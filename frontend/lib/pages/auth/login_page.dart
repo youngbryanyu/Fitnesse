@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:frontend/components/auth/auth_button.dart';
 import 'package:frontend/components/auth/auth_error_popup.dart';
 import 'package:frontend/components/auth/auth_text_field.dart';
-import 'package:frontend/components/auth/auth_logo_tile.dart';
-import 'package:frontend/services/auth/auth_service.dart';
+// import 'package:frontend/components/auth/auth_logo_tile.dart';
+// import 'package:frontend/services/auth/auth_service.dart';
 
 /* Login page widget */
 class LoginPage extends StatefulWidget {
@@ -148,48 +148,48 @@ class _LoginPageState extends State<LoginPage> {
                     SizedBox(height: screenHeight * .03),
 
                     /* Continue with other login options */
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 25),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Divider(
-                              thickness: 0.5,
-                              color: Theme.of(context).colorScheme.surface,
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 10),
-                            child: Text(
-                              'Or continue with',
-                              style: TextStyle(
-                                color: Theme.of(context).colorScheme.surface,
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            child: Divider(
-                              thickness: 0.5,
-                              color: Theme.of(context).colorScheme.surface,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: screenHeight * .03),
+                    // Padding(
+                    //   padding: const EdgeInsets.symmetric(horizontal: 25),
+                    //   child: Row(
+                    //     children: [
+                    //       Expanded(
+                    //         child: Divider(
+                    //           thickness: 0.5,
+                    //           color: Theme.of(context).colorScheme.surface,
+                    //         ),
+                    //       ),
+                    //       Padding(
+                    //         padding: const EdgeInsets.symmetric(horizontal: 10),
+                    //         child: Text(
+                    //           'Or continue with',
+                    //           style: TextStyle(
+                    //             color: Theme.of(context).colorScheme.surface,
+                    //           ),
+                    //         ),
+                    //       ),
+                    //       Expanded(
+                    //         child: Divider(
+                    //           thickness: 0.5,
+                    //           color: Theme.of(context).colorScheme.surface,
+                    //         ),
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ),
+                    // SizedBox(height: screenHeight * .03),
 
                     /* 3P sign in buttons */
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        /* Google button */
-                        LogoTile(
-                          imagePath: 'lib/images/google-logo.png',
-                          onTap: () => AuthService(context).signInWithGoogle(),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: screenHeight * .03),
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.center,
+                    //   children: [
+                    //     /* Google button */
+                    //     LogoTile(
+                    //       imagePath: 'lib/images/google-logo.png',
+                    //       onTap: () => AuthService(context).signInWithGoogle(),
+                    //     ),
+                    //   ],
+                    // ),
+                    // SizedBox(height: screenHeight * .03),
 
                     /* Link to register page */
                     Row(
