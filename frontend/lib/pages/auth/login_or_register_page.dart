@@ -32,5 +32,7 @@ class _LoginOrRegisterPageState extends State<LoginOrRegisterPage> {
         onTap: togglePages,
       );
     }
+
+    // TODO: add password reset page
   }
 }

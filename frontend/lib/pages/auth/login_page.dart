@@ -5,7 +5,7 @@ import 'package:frontend/components/auth/auth_button.dart';
 import 'package:frontend/components/auth/auth_error_popup.dart';
 import 'package:frontend/components/auth/auth_text_field.dart';
 import 'package:frontend/components/auth/auth_logo_tile.dart';
-import 'package:frontend/services/auth_service.dart';
+import 'package:frontend/services/auth/auth_service.dart';
 
 /* Login page widget */
 class LoginPage extends StatefulWidget {
@@ -185,7 +185,7 @@ class _LoginPageState extends State<LoginPage> {
                         /* Google button */
                         LogoTile(
                           imagePath: 'lib/images/google-logo.png',
-                          onTap: () => AuthService().signInWithGoogle(),
+                          onTap: () => AuthService(context).signInWithGoogle(),
                         ),
                       ],
                     ),
