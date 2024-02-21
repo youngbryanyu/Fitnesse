@@ -61,12 +61,33 @@ class _RegisterPageState extends State<RegisterPage> {
       }
 
       if (error.code == 'email-already-in-use') {
-        showPopup('Registration failed', 'The email is already taken');
+        showPopup(
+          'Registration failed',
+          'The email is already taken. Try logging in. If you forgot your password you can reset it.',
+        );
       } else if (error.code == 'invalid-email') {
         showPopup('Registration failed', 'The email is invalid');
       } else if (error.code == 'weak-password') {
-        showPopup('Registration failed',
-            'Your password must be at least 6 characters long');
+        showPopup(
+          'Registration failed',
+          'Your password must be at least 6 characters long',
+        );
+      } else if (error.code == 'operation-not-allowed') {
+        showPopup(
+          'Registration failed',
+          'Email-based sign up is currently disabled.',
+        );
+      } else if (error.code == 'too-many-requests') {
+        showPopup(
+          'Registration failed',
+          'Too many sign up requests from this IP. Try again later.',
+        );
+      } else {
+        /* Group all other errors together */
+        showPopup(
+          'Registration failed',
+          'Unknown error occurred during sign up',
+        );
       }
     } catch (error) {
       showPopup('Registration failed', 'Server error occurred');

@@ -53,11 +53,22 @@ class _LoginPageState extends State<LoginPage> {
         Navigator.pop(context);
       }
 
+      /* Handle error codes */
       if (error.code == 'too-many-requests') {
-        showErrorPopup('Account temporarily locked',
-            'Too many failed login attempts. Try again later or reset your password.');
+        showErrorPopup(
+          'Account temporarily locked',
+          'Too many failed login attempts. Try again later or reset your password.',
+        );
+      } else if (error.code == 'user-disabled') {
+        showErrorPopup('Account locked', 'Your account is disabled.');
+      } else if (error.code == 'operation-not-allowed') {
+        showErrorPopup(
+          'Login failed',
+          'Email-based login is currently disabled',
+        );
       } else {
-        showErrorPopup('Login failed', 'Invalid login credentials.');
+        /* Group other errors together (e.g. invalid password, no user found, invalid email)*/
+        showErrorPopup('Login failed', 'Invalid login credentials');
       }
     } catch (error) {
       showErrorPopup('Login failed', 'Server error occurred');
