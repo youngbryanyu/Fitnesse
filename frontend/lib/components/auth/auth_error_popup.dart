@@ -40,7 +40,7 @@ class AuthErrorPopup extends StatelessWidget {
             },
             child: Container(
               padding: EdgeInsets.all(screenHeight * .01),
-              margin: EdgeInsets.symmetric(horizontal: screenHeight * .03),
+              // margin: EdgeInsets.symmetric(horizontal: screenHeight * .03),
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.primary,
                 borderRadius: BorderRadius.circular(8),
