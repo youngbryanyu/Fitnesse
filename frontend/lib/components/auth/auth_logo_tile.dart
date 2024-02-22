@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 /* Logo tile for 3rd party logos like Google and Apple sign in logos */
-class LogoTile extends StatelessWidget {
+class AuthLogoTile extends StatelessWidget {
   final String imagePath;
   final Function()? onTap;
 
-  const LogoTile({
+  const AuthLogoTile({
     super.key,
     required this.imagePath,
     required this.onTap,
