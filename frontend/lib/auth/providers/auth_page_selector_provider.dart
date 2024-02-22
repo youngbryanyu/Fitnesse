@@ -10,5 +10,5 @@ enum AuthPageState {
 
 /* Listen for state changes for which auth page the user is on */
 final authPageStateProvider = StateProvider<AuthPageState>((ref) {
-  return AuthPageState.register;
+  return AuthPageState.register; /* Initial state is register */
 });
