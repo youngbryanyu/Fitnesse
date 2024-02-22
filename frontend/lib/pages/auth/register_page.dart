@@ -1,22 +1,23 @@
 /* The register page */
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/components/auth/auth_button.dart';
 import 'package:frontend/components/auth/auth_error_popup.dart';
 import 'package:frontend/components/auth/auth_text_field.dart';
+import 'package:frontend/providers/auth/auth_providers.dart';
 // import 'package:frontend/components/auth/auth_logo_tile.dart';
 // import 'package:frontend/services/auth/auth_service.dart';
 
 /* Login page widget */
-class RegisterPage extends StatefulWidget {
-  final Function()? onTap;
-  const RegisterPage({super.key, required this.onTap});
+class RegisterPage extends ConsumerStatefulWidget {
+  const RegisterPage({super.key});
 
   @override
-  State<RegisterPage> createState() => _RegisterPageState();
+  ConsumerState<RegisterPage> createState() => _RegisterPageState();
 }
 
-class _RegisterPageState extends State<RegisterPage> {
+class _RegisterPageState extends ConsumerState<RegisterPage> {
   /* Text box controllers */
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
@@ -54,6 +55,9 @@ class _RegisterPageState extends State<RegisterPage> {
       if (mounted) {
         Navigator.pop(context);
       }
+
+      /* Switch to home page */
+      ref.read(authPageStateProvider.notifier).state = AuthPageState.home;
     } on FirebaseAuthException catch (error) {
       /* Pop loading circle */
       if (mounted) {
@@ -253,7 +257,10 @@ class _RegisterPageState extends State<RegisterPage> {
                         ),
                         SizedBox(width: screenWidth * .01),
                         GestureDetector(
-                          onTap: widget.onTap,
+                          onTap: () {
+                            ref.read(authPageStateProvider.notifier).state =
+                                AuthPageState.login;
+                          },
                           child: Text(
                             'Login now',
                             style: TextStyle(

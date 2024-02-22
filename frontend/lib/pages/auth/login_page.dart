@@ -1,22 +1,23 @@
 /* The login page */
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/components/auth/auth_button.dart';
 import 'package:frontend/components/auth/auth_error_popup.dart';
 import 'package:frontend/components/auth/auth_text_field.dart';
+import 'package:frontend/providers/auth/auth_providers.dart';
 // import 'package:frontend/components/auth/auth_logo_tile.dart';
 // import 'package:frontend/services/auth/auth_service.dart';
 
 /* Login page widget */
-class LoginPage extends StatefulWidget {
-  final Function()? onTap;
-  const LoginPage({super.key, required this.onTap});
+class LoginPage extends ConsumerStatefulWidget {
+  const LoginPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  ConsumerState<LoginPage> createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginPageState extends ConsumerState<LoginPage> {
   /* Text box controllers */
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
@@ -47,6 +48,9 @@ class _LoginPageState extends State<LoginPage> {
       if (mounted) {
         Navigator.pop(context);
       }
+
+      /* Switch to home page */
+      ref.read(authPageStateProvider.notifier).state = AuthPageState.home;
     } on FirebaseAuthException catch (error) {
       /* Pop loading circle */
       if (mounted) {
@@ -219,7 +223,10 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         SizedBox(width: screenWidth * .01),
                         GestureDetector(
-                          onTap: widget.onTap,
+                          onTap: () {
+                            ref.read(authPageStateProvider.notifier).state =
+                                AuthPageState.register;
+                          },
                           child: Text(
                             'Register now',
                             style: TextStyle(

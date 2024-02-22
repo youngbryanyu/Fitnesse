@@ -38,6 +38,8 @@ dependencies:
   firebase_auth: ^4.17.5
   firebase_core: ^2.25.4
   google_sign_in: ^6.2.1
+  flutter_riverpod: ^2.4.10
+  shared_preferences: ^2.2.2
 
 dev_dependencies:
   flutter_test:

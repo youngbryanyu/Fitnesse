@@ -1,7 +1,9 @@
 /* Entry point into the frontend */
 import 'package:flutter/material.dart';
-import 'package:frontend/pages/auth/auth_page.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:frontend/pages/core/root_page_wrapper.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:frontend/routes/routes_handler.dart';
 
 /* Determine which firebase config file to import depending on environment */
 import 'firebase_options_dev.dart'
@@ -16,18 +18,19 @@ void main() async {
       options: firebase_options.DefaultFirebaseOptions.currentPlatform);
 
   /* Start app */
-  runApp(const App());
+  runApp(const ProviderScope(child: App()));
 }
 
 /* Main app widget */
-class App extends StatelessWidget {
+class App extends ConsumerWidget {
   const App({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: const AuthPage(),
+      onGenerateRoute: generateRoute,
+      home: const RootPageWrapper(),
       themeMode: ThemeMode.system,
       /* Use system theme for now */
       theme: lightTheme,
@@ -35,8 +38,6 @@ class App extends StatelessWidget {
     );
   }
 }
-
-// TODO: allow users to switch themes later in settings
 
 /* Light theme */
 final ThemeData lightTheme = ThemeData(

@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
+// ----------------
+// CURRENTLY UNUSED
+// ----------------
+
 /* Auth service for 3P sign ins */
 class AuthService {
   final BuildContext context;
