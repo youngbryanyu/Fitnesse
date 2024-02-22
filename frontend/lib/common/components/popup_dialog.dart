@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/* Button for popups during auth */
+/* Button for popups dialogs */
 class PopupDialog extends StatelessWidget {
   final String title;
   final String message;
