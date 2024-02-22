@@ -16,3 +16,6 @@ coverage
 
 # ignore Docker files
 docker-compose.*.yml
+
+# ignore firebase files
+firebase-key**.json

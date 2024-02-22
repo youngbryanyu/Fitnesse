@@ -18,7 +18,7 @@ async function startApp(port: number) {
 
   try {
     /* Wait for the MongoDB connection to be established */
-    await appInstance.connectToDatabase();
+    await appInstance.connectToMongoDB();
 
     /* Start the server after successful database connection */
     await appInstance.startServer(port);

@@ -1,7 +1,7 @@
 /* Application setup */
 import express, { Express } from 'express';
 import mongoose from 'mongoose';
-import authRoute from './auth/routes/authRoutes';
+import authRoute from './auth-deprecated/routes/authRoutes';
 import healthCheckRoute from './healthCheck/routes/healthCheckRoutes';
 import { API_URLS_V1 } from './constants';
 import logger from './logging/logger';
@@ -75,18 +75,18 @@ class App {
    * Connect to the MongoDB using the connection URL in the configuration object. Exits with error if connection fails.
    * @returns Returns a promise indicating completion of the async function.
    */
-  public async connectToDatabase(): Promise<void> {
+  public async connectToMongoDB(): Promise<void> {
     /* Get connection URL from environment variables */
     const mongoUrl: string = Config.get('MONGO_DB.CONNECTION_URL');
 
-    /* Try connecting to the database specified by the connection URL, with retries */
+    /* Try connecting to mongodb, with retries */
     let attempts = 0;
     const maxAttempts: number = Config.get('MONGO_DB.CONNECTION_RETRIES');
     const retryTimeout: number = Config.get('MONGO_DB.CONNECTION_RETRY_TIMEOUT');
     while (attempts < maxAttempts) {
       try {
         await mongoose.connect(mongoUrl);
-        logger.info('Successfully connected to MongoDB.');
+        logger.info('Successfully connected to MongoDB');
         return;
       } catch (error) {
         logger.error('Failed to connect to MongoDB: ', error);

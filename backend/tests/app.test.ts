@@ -25,7 +25,7 @@ describe('App Tests', () => {
     appInstance.closeServer(PORT);
   });
 
-  describe('connectToDatabase', () => {
+  describe('connectToMongoDB', () => {
     it('should successfully connect to MongoDB', async () => {
       /* Set up mocks and spies */
       jest.spyOn(mongoose, 'connect').mockImplementation(() => {
@@ -42,7 +42,7 @@ describe('App Tests', () => {
         });
 
       /* Connect to DB */
-      await appInstance.connectToDatabase();
+      await appInstance.connectToMongoDB();
 
       /* Test against expected */
       expect(mongoose.connect).toHaveBeenCalled();
@@ -64,7 +64,7 @@ describe('App Tests', () => {
       jest.spyOn(logger, 'info');
 
       /* Connect to database */
-      await appInstance.connectToDatabase();
+      await appInstance.connectToMongoDB();
 
       /* Test against expected */
       expect(process.exit).toHaveBeenCalledWith(1);

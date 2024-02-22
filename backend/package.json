@@ -13,7 +13,12 @@
   "keywords": [
     "fitness",
     "nutrition",
-    "mobile"
+    "mobile",
+    "exercise",
+    "macros",
+    "exercise-tracker",
+    "macro-tracker",
+    "simple"
   ],
   "dependencies": {
     "crypto-js": "^4.2.0",
