@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:frontend/components/auth/auth_text_field.dart';
+import 'package:frontend/auth/components/auth_text_field.dart';
 
 void main() {
   // A group of tests for AuthTextField

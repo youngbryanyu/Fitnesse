@@ -2,10 +2,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:frontend/components/auth/auth_button.dart';
-import 'package:frontend/components/auth/auth_popup.dart';
-import 'package:frontend/components/auth/auth_text_field.dart';
-import 'package:frontend/providers/auth/auth_page_provider.dart';
+import 'package:frontend/auth/components/auth_button.dart';
+import 'package:frontend/auth/components/auth_popup.dart';
+import 'package:frontend/auth/components/auth_text_field.dart';
+import 'package:frontend/auth/providers/auth_page_selector_provider.dart';
 
 /* Login page widget */
 class ResetPasswordPage extends ConsumerStatefulWidget {

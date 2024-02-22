@@ -1,20 +1,20 @@
 /* Authentication wrapper page that handles which page to show in the auth workflow */
 import "package:flutter/material.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
-import "package:frontend/pages/auth/login_page.dart";
-import "package:frontend/pages/auth/register_page.dart";
-import "package:frontend/pages/auth/forgot_password_page.dart";
-import "package:frontend/pages/home/home_page.dart";
-import "package:frontend/providers/auth/auth_page_provider.dart";
-import "package:frontend/providers/auth/firebase_auth_state_provider.dart";
+import "package:frontend/auth/pages/login_page.dart";
+import "package:frontend/auth/pages/register_page.dart";
+import "package:frontend/auth/pages/forgot_password_page.dart";
+import "package:frontend/core/pages/home_page.dart";
+import "package:frontend/auth/providers/auth_page_selector_provider.dart";
+import "package:frontend/auth/providers/firebase_auth_state_provider.dart";
 
 // -----------------------------------------------------------
 // THIS SHOULD ALWAYS BE THE PAGE AT THE ROOT OF THE NAVIGATOR
 // -----------------------------------------------------------
 
 /* Wrapper class that determines which auth page to show, and whether user is logged in */
-class RootPageWrapper extends ConsumerWidget {
-  const RootPageWrapper({super.key});
+class AuthPageSelector extends ConsumerWidget {
+  const AuthPageSelector({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

@@ -1,28 +1,16 @@
 /* Route handler to determine which page to show */
 import 'package:flutter/material.dart';
-import 'package:frontend/pages/core/root_page_wrapper.dart';
-import 'package:frontend/pages/auth/login_page.dart';
-import 'package:frontend/pages/auth/register_page.dart';
-import 'package:frontend/pages/home/home_page.dart';
+import 'package:frontend/auth/pages/auth_page_selector.dart';
+import 'package:frontend/core/pages/home_page.dart';
 import 'package:frontend/routes/routes.dart';
 
 /* Generates the page route based on the route settings */
 Route<dynamic> generateRoute(RouteSettings settings) {
   switch (settings.name) {
-    case Routes.authWrapper:
+    case Routes.authPageSelector:
       return getPageRoute(
         routeName: settings.name!,
-        screen: const RootPageWrapper(),
-      );
-    case Routes.login:
-      return getPageRoute(
-        routeName: settings.name!,
-        screen: const LoginPage(),
-      );
-    case Routes.register:
-      return getPageRoute(
-        routeName: settings.name!,
-        screen: const RegisterPage(),
+        screen: const AuthPageSelector(),
       );
     case Routes.home:
       return getPageRoute(

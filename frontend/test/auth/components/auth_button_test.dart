@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:frontend/components/auth/auth_button.dart';
+import 'package:frontend/auth/components/auth_button.dart';
 
 void main() {
   // A group of tests for AuthButton

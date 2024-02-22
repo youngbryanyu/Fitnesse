@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 
 /* Navigation Routes class */
-abstract class NavigationRouter {
+abstract class RouteNavigator {
   /* Push a new page onto the stack */
   static void push(context, String routeName, {Object? arguments}) {
     Navigator.pushNamed(context, routeName, arguments: arguments);
