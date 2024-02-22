@@ -2,7 +2,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/components/auth/auth_button.dart';
-import 'package:frontend/components/auth/auth_error_popup.dart';
+import 'package:frontend/components/auth/auth_popup.dart';
 import 'package:frontend/components/auth/auth_text_field.dart';
 
 /* Login page widget */
