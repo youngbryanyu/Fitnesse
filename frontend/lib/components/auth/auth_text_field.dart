@@ -1,6 +1,6 @@
-/* Text field for authentication pages like login and register */
 import 'package:flutter/material.dart';
 
+/* Text field for authentication pages like login and register */
 class AuthTextField extends StatelessWidget {
   final TextEditingController controller;
   final String hintText;

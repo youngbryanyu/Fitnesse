@@ -1,6 +1,6 @@
-/* Logo tile for 3rd party logos like Google and Apple sign in logos */
 import 'package:flutter/material.dart';
 
+/* Logo tile for 3rd party logos like Google and Apple sign in logos */
 class LogoTile extends StatelessWidget {
   final String imagePath;
   final Function()? onTap;

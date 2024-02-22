@@ -2,19 +2,20 @@
 import 'package:flutter/material.dart';
 
 /* Navigation Routes class */
-class NavigationRoutes {
+abstract class NavigationRouter {
   /* Push a new page onto the stack */
-  void push(context, String routeName, {Object? arguments}) {
+  static void push(context, String routeName, {Object? arguments}) {
     Navigator.pushNamed(context, routeName, arguments: arguments);
   }
 
   /* Push route and replace previous route */
-  void pushReplacement(context, String routeName, {Object? arguments}) {
+  static void pushReplacement(context, String routeName, {Object? arguments}) {
     Navigator.pushReplacementNamed(context, routeName, arguments: arguments);
   }
 
   /* Push route and remove until condition is true */
-  void pushNamedAndRemoveUntil(context, String routeName, {Object? arguments}) {
+  static void pushNamedAndRemoveUntil(context, String routeName,
+      {Object? arguments}) {
     Navigator.pushNamedAndRemoveUntil(
       context,
       routeName,
@@ -24,7 +25,7 @@ class NavigationRoutes {
   }
 
   /* Pop a page from the stack */
-  void pop(context) {
+  static void pop(context) {
     Navigator.pop(context);
   }
 }

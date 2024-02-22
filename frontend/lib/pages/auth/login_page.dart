@@ -3,9 +3,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/components/auth/auth_button.dart';
-import 'package:frontend/components/auth/auth_error_popup.dart';
+import 'package:frontend/components/auth/auth_popup.dart';
 import 'package:frontend/components/auth/auth_text_field.dart';
-import 'package:frontend/providers/auth/auth_providers.dart';
+import 'package:frontend/providers/auth/auth_page_provider.dart';
 // import 'package:frontend/components/auth/auth_logo_tile.dart';
 // import 'package:frontend/services/auth/auth_service.dart';
 
@@ -84,7 +84,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     showDialog(
       context: context,
       builder: (context) {
-        return AuthErrorPopup(title: title, message: message);
+        return AuthPopup(title: title, message: message);
       },
     );
   }

@@ -4,7 +4,8 @@ import "package:flutter_riverpod/flutter_riverpod.dart";
 import "package:frontend/pages/auth/login_page.dart";
 import "package:frontend/pages/auth/register_page.dart";
 import "package:frontend/pages/home/home_page.dart";
-import "package:frontend/providers/auth/auth_providers.dart";
+import "package:frontend/providers/auth/auth_page_provider.dart";
+import "package:frontend/providers/auth/firebase_auth_state_provider.dart";
 
 // -----------------------------------------------------------
 // THIS SHOULD ALWAYS BE THE PAGE AT THE ROOT OF THE NAVIGATOR

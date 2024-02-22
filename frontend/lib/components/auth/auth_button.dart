@@ -1,6 +1,6 @@
-/* Button for authentication pages like login and register */
 import 'package:flutter/material.dart';
 
+/* Button for authentication pages like login and register */
 class AuthButton extends StatelessWidget {
   final Function()? onTap;
   final String message;

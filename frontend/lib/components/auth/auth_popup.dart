@@ -1,12 +1,11 @@
-/* Error message popup during login and register */
-/* Button for authentication pages like login and register */
 import 'package:flutter/material.dart';
 
-class AuthErrorPopup extends StatelessWidget {
+/* Button for popups during auth */
+class AuthPopup extends StatelessWidget {
   final String title;
   final String message;
 
-  const AuthErrorPopup({
+  const AuthPopup({
     super.key,
     required this.title,
     required this.message,

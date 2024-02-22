@@ -78,7 +78,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
     showDialog(
       context: context,
       builder: (context) {
-        return AuthErrorPopup(title: title, message: message);
+        return AuthPopup(title: title, message: message);
       },
     );
   }

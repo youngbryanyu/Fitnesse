@@ -1,7 +1,9 @@
+/* The home page after being authenticated */
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+/* Home page widget */
 class HomePage extends ConsumerWidget {
   HomePage({super.key});
 
