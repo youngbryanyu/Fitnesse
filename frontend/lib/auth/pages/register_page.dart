@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/auth/components/auth_button.dart';
-import 'package:frontend/auth/components/auth_popup.dart';
+import 'package:frontend/common/components/popup_dialog.dart';
 import 'package:frontend/auth/components/auth_text_field.dart';
 import 'package:frontend/auth/providers/auth_page_selector_provider.dart';
 // import 'package:frontend/components/auth/auth_logo_tile.dart';

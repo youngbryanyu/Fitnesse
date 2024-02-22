@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:frontend/auth/components/auth_popup.dart';
+import 'package:frontend/common/components/popup_dialog.dart';
 
 void main() {
   // Widget test group for AuthPopup

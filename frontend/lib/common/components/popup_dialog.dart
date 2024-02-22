@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 /* Button for popups during auth */
-class AuthPopup extends StatelessWidget {
+class PopupDialog extends StatelessWidget {
   final String title;
   final String message;
 
-  const AuthPopup({
+  const PopupDialog({
     super.key,
     required this.title,
     required this.message,
@@ -67,7 +67,7 @@ void showAuthPopup(final context, String title, String message) {
   showDialog(
     context: context,
     builder: (context) {
-      return AuthPopup(title: title, message: message);
+      return PopupDialog(title: title, message: message);
     },
   );
 }
