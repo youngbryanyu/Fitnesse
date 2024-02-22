@@ -1,20 +1,21 @@
 /* The login page */
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/components/auth/auth_button.dart';
 import 'package:frontend/components/auth/auth_popup.dart';
 import 'package:frontend/components/auth/auth_text_field.dart';
+import 'package:frontend/providers/auth/auth_page_provider.dart';
 
 /* Login page widget */
-class ResetPasswordPage extends StatefulWidget {
-  final Function()? onTap;
-  const ResetPasswordPage({super.key, required this.onTap});
+class ResetPasswordPage extends ConsumerStatefulWidget {
+  const ResetPasswordPage({super.key});
 
   @override
-  State<ResetPasswordPage> createState() => _ResetPasswordPageState();
+  ConsumerState<ResetPasswordPage> createState() => _ResetPasswordPageState();
 }
 
-class _ResetPasswordPageState extends State<ResetPasswordPage> {
+class _ResetPasswordPageState extends ConsumerState<ResetPasswordPage> {
   /* Text box controllers */
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
@@ -23,7 +24,8 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
   bool passwordVisible = false;
 
   /* Sign in function */
-  Future<void> signInUser() async {
+  Future<void> sendResetPasswordEmail() async {
+    // TODO: update
     /* Show loading circle */
     showDialog(
       context: context,
@@ -97,13 +99,30 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
               child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    /* Welcome text*/
+                    /* Title text */
                     Text(
-                      'Reset Password',
+                      'Forgot your password?',
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.onBackground,
-                        fontSize: 32,
+                        fontSize: 28,
                         fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(height: screenHeight * .01),
+                    Text(
+                      'Enter your email below to receive',
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onBackground,
+                        fontSize: 14,
+                        fontWeight: FontWeight.normal,
+                      ),
+                    ),
+                    Text(
+                      'a password reset email',
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onBackground,
+                        fontSize: 14,
+                        fontWeight: FontWeight.normal,
                       ),
                     ),
                     SizedBox(height: screenHeight * .02),
@@ -118,14 +137,17 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
 
                     /* Send email button */
                     AuthButton(
-                      onTap: signInUser,
-                      message: 'Send password reset email',
+                      onTap: sendResetPasswordEmail,
+                      message: 'Send',
                     ),
-                    SizedBox(height: screenHeight * .03),
+                    SizedBox(height: screenHeight * .01),
 
                     /* Back button */
                     AuthButton(
-                      onTap: signInUser,
+                      onTap: () {
+                        ref.read(authPageStateProvider.notifier).state =
+                            AuthPageState.login;
+                      },
                       message: 'Back',
                     ),
                     SizedBox(height: screenHeight * .03),

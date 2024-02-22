@@ -118,8 +118,8 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
     final isDarkMode =
         MediaQuery.of(context).platformBrightness == Brightness.dark;
     final String onTrackLogoPath = isDarkMode
-        ? 'lib/images/ontrack-logo-dark.png'
-        : 'lib/images/ontrack-logo-light.png';
+        ? 'lib/assets/images/ontrack-logo-dark.png'
+        : 'lib/assets/images/ontrack-logo-light.png';
 
     return Scaffold(
         backgroundColor: Theme.of(context).colorScheme.background,
@@ -160,7 +160,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                       'Super simple exercise and macro tracking',
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.onBackground,
-                        fontSize: 12,
+                        fontSize: 14,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -252,7 +252,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                         Text(
                           'Already have an account?',
                           style: TextStyle(
-                            color: Theme.of(context).colorScheme.surface,
+                            color: Theme.of(context).colorScheme.secondary,
                           ),
                         ),
                         SizedBox(width: screenWidth * .01),

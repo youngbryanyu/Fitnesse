@@ -149,10 +149,16 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          Text(
-                            'Forgot Password?',
-                            style: TextStyle(
-                              color: Theme.of(context).colorScheme.secondary,
+                          GestureDetector(
+                            onTap: () {
+                              ref.read(authPageStateProvider.notifier).state =
+                                  AuthPageState.forgotPassword;
+                            },
+                            child: Text(
+                              'Forgot Password?',
+                              style: TextStyle(
+                                color: Theme.of(context).colorScheme.secondary,
+                              ),
                             ),
                           ),
                         ],
@@ -218,7 +224,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                         Text(
                           'Not a member?',
                           style: TextStyle(
-                            color: Theme.of(context).colorScheme.surface,
+                            color: Theme.of(context).colorScheme.secondary,
                           ),
                         ),
                         SizedBox(width: screenWidth * .01),

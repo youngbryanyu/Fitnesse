@@ -3,6 +3,7 @@ import "package:flutter/material.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
 import "package:frontend/pages/auth/login_page.dart";
 import "package:frontend/pages/auth/register_page.dart";
+import "package:frontend/pages/auth/forgot_password_page.dart";
 import "package:frontend/pages/home/home_page.dart";
 import "package:frontend/providers/auth/auth_page_provider.dart";
 import "package:frontend/providers/auth/firebase_auth_state_provider.dart";
@@ -31,6 +32,8 @@ class RootPageWrapper extends ConsumerWidget {
               return const LoginPage();
             case AuthPageState.register:
               return const RegisterPage();
+            case AuthPageState.forgotPassword:
+              return const ResetPasswordPage();
             default:
               return const RegisterPage();
           }
