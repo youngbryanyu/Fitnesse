@@ -59,34 +59,58 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
       /* Handle error codes */
       if (error.code == 'too-many-requests') {
-        showErrorPopup(
-          'Account temporarily locked',
-          'Too many failed login attempts. Try again later or reset your password.',
-        );
+        if (mounted) {
+          showAuthPopup(
+            context,
+            'Account temporarily locked',
+            'Too many failed login attempts. Please try again later or reset your password.',
+          );
+        }
       } else if (error.code == 'user-disabled') {
-        showErrorPopup('Account locked', 'Your account is disabled.');
+        if (mounted) {
+          showAuthPopup(
+            context,
+            'Account locked',
+            'Your account is disabled.',
+          );
+        }
       } else if (error.code == 'operation-not-allowed') {
-        showErrorPopup(
-          'Login failed',
-          'Email-based login is currently disabled',
-        );
+        if (mounted) {
+          showAuthPopup(
+            context,
+            'Login failed',
+            'Email-based login is currently disabled',
+          );
+        }
+      } else if (error.code == 'wrong-password' ||
+          error.code == 'invalid-email' ||
+          error.code == 'user-not-found' ||
+          error.code == 'invalid-credential') {
+        if (mounted) {
+          showAuthPopup(
+            context,
+            'Login failed',
+            'Invalid login credentials',
+          );
+        }
       } else {
-        /* Group other errors together (e.g. invalid password, no user found, invalid email)*/
-        showErrorPopup('Login failed', 'Invalid login credentials');
+        if (mounted) {
+          showAuthPopup(
+            context,
+            'Unknown error occurred',
+            'Please try again later',
+          );
+        }
       }
     } catch (error) {
-      showErrorPopup('Login failed', 'Server error occurred');
+      if (mounted) {
+        showAuthPopup(
+          context,
+          'Server error occurred',
+          'Please try again later',
+        );
+      }
     }
-  }
-
-  /* Shows an error message popup */
-  void showErrorPopup(String title, String message) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AuthPopup(title: title, message: message);
-      },
-    );
   }
 
   @override

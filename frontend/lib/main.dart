@@ -59,6 +59,7 @@ final ThemeData lightTheme = ThemeData(
     fillColor: Colors.grey.shade300,
     hintStyle: TextStyle(
       color: Colors.grey.shade500,
+      fontSize: 16,
     ),
     enabledBorder: OutlineInputBorder(
       borderSide: BorderSide(
@@ -140,6 +141,7 @@ final ThemeData darkTheme = ThemeData(
     fillColor: Colors.grey.shade700,
     hintStyle: TextStyle(
       color: Colors.grey.shade500,
+      fontSize: 16,
     ),
     enabledBorder: OutlineInputBorder(
       borderSide: BorderSide(

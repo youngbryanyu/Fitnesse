@@ -65,47 +65,64 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
       }
 
       if (error.code == 'email-already-in-use') {
-        showPopup(
-          'Registration failed',
-          'The email is already taken. Try logging in. If you forgot your password you can reset it.',
-        );
+        if (mounted) {
+          showAuthPopup(
+            context,
+            'Email already taken',
+            'The email is already taken. Try logging in. If you forgot your password, you can reset it.',
+          );
+        }
       } else if (error.code == 'invalid-email') {
-        showPopup('Registration failed', 'The email is invalid');
+        if (mounted) {
+          showAuthPopup(
+            context,
+            'Invalid email',
+            'Please enter a valid email address',
+          );
+        }
       } else if (error.code == 'weak-password') {
-        showPopup(
-          'Registration failed',
-          'Your password must be at least 6 characters long',
-        );
+        if (mounted) {
+          showAuthPopup(
+            context,
+            'Invalid password',
+            'Your password must be at least 6 characters long',
+          );
+        }
       } else if (error.code == 'operation-not-allowed') {
-        showPopup(
-          'Registration failed',
-          'Email-based sign up is currently disabled.',
-        );
+        if (mounted) {
+          showAuthPopup(
+            context,
+            'Registration failed',
+            'Email-based sign up is currently disabled.',
+          );
+        }
       } else if (error.code == 'too-many-requests') {
-        showPopup(
-          'Registration failed',
-          'Too many sign up requests from this IP. Try again later.',
-        );
+        if (mounted) {
+          showAuthPopup(
+            context,
+            'Registration failed',
+            'Too many recent sign up requests. Please try again later.',
+          );
+        }
       } else {
         /* Group all other errors together */
-        showPopup(
-          'Registration failed',
-          'Unknown error occurred during sign up',
-        );
+        if (mounted) {
+          showAuthPopup(
+            context,
+            'Registration failed',
+            'Unknown error occurred. Please try again later.',
+          );
+        }
       }
     } catch (error) {
-      showPopup('Registration failed', 'Server error occurred');
+      if (mounted) {
+        showAuthPopup(
+          context,
+          'Registration failed',
+          'Server error occurred. Please try again later.',
+        );
+      }
     }
-  }
-
-  /* Shows an error message popup */
-  void showPopup(String title, String message) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AuthPopup(title: title, message: message);
-      },
-    );
   }
 
   @override

@@ -18,14 +18,12 @@ class ResetPasswordPage extends ConsumerStatefulWidget {
 class _ResetPasswordPageState extends ConsumerState<ResetPasswordPage> {
   /* Text box controllers */
   final emailController = TextEditingController();
-  final passwordController = TextEditingController();
 
   /* whether to show password */
   bool passwordVisible = false;
 
   /* Sign in function */
   Future<void> sendResetPasswordEmail() async {
-    // TODO: update
     /* Show loading circle */
     showDialog(
       context: context,
@@ -37,16 +35,23 @@ class _ResetPasswordPageState extends ConsumerState<ResetPasswordPage> {
     );
 
     try {
-      /* Await sign in */
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
+      /* Await send email */
+      await FirebaseAuth.instance.sendPasswordResetEmail(
         email: emailController.text,
-        password: passwordController.text,
       );
 
-      /* Pop loading circle */
       if (mounted) {
+        /* Pop loading circle */
         Navigator.pop(context);
+
+        /* Show popup and clear controller */
+        showAuthPopup(
+          context,
+          "Email sent successfully",
+          "Please check your email for steps on how to reset your password",
+        );
       }
+      emailController.text = '';
     } on FirebaseAuthException catch (error) {
       /* Pop loading circle */
       if (mounted) {
@@ -55,34 +60,45 @@ class _ResetPasswordPageState extends ConsumerState<ResetPasswordPage> {
 
       /* Handle error codes */
       if (error.code == 'too-many-requests') {
-        showErrorPopup(
-          'Account temporarily locked',
-          'Too many failed login attempts. Try again later or reset your password.',
-        );
-      } else if (error.code == 'user-disabled') {
-        showErrorPopup('Account locked', 'Your account is disabled.');
+        if (mounted) {
+          showAuthPopup(
+            context,
+            'Password reset failed',
+            'Too many recent password resets. Please try again later.',
+          );
+        }
       } else if (error.code == 'operation-not-allowed') {
-        showErrorPopup(
-          'Login failed',
-          'Email-based login is currently disabled',
-        );
+        if (mounted) {
+          showAuthPopup(
+            context,
+            'Password reset failed',
+            'Password reset is currently disabled',
+          );
+        }
+      } else if (error.code == 'invalid-email' ||
+          error.code == 'missing-email') {
+        if (mounted) {
+          showAuthPopup(
+            context,
+            'Invalid email',
+            'Please enter a valid email address',
+          );
+        }
       } else {
-        /* Group other errors together (e.g. invalid password, no user found, invalid email)*/
-        showErrorPopup('Login failed', 'Invalid login credentials');
+        if (mounted) {
+          showAuthPopup(
+              context, 'Unknown error occurred', 'Please try again later.');
+        }
       }
     } catch (error) {
-      showErrorPopup('Login failed', 'Server error occurred');
+      if (mounted) {
+        showAuthPopup(
+          context,
+          'Server error occurred',
+          'Please try again later.',
+        );
+      }
     }
-  }
-
-  /* Shows an error message popup */
-  void showErrorPopup(String title, String message) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AuthPopup(title: title, message: message);
-      },
-    );
   }
 
   @override

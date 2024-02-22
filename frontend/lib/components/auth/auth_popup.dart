@@ -61,3 +61,13 @@ class AuthPopup extends StatelessWidget {
     );
   }
 }
+
+/* Function which shows an auth popup */
+void showAuthPopup(final context, String title, String message) {
+  showDialog(
+    context: context,
+    builder: (context) {
+      return AuthPopup(title: title, message: message);
+    },
+  );
+}
