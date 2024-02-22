@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/* Button for popups dialogs */
+/* A popup dialogs with an 'OK' button */
 class PopupDialog extends StatelessWidget {
   final String title;
   final String message;
