@@ -1,7 +1,7 @@
 /* Setup for logger */
 import DailyRotateFile from 'winston-daily-rotate-file';
 import winston from 'winston';
-import { ENVIRONMENTS } from '../constants';
+import { Environments } from '../constants';
 
 /* Set up file transport and rotation */
 const fileTransport = new DailyRotateFile({
@@ -27,7 +27,7 @@ const consoleTransport = new winston.transports.Console({
 });
 
 /* Set up logger configuration */
-const level = process.env.NODE_ENV === ENVIRONMENTS.PROD ? 'info' : 'debug';
+const level = process.env.NODE_ENV === Environments.Prod ? 'info' : 'debug';
 const logger = winston.createLogger({
   level:
     level /* Minimum level of message to be logged, ranked: silly, debug, verbose, http, info, warn, error */,
@@ -50,7 +50,7 @@ logger.on('error', (error) => {
 });
 
 /* Enable file logging in non-test environments */
-if (process.env.NODE_ENV !== ENVIRONMENTS.TEST) {
+if (process.env.NODE_ENV !== Environments.Test) {
   logger.add(fileTransport);
 }
 

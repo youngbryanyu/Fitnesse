@@ -1,26 +1,44 @@
 /* Routes for user authentication */
 import express from 'express';
-import rateLimit from 'express-rate-limit';
+import rateLimit, { MemoryStore } from 'express-rate-limit';
 import logger from '../../logging/logger';
 import Config from 'simple-app-config';
-import { GENERIC_RESPONSES } from '../../constants';
+import { API_URLS_V1_PREFIX, Environments, GenericResponses } from '../../constants';
 import UserController from '../controllers/userController';
+import RedisStore from 'rate-limit-redis';
+import RedisClient from '../../redis/redisClient';
+import _ from 'lodash';
 
-const router = express.Router();
+export const userRouter = express.Router();
+
+/* Get redis client */
+const redisClient = RedisClient.getClient();
+
+/* Get environment */
+const environment = Config.get('ENV');
 
 /* Rate limit create user API */
 const rateLimitCreateUser = rateLimit({
-  windowMs: Config.get('RATE_LIMITING.AUTH.REGISTER.WINDOW'),
-  max: Config.get('RATE_LIMITING.AUTH.REGISTER.THRESHOLD'),
+  windowMs: Config.get('RATE_LIMITING.USER.POST.WINDOW'),
+  max: Config.get('RATE_LIMITING.USER.POST.THRESHOLD'),
   handler: (req, res) => {
-    logger.info(`The register rate limit has been reached for IP ${req.ip}`);
+    logger.info(`The create user rate limit has been reached for IP ${req.ip}`);
     res.status(429).json({
-      message: GENERIC_RESPONSES[429]
+      message: GenericResponses._429
     });
+  },
+  store:
+    environment == Environments.Test
+      ? new MemoryStore()
+      : new RedisStore({
+          sendCommand: (...args: string[]) => redisClient.sendCommand(args)
+        }),
+  keyGenerator: (req) => {
+    return `${req.method}-${_.trimStart(req.baseUrl, API_URLS_V1_PREFIX)}-${req.ip}`;
   }
 });
 
 /* Create user */
-router.post('/', rateLimitCreateUser, UserController.createUser);
+userRouter.post('/', rateLimitCreateUser, UserController.createUser);
 
-export default router;
+export default userRouter;

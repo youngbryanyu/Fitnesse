@@ -1,7 +1,7 @@
 /* Unit tests for the backend application server class */
 import mongoose from 'mongoose';
 import App from '../src/app';
-import { ENVIRONMENTS } from '../src/constants';
+import { Environments } from '../src/constants';
 import logger from '../src/logging/logger';
 import Config, { EnvParser } from 'simple-app-config';
 import http from 'http';
@@ -91,7 +91,7 @@ describe('App Tests', () => {
 
     it('should start the server and have it listen successfully when the environment is production', async () => {
       EnvParser.getString = jest.fn().mockImplementationOnce(() => {
-        return ENVIRONMENTS.PROD;
+        return Environments.Prod;
       });
       fs.existsSync = jest.fn().mockImplementation(() => {
         return true;

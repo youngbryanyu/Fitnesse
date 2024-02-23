@@ -1,30 +1,62 @@
-/* Backend server startup script and entry point */
-import App from './app';
+/**
+ * Import DB clients and logger before all else
+ */
 import logger from './logging/logger';
-import Config from 'simple-app-config';
-
-/* Get the server port from configuration object */
-const PORT: number = Config.get('PORT');
-
-/* Start application */
-startApp(PORT);
+import RedisClient from './redis/redisClient';
 
 /**
- * Initializes middlewares, mounts API routes, connects to MongoDB, and starts the backend server.
- * @param port The port number that the backend server listens on.
+ * IIFE to ensure database connections are established synchronously before anything else uses the DBs
  */
-async function startApp(port: number) {
-  const appInstance = new App();
+(async () => {
+  /**
+   * Create DB connections
+   */
+  await createDatabaseConnections();
 
-  try {
-    /* Wait for the MongoDB connection to be established */
-    await appInstance.connectToMongoDB();
+  /* Dynamically import other dependencies */
+  const App = (await import('./app')).default;
+  const Config = (await import('simple-app-config')).default;
 
-    /* Start the server after successful database connection */
-    await appInstance.startServer(port);
-  } catch (error) {
-    logger.error('Failed to start the application:', error);
-    appInstance.closeServer(port);
-    process.exit(1);
+  /* Get the server port from configuration object */
+  const PORT: number = Config.get('PORT');
+
+  /* Start application */
+  startApp(PORT);
+
+  /**
+   * Initializes middlewares, mounts API routes, connects to MongoDB, and starts the backend server.
+   * @param port The port number that the backend server listens on.
+   */
+  async function startApp(port: number) {
+    const appInstance = new App();
+
+    try {
+      /* Wait for the MongoDB connection to be established */
+      await appInstance.connectToMongoDB();
+
+      /* Start the server after successful database connection */
+      await appInstance.startServer(port);
+    } catch (error) {
+      logger.error('Failed to start the application:', error);
+      appInstance.closeServer(port);
+      process.exit(1);
+    }
   }
-}
+
+  /**
+   * Creates all connections to external DBs.
+   */
+  async function createDatabaseConnections(): Promise<void> {
+    try {
+      /* Connect to MongoDB */
+
+      // TODO: move mongodb connection here and create client
+
+      /* Connect to Redis */
+      await RedisClient.initialize();
+    } catch (error) {
+      logger.error('Failed to establish all DB connections:\n', error);
+      process.exit(1);
+    }
+  }
+})();

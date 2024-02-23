@@ -1,8 +1,8 @@
 /* Business logic for user related APIs */
 import { Request, Response } from 'express';
 import { User } from '../models/user';
-import { USER_RESPONSES } from '../constants';
-import { GENERIC_RESPONSES } from '../../constants';
+import { UserResponses } from '../constants';
+import { GenericResponses } from '../../constants';
 
 /**
  * Business logic for user related APIs
@@ -19,8 +19,8 @@ class UserController {
       /* Check if user already created */
       const user = await User.findById(req.body._id);
       if (user) {
-        res.status(403).json({
-          message: USER_RESPONSES._403_USER_ALREADY_EXISTS
+        res.status(409).json({
+          message: UserResponses._409_UserAlreadyExists
         });
         return;
       }
@@ -43,11 +43,11 @@ class UserController {
       });
       await newUser.save();
       res.status(201).json({
-        message: USER_RESPONSES._201_USER_CREATE_SUCCESSFUL
+        message: UserResponses._201_UserCreateSuccessful
       });
     } catch (error) {
       res.status(500).json({
-        message: GENERIC_RESPONSES[500]
+        message: GenericResponses._500
       });
     }
   }

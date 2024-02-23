@@ -1,8 +1,9 @@
 /* Application setup */
 import express, { Express } from 'express';
 import mongoose from 'mongoose';
-import healthCheckRoute from './healthCheck/routes/healthCheckRoutes';
-import { API_URLS_V1 } from './constants';
+import healthCheckRouter from './healthCheck/routes/healthCheckRoutes';
+import userRouter from './user/routes/userRoutes';
+import { ApiUrlsV1 } from './constants';
 import logger from './logging/logger';
 import Config from 'simple-app-config';
 import helmet from 'helmet';
@@ -15,7 +16,7 @@ class App {
   /**
    * Express middleware
    */
-  private readonly expressApp: Express;
+  private expressApp: Express;
   /**
    * Pool of servers where we map port to server
    */
@@ -66,7 +67,8 @@ class App {
    * Mounts the routes for the backend API endpoints.
    */
   private mountRoutes(): void {
-    this.expressApp.use(API_URLS_V1.HEALTH_CHECK, healthCheckRoute);
+    this.expressApp.use(ApiUrlsV1.HealthCheck, healthCheckRouter);
+    this.expressApp.use(ApiUrlsV1.User, userRouter);
   }
 
   /**

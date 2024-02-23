@@ -1,6 +1,6 @@
 /* Unit tests for the health check routes */
 import request from 'supertest';
-import { API_URLS_V1, GENERIC_RESPONSES } from '../../../src/constants';
+import { ApiUrlsV1, GenericResponses } from '../../../src/constants';
 import App from '../../../src/app';
 import Config from 'simple-app-config';
 import HealthCheckController from '../../../src/healthCheck/controllers/healthCheckController';
@@ -27,7 +27,7 @@ describe('Health Check Routes Tests', () => {
     it('should call HealthCheckController.checkHealth', async () => {
       /* Make the API call */
       const expressInstance = appInstance.getExpressApp();
-      await request(expressInstance).get(`${API_URLS_V1.HEALTH_CHECK}/healthCheck`).send({});
+      await request(expressInstance).get(`${ApiUrlsV1.HealthCheck}`).send({});
 
       /* Test against expected */
       expect(HealthCheckController.checkHealth).toHaveBeenCalled();
@@ -36,20 +36,18 @@ describe('Health Check Routes Tests', () => {
     it('should fail when the rate limit is exceeded', async () => {
       /* Call API `threshold` times so that next call will cause rating limiting */
       const expressInstance = appInstance.getExpressApp();
-      const threshold: number = Config.get('RATE_LIMITING.HEALTH_CHECKS.HEALTH_CHECK.THRESHOLD');
+      const threshold: number = Config.get('RATE_LIMITING.HEALTH_CHECK.GET.THRESHOLD');
       for (let i = 0; i < threshold; i++) {
-        await request(expressInstance).get(`${API_URLS_V1.HEALTH_CHECK}/healthCheck`).send({});
+        await request(expressInstance).get(`${ApiUrlsV1.HealthCheck}`).send({});
       }
 
       /* Call API */
-      const response = await request(expressInstance)
-        .get(`${API_URLS_V1.HEALTH_CHECK}/healthCheck`)
-        .send({});
+      const response = await request(expressInstance).get(`${ApiUrlsV1.HealthCheck}`).send({});
 
       /* Test against expected */
       expect(HealthCheckController.checkHealth).toHaveBeenCalled();
       expect(response.statusCode).toBe(429);
-      expect(response.body.message).toBe(GENERIC_RESPONSES[429]);
+      expect(response.body.message).toBe(GenericResponses._429);
     });
   });
 });

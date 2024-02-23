@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { MockRequest, MockResponse, createRequest, createResponse } from 'node-mocks-http';
 import HealthCheckController from '../../../src/healthCheck/controllers/healthCheckController';
-import { HEALTH_CHECK_RESPONSES } from '../../../src/healthCheck/constants';
+import { HealthCheckResponses } from '../../../src/healthCheck/constants';
 import mongoose from 'mongoose';
 
 describe('Health Check Controller Tests', () => {
@@ -35,7 +35,7 @@ describe('Health Check Controller Tests', () => {
 
       /* Test against expected */
       expect(response.statusCode).toBe(200);
-      expect(response._getJSONData().message).toBe(HEALTH_CHECK_RESPONSES._200_SUCCESS);
+      expect(response._getJSONData().message).toBe(HealthCheckResponses._200_Success);
     });
 
     it('should fail when not all databases are healthy', async () => {
@@ -59,7 +59,7 @@ describe('Health Check Controller Tests', () => {
 
       /* Test against expected*/
       expect(response.statusCode).toBe(503);
-      expect(response._getJSONData().message).toBe(HEALTH_CHECK_RESPONSES._503_FAILURE);
+      expect(response._getJSONData().message).toBe(HealthCheckResponses._503_Failure);
     });
   });
 });

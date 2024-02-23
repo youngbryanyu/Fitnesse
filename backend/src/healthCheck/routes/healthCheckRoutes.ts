@@ -1,26 +1,44 @@
 /* Routes for application health checks */
 import express from 'express';
-import rateLimit from 'express-rate-limit';
+import rateLimit, { MemoryStore } from 'express-rate-limit';
 import logger from '../../logging/logger';
 import Config from 'simple-app-config';
 import HealthCheckController from '../controllers/healthCheckController';
-import { GENERIC_RESPONSES } from '../../constants';
+import { API_URLS_V1_PREFIX, Environments, GenericResponses } from '../../constants';
+import RedisStore from 'rate-limit-redis';
+import RedisClient from '../../redis/redisClient';
+import _ from 'lodash';
 
-const router = express.Router();
+const healthCheckRouter = express.Router();
+
+/* Get redis client */
+const redisClient = RedisClient.getClient();
+
+/* Get environment */
+const environment = Config.get('ENV');
 
 /* Rate limit register API based on IP */
 const rateLimitHealthCheck = rateLimit({
-  windowMs: Config.get('RATE_LIMITING.HEALTH_CHECKS.HEALTH_CHECK.WINDOW'),
-  max: Config.get('RATE_LIMITING.HEALTH_CHECKS.HEALTH_CHECK.THRESHOLD'),
+  windowMs: Config.get('RATE_LIMITING.HEALTH_CHECK.GET.WINDOW'),
+  max: Config.get('RATE_LIMITING.HEALTH_CHECK.GET.THRESHOLD'),
   handler: (req, res) => {
-    logger.info(`The register rate limit has been reached for IP ${req.ip}`);
+    logger.info(`The health check rate limit has been reached for IP ${req.ip}`);
     res.status(429).json({
-      message: GENERIC_RESPONSES[429]
+      message: GenericResponses._429
     });
+  },
+  store:
+    environment == Environments.Test
+      ? new MemoryStore()
+      : new RedisStore({
+          sendCommand: (...args: string[]) => redisClient.sendCommand(args)
+        }),
+  keyGenerator: (req) => {
+    return `${req.method}-${_.trimStart(req.baseUrl, API_URLS_V1_PREFIX)}-${req.ip}`;
   }
 });
 
-/* Register route */
-router.get('/healthCheck', rateLimitHealthCheck, HealthCheckController.checkHealth);
+/* Health check route */
+healthCheckRouter.get('/', rateLimitHealthCheck, HealthCheckController.checkHealth);
 
-export default router;
+export default healthCheckRouter;

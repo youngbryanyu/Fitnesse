@@ -21,6 +21,7 @@
     "simple"
   ],
   "dependencies": {
+    "@types/lodash": "^4.14.202",
     "async-retry": "^1.3.3",
     "crypto-js": "^4.2.0",
     "dotenv": "^16.3.1",
@@ -28,8 +29,11 @@
     "express-rate-limit": "^7.1.5",
     "helmet": "^7.1.0",
     "jsonwebtoken": "^9.0.2",
+    "lodash": "^4.17.21",
     "mongoose": "^8.0.3",
     "rate-limit-mongo": "^2.3.2",
+    "rate-limit-redis": "^4.2.0",
+    "redis": "^4.6.13",
     "simple-app-config": "^1.2.0",
     "winston": "^3.11.0",
     "winston-daily-rotate-file": "^4.7.1"

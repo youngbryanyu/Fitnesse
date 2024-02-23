@@ -2,7 +2,7 @@
 import { Request, Response } from 'express';
 import mongoose, { STATES } from 'mongoose';
 import logger from '../../logging/logger';
-import { HEALTH_CHECK_RESPONSES } from '../constants';
+import { HealthCheckResponses } from '../constants';
 
 /**
  * Business logic for application health checks
@@ -25,12 +25,12 @@ class HealthCheckController {
 
       /* Response to client */
       res.status(200).json({
-        message: HEALTH_CHECK_RESPONSES._200_SUCCESS
+        message: HealthCheckResponses._200_Success
       });
     } catch (error) {
       logger.error('Error occured during database health check (failure): ' + error);
       res.status(503).json({
-        message: HEALTH_CHECK_RESPONSES._503_FAILURE
+        message: HealthCheckResponses._503_Failure
       });
     }
   }

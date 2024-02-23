@@ -1,4 +1,5 @@
 {
+  "ENV": "$NODE_ENV::string",
   "PORT": "$PORT::number",
   "REFRESH_TOKEN_SECRET": "$REFRESH_TOKEN_SECRET::string",
   "ACCESS_TOKEN_SECRET": "$ACCESS_TOKEN_SECRET::string",
@@ -9,25 +10,36 @@
     "CONNECTION_RETRY_TIMEOUT": 1000,
     "CONNECTION_URL": "$MONGO_CONNECTION_URL::string"
   },
+  "REDIS": {
+    "HOST": "$REDIS_HOST::string",
+    "PORT": "$REDIS_PORT::number",
+    "PASSWORD": "$REDIS_PASSWORD::string",
+    "CONNECTION_RETRIES": 2,
+    "CONNECTION_RETRY_TIMEOUT": 1000
+  },
   "RATE_LIMITING": {
-    "AUTH": {
-      "REGISTER": {
-        "THRESHOLD": 100,
-        "WINDOW": 3600000
+    "USER": {
+      "POST": {
+        "THRESHOLD": 60,
+        "WINDOW": 60000
       },
-      "LOGIN": {
-        "THRESHOLD": 100,
-        "WINDOW": 3600000
+      "PUT": {
+        "THRESHOLD": 60,
+        "WINDOW": 60000
       },
-      "LOGOUT": {
-        "THRESHOLD": 100,
-        "WINDOW": 3600000
+      "GET": {
+        "THRESHOLD": 60,
+        "WINDOW": 60000
+      },
+      "DELETE": {
+        "THRESHOLD": 60,
+        "WINDOW": 60000
       }
     },
-    "HEALTH_CHECKS": {
-      "HEALTH_CHECK": {
+    "HEALTH_CHECK": {
+      "GET": {
         "THRESHOLD": 120,
-        "WINDOW": 60
+        "WINDOW": 60000
       }
     }
   },
