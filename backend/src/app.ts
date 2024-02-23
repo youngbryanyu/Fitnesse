@@ -1,9 +1,9 @@
 /* Application setup */
 import express, { Express } from 'express';
 import mongoose from 'mongoose';
-import healthCheckRouter from './healthCheck/routes/healthCheckRoutes';
-import userRouter from './user/routes/userRoutes';
-import { ApiUrlsV1 } from './constants';
+import healthCheckRouter from './features/healthCheck/routes/healthCheckRoutes';
+import userRouter from './features/user/routes/userRoutes';
+import { ApiUrlsV1 } from './features/common/constants';
 import logger from './logging/logger';
 import Config from 'simple-app-config';
 import helmet from 'helmet';

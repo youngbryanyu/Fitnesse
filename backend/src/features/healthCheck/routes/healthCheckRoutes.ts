@@ -1,13 +1,13 @@
 /* Routes for application health checks */
 import express from 'express';
 import rateLimit, { MemoryStore } from 'express-rate-limit';
-import logger from '../../logging/logger';
 import Config from 'simple-app-config';
 import HealthCheckController from '../controllers/healthCheckController';
-import { API_URLS_V1_PREFIX, Environments, GenericResponses } from '../../constants';
+import { API_URLS_V1_PREFIX, Environments, GenericResponses } from '../../common/constants';
 import RedisStore from 'rate-limit-redis';
-import RedisClient from '../../redis/redisClient';
 import _ from 'lodash';
+import logger from '../../../logging/logger';
+import RedisClient from '../../../database/redis/redisClient';
 
 const healthCheckRouter = express.Router();
 

@@ -1,13 +1,13 @@
 /* Routes for user authentication */
 import express from 'express';
 import rateLimit, { MemoryStore } from 'express-rate-limit';
-import logger from '../../logging/logger';
+import logger from '../../../logging/logger';
 import Config from 'simple-app-config';
-import { API_URLS_V1_PREFIX, Environments, GenericResponses } from '../../constants';
+import { API_URLS_V1_PREFIX, Environments, GenericResponses } from '../../common/constants';
 import UserController from '../controllers/userController';
 import RedisStore from 'rate-limit-redis';
-import RedisClient from '../../redis/redisClient';
 import _ from 'lodash';
+import RedisClient from '../../../database/redis/redisClient';
 
 export const userRouter = express.Router();
 

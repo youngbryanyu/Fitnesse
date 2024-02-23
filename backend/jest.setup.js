@@ -12,8 +12,8 @@ global.console = {
   debug: jest.fn(), // Mock console.debug
 }
 
-/* Mock Redis client in all unit tests */
-jest.mock('./src/redis/redisClient', () => ({
+/* Mock Redis client in all unit tests. Needed since redis is used by express-rate-limit in top level code which is imported by App.ts when the routes are loaded */
+jest.mock('./src/database/redis/redisClient', () => ({
   getClient: jest.fn().mockImplementation(() => ({
     sendCommand: jest.fn().mockResolvedValue('OK'),
   })),

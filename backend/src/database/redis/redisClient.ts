@@ -1,6 +1,6 @@
 import Config from 'simple-app-config';
 import { createClient, RedisClientType } from 'redis';
-import logger from '../logging/logger';
+import logger from '../../logging/logger';
 
 /**
  * Client class used to interact with redis

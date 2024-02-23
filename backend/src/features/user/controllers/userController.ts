@@ -2,8 +2,8 @@
 import { Request, Response } from 'express';
 import { User } from '../models/user';
 import { UserResponses } from '../constants';
-import { GenericResponses } from '../../constants';
-import logger from '../../logging/logger';
+import { GenericResponses } from '../../common/constants';
+import logger from '../../../logging/logger';
 
 /**
  * Business logic for user related APIs

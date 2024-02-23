@@ -1,8 +1,8 @@
 /* Business logic for application health checks */
 import { Request, Response } from 'express';
 import mongoose, { STATES } from 'mongoose';
-import logger from '../../logging/logger';
 import { HealthCheckResponses } from '../constants';
+import logger from '../../../logging/logger';
 
 /**
  * Business logic for application health checks

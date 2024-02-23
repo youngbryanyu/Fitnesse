@@ -1,5 +1,5 @@
 /* Interface that all official and custom food documents extend */
-import { BaseDocument } from '../../baseDocument';
+import { BaseDocument } from '../../common/baseDocument';
 
 /**
  * Interface for a generic food document that is trackable

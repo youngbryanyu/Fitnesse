@@ -1,7 +1,7 @@
 /* Unit tests for the backend application server class */
 import mongoose from 'mongoose';
 import App from '../src/app';
-import { Environments } from '../src/constants';
+import { Environments } from '../src/features/common/constants';
 import logger from '../src/logging/logger';
 import Config, { EnvParser } from 'simple-app-config';
 import http from 'http';

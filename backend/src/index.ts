@@ -2,7 +2,7 @@
  * Import DB clients and logger before all else
  */
 import logger from './logging/logger';
-import RedisClient from './redis/redisClient';
+import RedisClient from './database/redis/redisClient';
 
 /**
  * IIFE to ensure database connections are established synchronously before anything else uses the DBs

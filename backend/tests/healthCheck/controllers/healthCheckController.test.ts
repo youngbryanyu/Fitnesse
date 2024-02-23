@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { MockRequest, MockResponse, createRequest, createResponse } from 'node-mocks-http';
-import HealthCheckController from '../../../src/healthCheck/controllers/healthCheckController';
-import { HealthCheckResponses } from '../../../src/healthCheck/constants';
+import HealthCheckController from '../../../src/features/healthCheck/controllers/healthCheckController';
+import { HealthCheckResponses } from '../../../src/features/healthCheck/constants';
 import mongoose from 'mongoose';
 
 describe('Health Check Controller Tests', () => {
