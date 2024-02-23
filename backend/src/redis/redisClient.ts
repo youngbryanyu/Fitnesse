@@ -35,7 +35,7 @@ class RedisClient {
       await RedisClient.client.connect();
       logger.info('Successfully connected to Redis');
     } catch (error) {
-      logger.error('Error connecting to redis:\n', error);
+      logger.error('Error occurred while connecting to redis:\n', error);
       throw error;
     }
   }

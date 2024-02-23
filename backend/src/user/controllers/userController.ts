@@ -3,6 +3,7 @@ import { Request, Response } from 'express';
 import { User } from '../models/user';
 import { UserResponses } from '../constants';
 import { GenericResponses } from '../../constants';
+import logger from '../../logging/logger';
 
 /**
  * Business logic for user related APIs
@@ -46,6 +47,7 @@ class UserController {
         message: UserResponses._201_UserCreateSuccessful
       });
     } catch (error) {
+      logger.error('Error occurred during user creation:\n', error);
       res.status(500).json({
         message: GenericResponses._500
       });
