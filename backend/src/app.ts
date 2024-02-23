@@ -1,7 +1,6 @@
 /* Application setup */
 import express, { Express } from 'express';
 import mongoose from 'mongoose';
-import authRoute from './auth-deprecated/routes/authRoutes';
 import healthCheckRoute from './healthCheck/routes/healthCheckRoutes';
 import { API_URLS_V1 } from './constants';
 import logger from './logging/logger';
@@ -67,7 +66,6 @@ class App {
    * Mounts the routes for the backend API endpoints.
    */
   private mountRoutes(): void {
-    this.expressApp.use(API_URLS_V1.AUTH, authRoute);
     this.expressApp.use(API_URLS_V1.HEALTH_CHECK, healthCheckRoute);
   }
 

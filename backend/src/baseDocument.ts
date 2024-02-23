@@ -5,6 +5,6 @@ import mongoose from 'mongoose';
  * Base interface for a document
  */
 export interface BaseDocument<T> extends Document {
-  _id: mongoose.Schema.Types.ObjectId;
+  _id: mongoose.Schema.Types.ObjectId | string;
   _doc: T;
 }
