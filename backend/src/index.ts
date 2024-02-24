@@ -9,9 +9,7 @@ import MongodbClient from './database/mongodb/mongodbClient';
  * Startup script for the backend server
  */
 (async () => {
-  /**
-   * Create DB connections
-   */
+  /* Create DB connections */
   await createDatabaseConnections();
 
   /* Dynamically import other dependencies */
@@ -21,6 +19,22 @@ import MongodbClient from './database/mongodb/mongodbClient';
   /* Start application */
   const PORT: number = Config.get('PORT');
   startApp(PORT);
+
+  /**
+   * Creates all connections to external DBs.
+   */
+  async function createDatabaseConnections(): Promise<void> {
+    try {
+      /* Connect to MongoDB */
+      await MongodbClient.initialize();
+
+      /* Connect to Redis */
+      await RedisClient.initialize();
+    } catch (error) {
+      logger.error('Failed to establish all DB connections:\n', error);
+      process.exit(1);
+    }
+  }
 
   /**
    * Initializes middlewares, mounts API routes, connects to MongoDB, and starts the backend server.
@@ -35,22 +49,6 @@ import MongodbClient from './database/mongodb/mongodbClient';
     } catch (error) {
       logger.error('Failed to start the application:', error);
       appInstance.closeServer(port);
-      process.exit(1);
-    }
-  }
-
-  /**
-   * Creates all connections to external DBs.
-   */
-  async function createDatabaseConnections(): Promise<void> {
-    try {
-      /* Connect to MongoDB */
-      await MongodbClient.initialize();
-
-      /* Connect to Redis */
-      await RedisClient.initialize();
-    } catch (error) {
-      logger.error('Failed to establish all DB connections:\n', error);
       process.exit(1);
     }
   }

@@ -7,8 +7,6 @@ describe('MongodbClient Tests', () => {
     jest.restoreAllMocks();
   });
 
-  afterEach(() => {});
-
   describe('initialize', () => {
     it('should successfully connect to MongoDB', async () => {
       /* Set up mocks */
