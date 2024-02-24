@@ -82,4 +82,51 @@ describe('App Tests', () => {
       expect(logger.error).toHaveBeenCalled();
     });
   });
+
+  describe('closePort', () => {
+    it('should close a port successfully', async () => {
+      /* Set up mocks */
+      jest.spyOn(http.Server.prototype, 'listen').mockImplementation(function (
+        this: http.Server,
+        // eslint-disable-next-line
+        ...args: any[]
+      ) {
+        const callback = args.find((arg) => typeof arg === 'function');
+        if (callback) callback();
+        return this;
+      });
+      jest.spyOn(http.Server.prototype, 'close');
+
+      /* Call functions */
+      await appInstance.startServer(PORT);
+      appInstance.closePort(PORT);
+
+      /* Test against expected */
+      expect(http.Server.prototype.close).toHaveBeenCalled();
+    });
+
+    it('should fail if closing a port fails', async () => {
+      /* Set up mocks */
+      jest.spyOn(http.Server.prototype, 'listen').mockImplementation(function (
+        this: http.Server,
+        // eslint-disable-next-line
+        ...args: any[]
+      ) {
+        const callback = args.find((arg) => typeof arg === 'function');
+        if (callback) callback();
+        return this;
+      });
+      jest.spyOn(http.Server.prototype, 'close').mockImplementation(() => {
+        throw new Error();
+      });
+      jest.spyOn(logger, 'error');
+
+      /* Call functions */
+      await appInstance.startServer(PORT);
+      appInstance.closePort(PORT);
+
+      /* Test against expected */
+      expect(logger.error).toHaveBeenCalled();
+    });
+  });
 });

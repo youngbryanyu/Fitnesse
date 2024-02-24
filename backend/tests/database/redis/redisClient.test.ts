@@ -1,9 +1,11 @@
 /* Unit tests for the redis client */
+import Config from 'simple-app-config';
 import RedisClient from '../../../src/database/redis/redisClient';
 
 /* Mock redis package */
 jest.mock('redis', () => jest.requireActual('redis-mock'));
 import redis from 'redis';
+import logger from '../../../src/logging/logger';
 
 describe('RedisClient Tests', () => {
   beforeEach(() => {
@@ -53,10 +55,12 @@ describe('RedisClient Tests', () => {
       redis.createClient = jest.fn().mockImplementationOnce(() => ({
         connect: jest.fn().mockImplementationOnce(() => {
           throw new Error();
-        }), // Simulates successful connection
-        quit: jest.fn().mockResolvedValue(undefined), // Simulates successful disconnection
-        isReady: true // Simulates the client being ready
+        }),
+        quit: jest.fn().mockResolvedValue(undefined),
+        isReady: true
       }));
+
+      jest.spyOn(Config, 'get');
 
       /* Call function twice */
       expect.assertions(1);
@@ -72,9 +76,9 @@ describe('RedisClient Tests', () => {
     it('should return the client if it has been initialized', async () => {
       /* Set up mocks */
       redis.createClient = jest.fn().mockImplementationOnce(() => ({
-        connect: jest.fn().mockResolvedValue(undefined), // Simulates successful connection
-        quit: jest.fn().mockResolvedValue(undefined), // Simulates successful disconnection
-        isReady: true // Simulates the client being ready
+        connect: jest.fn().mockResolvedValue(undefined),
+        quit: jest.fn().mockResolvedValue(undefined),
+        isReady: true
       }));
 
       /* Call function */
@@ -94,9 +98,9 @@ describe('RedisClient Tests', () => {
     it('should call quit and disconnect from redis', async () => {
       /* Set up mocks */
       redis.createClient = jest.fn().mockImplementationOnce(() => ({
-        connect: jest.fn().mockResolvedValue(undefined), // Simulates successful connection
-        quit: jest.fn().mockResolvedValue(undefined), // Simulates successful disconnection
-        isReady: true // Simulates the client being ready
+        connect: jest.fn().mockResolvedValue(undefined),
+        quit: jest.fn().mockResolvedValue(undefined),
+        isReady: true
       }));
 
       /* Call function */
@@ -106,6 +110,30 @@ describe('RedisClient Tests', () => {
 
       /* Test against expected */
       expect(client.quit).toHaveBeenCalled();
+    });
+
+    it('should fail if disconnecting from redis fails', async () => {
+      /* Set up mocks and spies */
+      redis.createClient = jest.fn().mockImplementationOnce(() => ({
+        connect: jest.fn().mockResolvedValue(undefined),
+        quit: jest.fn().mockImplementationOnce(() => {
+          throw new Error();
+        }),
+        isReady: true
+      }));
+      jest.spyOn(logger, 'error');
+
+      /* Call function and test against expected */
+      await RedisClient.initialize();
+      await RedisClient.reset();
+      expect(logger.error).toHaveBeenCalled();
+    });
+
+    it('should return if the client is not initialized', async () => {
+      /* Call function and test against expected */
+      expect.assertions(1);
+      const result = await RedisClient.reset();
+      expect(result).toBeUndefined();
     });
   });
 });

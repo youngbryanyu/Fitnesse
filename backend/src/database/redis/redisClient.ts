@@ -47,8 +47,8 @@ class RedisClient {
    * @returns The Redis client.
    */
   public static getClient(): RedisClientType {
-    if (!RedisClient.client) {
-      logger.error('The redis client has no been initialized yet');
+    if (!RedisClient.client || !RedisClient.client.isReady) {
+      logger.error('The Redis client has not been initialized yet');
       throw new Error('Redis client not initialized yet.');
     }
     return RedisClient.client;
@@ -58,9 +58,15 @@ class RedisClient {
    * Tears down existing redis connection.
    */
   public static async reset(): Promise<void> {
-    if (RedisClient.client !== undefined && RedisClient.client.isReady) {
+    if (RedisClient.client === undefined || !RedisClient.client.isReady) {
+      return;
+    }
+
+    try {
       await RedisClient.client.quit();
       RedisClient.client = undefined;
+    } catch (error) {
+      logger.error('Failed to disconnect gracefully from Redis:\n', error);
     }
   }
 }

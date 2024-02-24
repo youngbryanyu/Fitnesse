@@ -5,7 +5,7 @@ import MongodbClient from './database/mongodb/mongodbClient';
 import { IApp } from './app';
 
 /* Whether app has been imported */
-let importedApp = false;
+let initializedApp = false;
 
 (async () => {
   /* Listen for termination events and disconnect from DBs upon termination */
@@ -21,11 +21,11 @@ let importedApp = false;
 
   /* Dynamically import app since it's dependencies have top-level code that depends on an active redis connection (routes) */
   const App = (await import('./app')).default;
-  importedApp = true;
 
   /* Start application */
   const port: number = Config.get('PORT');
   const app = await startApp(port);
+  initializedApp = true;
 
   /**
    * Creates all connections to external DBs.
@@ -49,14 +49,14 @@ let importedApp = false;
    * @param port The port number that the server listens on.
    */
   async function startApp(port: number): Promise<IApp> {
-    const app: IApp = new App();
-
     try {
+      const app: IApp = new App();
+
       /* Start the express server */
       await app.startServer(port);
       return app;
     } catch (error) {
-      logger.error('Failed to start the application:', error);
+      logger.error('Failed to start the application:\n', error);
       await tearDownResources();
       process.exit(1);
     }
@@ -66,20 +66,15 @@ let importedApp = false;
    * Resource tear down function to exit gracefully. Closes all database connections and server ports/
    */
   async function tearDownResources() {
+    /* Disconnect from mongodb */
+    await MongodbClient.reset();
+
     /* Disconnect from redis */
-    try {
-      await RedisClient.reset();
-    } catch (error) {
-      logger.info('Failed to disconnect gracefully from Redis:\n', error);
-    }
+    await RedisClient.reset();
 
     /* Close server ports */
-    try {
-      if (importedApp) {
-        app.closePort(port);
-      }
-    } catch (error) {
-      logger.info(`Failed to gracefully close all ports from server:\n`, error);
+    if (initializedApp) {
+      app.closePort(port);
     }
   }
 })();

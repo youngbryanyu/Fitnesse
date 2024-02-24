@@ -1,6 +1,7 @@
 /* Unit tests for the mongodb client */
 import mongoose from 'mongoose';
 import MongodbClient from '../../../src/database/mongodb/mongodbClient';
+import logger from '../../../src/logging/logger';
 
 describe('MongodbClient Tests', () => {
   beforeEach(() => {
@@ -34,6 +35,39 @@ describe('MongodbClient Tests', () => {
       } catch (error) {
         expect(error).toBeDefined();
       }
+    });
+  });
+
+  describe('reset', () => {
+    it('should successfully disconnect from MongoDB', async () => {
+      /* Set up mocks */
+      jest
+        .spyOn(mongoose, 'connect')
+        .mockResolvedValueOnce({ close: jest.fn() } as unknown as Promise<
+          typeof import('mongoose')
+        >);
+      jest.spyOn(mongoose, 'disconnect').mockResolvedValueOnce(undefined);
+
+      /* Call functions */
+      await MongodbClient.initialize();
+      await MongodbClient.reset();
+
+      /* Test against expected */
+      expect(mongoose.disconnect).toHaveBeenCalled();
+    });
+
+    it('should fail if disconnecting from MongoDB fails', async () => {
+      /* Set up mocks */
+      jest.spyOn(mongoose, 'disconnect').mockImplementation(() => {
+        throw new Error('Test');
+      });
+      jest.spyOn(logger, 'error');
+
+      /* Call functions */
+      await MongodbClient.reset();
+
+      /* Test against expected */
+      expect(logger.error).toHaveBeenCalled();
     });
   });
 });

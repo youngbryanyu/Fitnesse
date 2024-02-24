@@ -103,7 +103,11 @@ class App {
     if (this.serverPool.has(port)) {
       const server = this.serverPool.get(port);
       if (server) {
-        server.close();
+        try {
+          server.close();
+        } catch (error) {
+          logger.error(`Failed to gracefully close port from server:\n`, error);
+        }
       }
       this.serverPool.delete(port);
     }

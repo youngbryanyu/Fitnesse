@@ -23,6 +23,14 @@ class MongodbClient {
       throw error;
     }
   }
+
+  public static async reset(): Promise<void> {
+    try {
+      await mongoose.disconnect();
+    } catch (error) {
+      logger.error('Failed to disconnect gracefully from MongoDB:\n', error);
+    }
+  }
 }
 
 export default MongodbClient;
