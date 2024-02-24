@@ -1,24 +1,31 @@
-/**
- * Import DB clients and logger before all else
- */
+import Config from 'simple-app-config';
 import logger from './logging/logger';
 import RedisClient from './database/redis/redisClient';
 import MongodbClient from './database/mongodb/mongodbClient';
+import { IApp } from './app';
 
-/**
- * Startup script for the backend server
- */
+/* Whether app has been imported */
+let importedApp = false;
+
 (async () => {
+  /* Listen for termination events and disconnect from DBs upon termination */
+  process.on('SIGINT', async () => {
+    await tearDownResources();
+  });
+  process.on('SIGTERM', async () => {
+    await tearDownResources();
+  });
+
   /* Create DB connections */
   await createDatabaseConnections();
 
-  /* Dynamically import other dependencies */
+  /* Dynamically import app since it's dependencies have top-level code that depends on an active redis connection (routes) */
   const App = (await import('./app')).default;
-  const Config = (await import('simple-app-config')).default;
+  importedApp = true;
 
   /* Start application */
-  const PORT: number = Config.get('PORT');
-  startApp(PORT);
+  const port: number = Config.get('PORT');
+  const app = await startApp(port);
 
   /**
    * Creates all connections to external DBs.
@@ -32,24 +39,47 @@ import MongodbClient from './database/mongodb/mongodbClient';
       await RedisClient.initialize();
     } catch (error) {
       logger.error('Failed to establish all DB connections:\n', error);
+      await tearDownResources();
       process.exit(1);
     }
   }
 
   /**
-   * Initializes middlewares, mounts API routes, connects to MongoDB, and starts the backend server.
-   * @param port The port number that the backend server listens on.
+   * Initializes the app and starts the express server.
+   * @param port The port number that the server listens on.
    */
-  async function startApp(port: number) {
-    const appInstance = new App();
+  async function startApp(port: number): Promise<IApp> {
+    const app: IApp = new App();
 
     try {
       /* Start the express server */
-      await appInstance.startServer(port);
+      await app.startServer(port);
+      return app;
     } catch (error) {
       logger.error('Failed to start the application:', error);
-      appInstance.closeServer(port);
+      await tearDownResources();
       process.exit(1);
+    }
+  }
+
+  /**
+   * Resource tear down function to exit gracefully. Closes all database connections and server ports/
+   */
+  async function tearDownResources() {
+    /* Disconnect from redis */
+    try {
+      await RedisClient.reset();
+    } catch (error) {
+      logger.info('Failed to disconnect gracefully from Redis:\n', error);
+    }
+
+    /* Close server ports */
+    try {
+      if (importedApp) {
+        app.closePort(port);
+      }
+    } catch (error) {
+      logger.info(`Failed to gracefully close all ports from server:\n`, error);
     }
   }
 })();

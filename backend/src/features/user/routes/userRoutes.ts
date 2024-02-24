@@ -11,9 +11,6 @@ import RedisClient from '../../../database/redis/redisClient';
 
 const userRouter = express.Router();
 
-/* Get redis client */
-const redisClient = RedisClient.getClient();
-
 /* Get environment */
 const environment = Config.get('ENV');
 
@@ -33,7 +30,7 @@ const rateLimitCreateUser = rateLimit({
       ? new MemoryStore()
       : new RedisStore({
           sendCommand: /* istanbul ignore next */ (...args: string[]) =>
-            redisClient.sendCommand(args)
+            RedisClient.getClient().sendCommand(args)
         }),
   keyGenerator: (req) => {
     return `${req.method}-${_.trimStart(req.baseUrl, API_URLS_V1_PREFIX)}-${req.ip}`;

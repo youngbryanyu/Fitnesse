@@ -8,6 +8,15 @@ import helmet from 'helmet';
 import http from 'http';
 
 /**
+ * Interface for the App class.
+ */
+export interface IApp {
+  startServer(port: number): Promise<void>;
+  getExpressApp(): Express;
+  closePort(port: number): void;
+}
+
+/**
  * The backend application server.
  */
 class App {
@@ -82,20 +91,21 @@ class App {
       logger.info(`Server is listening on port ${port}`);
     } catch (error) {
       logger.error('Error starting the server.', error);
-      process.exit(1);
+      throw error;
     }
   }
 
   /**
-   * Closes a server at a port
+   * Stops listening at a port
    * @param port The port that the server is listening on.
    */
-  public closeServer(port: number): void {
+  public closePort(port: number): void {
     if (this.serverPool.has(port)) {
       const server = this.serverPool.get(port);
       if (server) {
         server.close();
       }
+      this.serverPool.delete(port);
     }
   }
 

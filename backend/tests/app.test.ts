@@ -21,7 +21,7 @@ describe('App Tests', () => {
   });
 
   afterEach(() => {
-    appInstance.closeServer(PORT);
+    appInstance.closePort(PORT);
   });
 
   describe('startServer', () => {
@@ -43,13 +43,13 @@ describe('App Tests', () => {
       EnvParser.getString = jest.fn().mockImplementationOnce(() => {
         return Environments.Prod;
       });
-      fs.existsSync = jest.fn().mockImplementation(() => {
+      fs.existsSync = jest.fn().mockImplementationOnce(() => {
         return true;
       });
-      fs.readFileSync = jest.fn().mockImplementation(() => {
+      fs.readFileSync = jest.fn().mockImplementationOnce(() => {
         return '';
       });
-      jest.spyOn(http.Server.prototype, 'listen').mockImplementation(function (
+      jest.spyOn(http.Server.prototype, 'listen').mockImplementationOnce(function (
         this: http.Server,
         // eslint-disable-next-line
         ...args: any[]
@@ -64,14 +64,19 @@ describe('App Tests', () => {
 
     it('should fail if express has an error when the server is started ', async () => {
       /* Set up mocks and spies */
-      jest.spyOn(http.Server.prototype, 'listen').mockImplementation(() => {
+      jest.spyOn(http.Server.prototype, 'listen').mockImplementationOnce(() => {
         throw new Error();
       });
       jest.spyOn(logger, 'error');
-      jest.spyOn(process, 'exit').mockImplementation(() => undefined as never);
+      jest.spyOn(process, 'exit').mockImplementationOnce(() => undefined as never);
 
       /* Call function */
-      await appInstance.startServer(PORT);
+      expect.assertions(2);
+      try {
+        await appInstance.startServer(PORT);
+      } catch (error) {
+        expect(error).toBeDefined();
+      }
 
       /* Test against expected */
       expect(logger.error).toHaveBeenCalled();

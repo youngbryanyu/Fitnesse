@@ -6,15 +6,17 @@ import logger from '../../logging/logger';
  * Client class used to interact with redis
  */
 class RedisClient {
+  /**
+   * The redis client instance.
+   */
   private static client: RedisClientType | undefined = undefined;
 
   /**
    * Connects to the redis instance and awaits for a connection.
-   * @returns a promise indicating completion of the async operation.
    */
   public static async initialize(): Promise<void> {
     /* Check if client is already initialized */
-    if (RedisClient.client !== undefined) {
+    if (RedisClient.client !== undefined && RedisClient.client.isReady) {
       return;
     }
 
@@ -50,6 +52,16 @@ class RedisClient {
       throw new Error('Redis client not initialized yet.');
     }
     return RedisClient.client;
+  }
+
+  /**
+   * Tears down existing redis connection.
+   */
+  public static async reset(): Promise<void> {
+    if (RedisClient.client !== undefined && RedisClient.client.isReady) {
+      await RedisClient.client.quit();
+      RedisClient.client = undefined;
+    }
   }
 }
 
