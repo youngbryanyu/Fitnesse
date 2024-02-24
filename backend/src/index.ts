@@ -3,9 +3,10 @@
  */
 import logger from './logging/logger';
 import RedisClient from './database/redis/redisClient';
+import MongodbClient from './database/mongodb/mongodbClient';
 
 /**
- * IIFE to ensure database connections are established synchronously before anything else uses the DBs
+ * Startup script for the backend server
  */
 (async () => {
   /**
@@ -17,10 +18,8 @@ import RedisClient from './database/redis/redisClient';
   const App = (await import('./app')).default;
   const Config = (await import('simple-app-config')).default;
 
-  /* Get the server port from configuration object */
-  const PORT: number = Config.get('PORT');
-
   /* Start application */
+  const PORT: number = Config.get('PORT');
   startApp(PORT);
 
   /**
@@ -31,10 +30,7 @@ import RedisClient from './database/redis/redisClient';
     const appInstance = new App();
 
     try {
-      /* Wait for the MongoDB connection to be established */
-      await appInstance.connectToMongoDB();
-
-      /* Start the server after successful database connection */
+      /* Start the express server */
       await appInstance.startServer(port);
     } catch (error) {
       logger.error('Failed to start the application:', error);
@@ -49,8 +45,7 @@ import RedisClient from './database/redis/redisClient';
   async function createDatabaseConnections(): Promise<void> {
     try {
       /* Connect to MongoDB */
-
-      // TODO: move mongodb connection here and create client
+      await MongodbClient.initialize();
 
       /* Connect to Redis */
       await RedisClient.initialize();

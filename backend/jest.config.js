@@ -3,6 +3,7 @@ module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
   testMatch: ['**/tests/**/*.test.ts'],
+  coverageProvider: 'babel',
   coverageThreshold: { /* TODO: set thresholds to 80% after finishing register tests */
     global: {
       branches: 25,
@@ -15,7 +16,7 @@ module.exports = {
   collectCoverageFrom: [
     'src/**/*.ts',        /* include all files in src directory*/
     '!src/**/index.ts',   /* exclude index.ts files */
-    '!src/models/**',     /* exclude data models */
+    '!src/**/models/**',  /* exclude data models */
     '!src/config/**',     /* exclude config and constants */
     '!src/logging/**'     /* exclude logging setup */
   ],

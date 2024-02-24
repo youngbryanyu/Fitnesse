@@ -1,11 +1,9 @@
 /* Application setup */
 import express, { Express } from 'express';
-import mongoose from 'mongoose';
 import healthCheckRouter from './features/healthCheck/routes/healthCheckRoutes';
 import userRouter from './features/user/routes/userRoutes';
 import { ApiUrlsV1 } from './features/common/constants';
 import logger from './logging/logger';
-import Config from 'simple-app-config';
 import helmet from 'helmet';
 import http from 'http';
 
@@ -69,38 +67,6 @@ class App {
   private mountRoutes(): void {
     this.expressApp.use(ApiUrlsV1.HealthCheck, healthCheckRouter);
     this.expressApp.use(ApiUrlsV1.User, userRouter);
-  }
-
-  /**
-   * Connect to the MongoDB using the connection URL in the configuration object. Exits with error if connection fails.
-   * @returns Returns a promise indicating completion of the async function.
-   */
-  public async connectToMongoDB(): Promise<void> {
-    /* Get connection URL from environment variables */
-    const mongoUrl: string = Config.get('MONGO_DB.CONNECTION_URL');
-
-    /* Try connecting to mongodb, with retries */
-    let attempts = 0;
-    const maxAttempts: number = Config.get('MONGO_DB.CONNECTION_RETRIES');
-    const retryTimeout: number = Config.get('MONGO_DB.CONNECTION_RETRY_TIMEOUT');
-    while (attempts < maxAttempts) {
-      try {
-        await mongoose.connect(mongoUrl);
-        logger.info('Successfully connected to MongoDB');
-        return;
-      } catch (error) {
-        logger.error('Failed to connect to MongoDB: ', error);
-        attempts++;
-        if (attempts >= maxAttempts) {
-          logger.error(`Maximum connection attempts of ${maxAttempts} reached for MongoDB.`);
-          process.exit(1);
-        }
-
-        /* Wait for 1 second before retrying */
-        logger.info('Retrying connection to MongoDB...');
-        await new Promise((resolve) => setTimeout(resolve, retryTimeout));
-      }
-    }
   }
 
   /**

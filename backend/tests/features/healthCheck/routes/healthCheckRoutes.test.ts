@@ -1,12 +1,12 @@
 /* Unit tests for the health check routes */
 import request from 'supertest';
-import { ApiUrlsV1, GenericResponses } from '../../../src/features/common/constants';
-import App from '../../../src/app';
+import { ApiUrlsV1, GenericResponses } from '../../../../src/features/common/constants';
+import App from '../../../../src/app';
 import Config from 'simple-app-config';
-import HealthCheckController from '../../../src/features/healthCheck/controllers/healthCheckController';
+import HealthCheckController from '../../../../src/features/healthCheck/controllers/healthCheckController';
 
 /* Mock the controller functions */
-jest.mock('../../../src/features/healthCheck/controllers/healthCheckController', () => ({
+jest.mock('../../../../src/features/healthCheck/controllers/healthCheckController', () => ({
   checkHealth: jest.fn().mockImplementation((req, res) => {
     res.sendStatus(200);
   })

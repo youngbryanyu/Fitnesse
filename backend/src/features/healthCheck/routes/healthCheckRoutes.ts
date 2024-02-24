@@ -28,10 +28,12 @@ const rateLimitHealthCheck = rateLimit({
     });
   },
   store:
+    /* istanbul ignore next */
     environment == Environments.Test
       ? new MemoryStore()
       : new RedisStore({
-          sendCommand: (...args: string[]) => redisClient.sendCommand(args)
+          sendCommand: /* istanbul ignore next */ (...args: string[]) =>
+            redisClient.sendCommand(args)
         }),
   keyGenerator: (req) => {
     return `${req.method}-${_.trimStart(req.baseUrl, API_URLS_V1_PREFIX)}-${req.ip}`;

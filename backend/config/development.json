@@ -13,9 +13,7 @@
   "REDIS": {
     "HOST": "$REDIS_HOST::string",
     "PORT": "$REDIS_PORT::number",
-    "PASSWORD": "$REDIS_PASSWORD::string",
-    "CONNECTION_RETRIES": 2,
-    "CONNECTION_RETRY_TIMEOUT": 1000
+    "PASSWORD": "$REDIS_PASSWORD::string"
   },
   "RATE_LIMITING": {
     "USER": {

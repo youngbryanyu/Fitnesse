@@ -9,7 +9,7 @@ import RedisStore from 'rate-limit-redis';
 import _ from 'lodash';
 import RedisClient from '../../../database/redis/redisClient';
 
-export const userRouter = express.Router();
+const userRouter = express.Router();
 
 /* Get redis client */
 const redisClient = RedisClient.getClient();
@@ -28,10 +28,12 @@ const rateLimitCreateUser = rateLimit({
     });
   },
   store:
+    /* istanbul ignore next */
     environment == Environments.Test
       ? new MemoryStore()
       : new RedisStore({
-          sendCommand: (...args: string[]) => redisClient.sendCommand(args)
+          sendCommand: /* istanbul ignore next */ (...args: string[]) =>
+            redisClient.sendCommand(args)
         }),
   keyGenerator: (req) => {
     return `${req.method}-${_.trimStart(req.baseUrl, API_URLS_V1_PREFIX)}-${req.ip}`;
