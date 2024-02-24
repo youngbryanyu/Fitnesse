@@ -2,12 +2,17 @@ import Config from 'simple-app-config';
 import logger from './logging/logger';
 import RedisClient from './database/redis/redisClient';
 import MongodbClient from './database/mongodb/mongodbClient';
-import { IApp } from './app';
+import App, { IApp } from './app';
 
 /* Whether app has been imported */
 let initializedApp = false;
 
-(async () => {
+main();
+
+/**
+ * Main function that encapsulates all startup logic
+ */
+async function main() {
   /* Listen for termination events and disconnect from DBs upon termination */
   process.on('SIGINT', async () => {
     await tearDownResources();
@@ -16,11 +21,8 @@ let initializedApp = false;
     await tearDownResources();
   });
 
-  /* Create DB connections */
+  /* Await for all DB connections to establish */
   await createDatabaseConnections();
-
-  /* Dynamically import app since it's dependencies have top-level code that depends on an active redis connection (routes) */
-  const App = (await import('./app')).default;
 
   /* Start application */
   const port: number = Config.get('PORT');
@@ -77,4 +79,4 @@ let initializedApp = false;
       app.closePort(port);
     }
   }
-})();
+}
