@@ -13,6 +13,11 @@
     "PORT": "$REDIS_PORT::number",
     "PASSWORD": "$REDIS_PASSWORD::string"
   },
+  "FIREBASE": {
+    "PROJECT_ID": "$FIREBASE_PROJECT_ID::string",
+    "CLIENT_EMAIL": "$FIREBASE_CLIENT_EMAIL::string",
+    "PRIVATE_KEY": "$FIREBASE_PRIVATE_KEY::string"
+  },
   "RATE_LIMITING": {
     "USER": {
       "POST": {

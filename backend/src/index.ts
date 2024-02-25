@@ -3,19 +3,17 @@ import logger from './logging/logger';
 import RedisClient from './database/redis/redisClient';
 import MongodbClient from './database/mongodb/mongodbClient';
 import App, { IApp } from './app';
+import FirebaseClient from './database/firebase/firebaseClient';
 
 /* Whether app has been imported */
 let initializedApp = false;
+let cleanedUp = false;
 
-main();
-
-/**
- * Main function that encapsulates all startup logic
- */
-async function main() {
+(async () => {
   /* Listen for termination events and disconnect from DBs upon termination */
   process.on('SIGINT', async () => {
     await tearDownResources();
+    process.exit(0);
   });
   process.on('SIGTERM', async () => {
     await tearDownResources();
@@ -39,6 +37,9 @@ async function main() {
 
       /* Connect to Redis */
       await RedisClient.initialize();
+
+      /* Connect to Firebase */
+      FirebaseClient.initialize();
     } catch (error) {
       logger.error('Failed to establish all DB connections:\n', error);
       await tearDownResources();
@@ -68,15 +69,24 @@ async function main() {
    * Resource tear down function to exit gracefully. Closes all database connections and server ports/
    */
   async function tearDownResources() {
+    /* Only run cleaup once */
+    if (cleanedUp) {
+      return;
+    }
+    cleanedUp = true;
+
     /* Disconnect from mongodb */
     await MongodbClient.reset();
 
     /* Disconnect from redis */
     await RedisClient.reset();
 
+    /* Disconnect from firebase */
+    await FirebaseClient.reset();
+
     /* Close server ports */
     if (initializedApp) {
       app.closePort(port);
     }
   }
-}
+})();

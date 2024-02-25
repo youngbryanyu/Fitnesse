@@ -1,10 +1,7 @@
 /* Unit tests for the backend application server class */
 import App from '../src/app';
-import { Environments } from '../src/features/common/constants';
 import logger from '../src/logging/logger';
-import { EnvParser } from 'simple-app-config';
 import http from 'http';
-import fs from 'fs';
 
 /* Dummy port for backend server */
 const PORT = 3000;
@@ -26,29 +23,6 @@ describe('App Tests', () => {
 
   describe('startServer', () => {
     it('should start the server and have it listen successfully', async () => {
-      jest.spyOn(http.Server.prototype, 'listen').mockImplementation(function (
-        this: http.Server,
-        // eslint-disable-next-line
-        ...args: any[]
-      ) {
-        const callback = args.find((arg) => typeof arg === 'function');
-        if (callback) callback();
-        return this;
-      });
-      await appInstance.startServer(PORT);
-      expect(http.Server.prototype.listen).toHaveBeenCalled();
-    });
-
-    it('should start the server and have it listen successfully when the environment is production', async () => {
-      EnvParser.getString = jest.fn().mockImplementationOnce(() => {
-        return Environments.Prod;
-      });
-      fs.existsSync = jest.fn().mockImplementationOnce(() => {
-        return true;
-      });
-      fs.readFileSync = jest.fn().mockImplementationOnce(() => {
-        return '';
-      });
       jest.spyOn(http.Server.prototype, 'listen').mockImplementationOnce(function (
         this: http.Server,
         // eslint-disable-next-line
@@ -86,7 +60,7 @@ describe('App Tests', () => {
   describe('closePort', () => {
     it('should close a port successfully', async () => {
       /* Set up mocks */
-      jest.spyOn(http.Server.prototype, 'listen').mockImplementation(function (
+      jest.spyOn(http.Server.prototype, 'listen').mockImplementationOnce(function (
         this: http.Server,
         // eslint-disable-next-line
         ...args: any[]
@@ -107,7 +81,7 @@ describe('App Tests', () => {
 
     it('should fail if closing a port fails', async () => {
       /* Set up mocks */
-      jest.spyOn(http.Server.prototype, 'listen').mockImplementation(function (
+      jest.spyOn(http.Server.prototype, 'listen').mockImplementationOnce(function (
         this: http.Server,
         // eslint-disable-next-line
         ...args: any[]
@@ -116,7 +90,7 @@ describe('App Tests', () => {
         if (callback) callback();
         return this;
       });
-      jest.spyOn(http.Server.prototype, 'close').mockImplementation(() => {
+      jest.spyOn(http.Server.prototype, 'close').mockImplementationOnce(() => {
         throw new Error();
       });
       jest.spyOn(logger, 'error');

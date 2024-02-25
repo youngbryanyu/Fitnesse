@@ -11,7 +11,7 @@ describe('MongodbClient Tests', () => {
   describe('initialize', () => {
     it('should successfully connect to MongoDB', async () => {
       /* Set up mocks */
-      jest.spyOn(mongoose, 'connect').mockImplementation(() => {
+      jest.spyOn(mongoose, 'connect').mockImplementationOnce(() => {
         return { close: jest.fn() } as unknown as Promise<typeof import('mongoose')>;
       });
 
@@ -24,7 +24,7 @@ describe('MongodbClient Tests', () => {
 
     it('should catch and throw any errors if failed connecting to MongoDB', async () => {
       /* Set up mocks */
-      jest.spyOn(mongoose, 'connect').mockImplementation(() => {
+      jest.spyOn(mongoose, 'connect').mockImplementationOnce(() => {
         throw new Error('Test');
       });
 
@@ -58,7 +58,7 @@ describe('MongodbClient Tests', () => {
 
     it('should fail if disconnecting from MongoDB fails', async () => {
       /* Set up mocks */
-      jest.spyOn(mongoose, 'disconnect').mockImplementation(() => {
+      jest.spyOn(mongoose, 'disconnect').mockImplementationOnce(() => {
         throw new Error('Test');
       });
       jest.spyOn(logger, 'error');

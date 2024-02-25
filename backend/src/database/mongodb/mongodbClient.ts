@@ -24,6 +24,9 @@ class MongodbClient {
     }
   }
 
+  /**
+   * Disconnects from the MongoDB instance.
+   */
   public static async reset(): Promise<void> {
     try {
       await mongoose.disconnect();
