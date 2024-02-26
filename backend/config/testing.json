@@ -43,12 +43,5 @@
         "WINDOW": 5000
       }
     }
-  },
-  "AUTH": {
-    "MAX_FAILED_LOGINS": 5,
-    "LOCKOUT_TIME": 5,
-    "FAILED_LOGIN_ATTEMPTS_WINDOW": 5,
-    "ACCESS_TOKEN_LIFETIME": "1d",
-    "IDLE_TIMEOUT": 5000
   }
 }
