@@ -11,7 +11,7 @@ export enum Environments {
 export const API_URLS_V1_PREFIX = '/fitnesse/v1';
 export enum ApiUrlsV1 {
   HealthCheck = `${API_URLS_V1_PREFIX}/healthCheck`,
-  User = `${API_URLS_V1_PREFIX}/user`
+  Users = `${API_URLS_V1_PREFIX}/users`
 }
 
 /* Generic messages for API endpoints */

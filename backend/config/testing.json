@@ -19,7 +19,7 @@
     "PRIVATE_KEY": "$FIREBASE_PRIVATE_KEY::string"
   },
   "RATE_LIMITING": {
-    "USER": {
+    "USERS": {
       "POST": {
         "THRESHOLD": 5,
         "WINDOW": 5000

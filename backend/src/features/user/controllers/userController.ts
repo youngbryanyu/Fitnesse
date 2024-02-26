@@ -10,7 +10,7 @@ import logger from '../../../logging/logger';
  */
 class UserController {
   /**
-   * Creates a new user. Requires an access token from Firebase, since firebase auth is used.
+   * Creates a new user. Requires an access token from Firebase, since firebase auth is used. If the user already exists, it fails.
    * @param req incoming request from client.
    * @param res response to return to client.
    * @returns Returns a promise indicating completion of the async function.

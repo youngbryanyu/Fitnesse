@@ -75,7 +75,7 @@ class App {
    */
   private mountRoutes(): void {
     this.expressApp.use(ApiUrlsV1.HealthCheck, healthCheckRouter);
-    this.expressApp.use(ApiUrlsV1.User, userRouter);
+    this.expressApp.use(ApiUrlsV1.Users, userRouter);
   }
 
   /**

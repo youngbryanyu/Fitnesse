@@ -3,16 +3,21 @@ import request from 'supertest';
 import { ApiUrlsV1, GenericResponses } from '../../../../src/features/common/constants';
 import App from '../../../../src/app';
 import Config from 'simple-app-config';
-import HealthCheckController from '../../../../src/features/healthCheck/controllers/healthCheckController';
+import UserController from '../../../../src/features/user/controllers/userController';
 
 /* Mock the controller functions */
-jest.mock('../../../../src/features/healthCheck/controllers/healthCheckController', () => ({
-  checkHealth: jest.fn().mockImplementation((req, res) => {
+jest.mock('../../../../src/features/user/controllers/userController', () => ({
+  createUser: jest.fn().mockImplementation((req, res) => {
     res.sendStatus(200);
   })
 }));
+jest.mock('../../../../src/features/auth/controllers/authController', () => ({
+  verify: jest.fn().mockImplementation((req, res, next) => {
+    next();
+  })
+}));
 
-describe('Health Check Routes Tests', () => {
+describe('User Routes Tests', () => {
   let appInstance: App;
 
   beforeAll(() => {
@@ -23,29 +28,29 @@ describe('Health Check Routes Tests', () => {
     jest.restoreAllMocks();
   });
 
-  describe('GET /healthCheck', () => {
-    it('should call HealthCheckController.checkHealth', async () => {
+  describe('POST /users', () => {
+    it('should call UserController.createUser', async () => {
       /* Make the API call */
       const expressInstance = appInstance.getExpressApp();
-      await request(expressInstance).get(`${ApiUrlsV1.HealthCheck}`).send({});
+      await request(expressInstance).post(`${ApiUrlsV1.Users}`).send({});
 
       /* Test against expected */
-      expect(HealthCheckController.checkHealth).toHaveBeenCalled();
+      expect(UserController.createUser).toHaveBeenCalled();
     });
 
     it('should fail when the rate limit is exceeded', async () => {
       /* Call API `threshold` times so that next call will cause rating limiting */
       const expressInstance = appInstance.getExpressApp();
-      const threshold: number = Config.get('RATE_LIMITING.HEALTH_CHECK.GET.THRESHOLD');
+      const threshold: number = Config.get('RATE_LIMITING.USERS.POST.THRESHOLD');
       for (let i = 0; i < threshold; i++) {
-        await request(expressInstance).get(`${ApiUrlsV1.HealthCheck}`).send({});
+        await request(expressInstance).post(`${ApiUrlsV1.Users}`).send({});
       }
 
       /* Call API */
-      const response = await request(expressInstance).get(`${ApiUrlsV1.HealthCheck}`).send({});
+      const response = await request(expressInstance).post(`${ApiUrlsV1.Users}`).send({});
 
       /* Test against expected */
-      expect(HealthCheckController.checkHealth).toHaveBeenCalledTimes(threshold);
+      expect(UserController.createUser).toHaveBeenCalledTimes(threshold);
       expect(response.statusCode).toBe(429);
       expect(response.body.message).toBe(GenericResponses._429);
     });

@@ -17,8 +17,8 @@ export function getRateLimitCreateUser() {
   return function (req: Request, res: Response, next: NextFunction) {
     if (!rateLimiterMiddleware) {
       rateLimiterMiddleware = rateLimit({
-        windowMs: Config.get('RATE_LIMITING.USER.POST.WINDOW'),
-        max: Config.get('RATE_LIMITING.USER.POST.THRESHOLD'),
+        windowMs: Config.get('RATE_LIMITING.USERS.POST.WINDOW'),
+        max: Config.get('RATE_LIMITING.USERS.POST.THRESHOLD'),
         handler: (req, res) => {
           logger.info(`The create user rate limit has been reached for IP ${req.ip}`);
           res.status(429).json({
