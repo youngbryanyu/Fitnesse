@@ -1,7 +1,7 @@
 /**
  * A test controller class
  */
-export class TestController {
+class TestController {
   /**
    * A test function for testing purposes.
    * @param req HTTP request.
@@ -12,3 +12,5 @@ export class TestController {
     return;
   }
 }
+
+export default TestController;
