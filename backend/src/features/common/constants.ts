@@ -16,6 +16,11 @@ export enum ApiUrlsV1 {
 
 /* Generic messages for API endpoints */
 export enum GenericResponses {
+  _400 = 'The request is malformed',
   _429 = 'Rate limit exceeded. Too many requests.',
   _500 = 'Internal Server Error.'
+}
+
+export enum MongooseErrors {
+  ValidationError = 'ValidationError' /* name of error when schema validation fails */
 }

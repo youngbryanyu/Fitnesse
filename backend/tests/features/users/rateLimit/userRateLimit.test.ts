@@ -1,4 +1,4 @@
-import { getRateLimitCreateUser } from '../../../../src/features/user/rateLimit/userRateLimit';
+import { getRateLimitCreateUser } from '../../../../src/features/users/rateLimit/userRateLimit';
 
 describe('User Rate Limit Tests', () => {
   beforeEach(() => {

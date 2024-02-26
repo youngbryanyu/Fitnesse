@@ -3,10 +3,10 @@ import request from 'supertest';
 import { ApiUrlsV1, GenericResponses } from '../../../../src/features/common/constants';
 import App from '../../../../src/app';
 import Config from 'simple-app-config';
-import UserController from '../../../../src/features/user/controllers/userController';
+import UserController from '../../../../src/features/users/controllers/userController';
 
 /* Mock the controller functions */
-jest.mock('../../../../src/features/user/controllers/userController', () => ({
+jest.mock('../../../../src/features/users/controllers/userController', () => ({
   createUser: jest.fn().mockImplementation((req, res) => {
     res.sendStatus(200);
   })

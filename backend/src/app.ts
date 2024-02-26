@@ -1,7 +1,7 @@
 /* Application setup */
 import express, { Express } from 'express';
 import healthCheckRouter from './features/healthCheck/routes/healthCheckRoutes';
-import userRouter from './features/user/routes/userRoutes';
+import userRouter from './features/users/routes/userRoutes';
 import { ApiUrlsV1 } from './features/common/constants';
 import logger from './logging/logger';
 import helmet from 'helmet';

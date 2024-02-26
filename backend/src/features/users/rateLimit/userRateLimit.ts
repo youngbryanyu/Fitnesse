@@ -26,10 +26,12 @@ export function getRateLimitCreateUser() {
           });
         },
         store:
+          /* istanbul ignore next */
           environment == Environments.Test
             ? new MemoryStore()
             : new RedisStore({
-                sendCommand: (...args) => RedisClient.getClient().sendCommand(args)
+                sendCommand: /* istanbul ignore next */ (...args) =>
+                  RedisClient.getClient().sendCommand(args)
               }),
         keyGenerator: (req) => {
           return `${req.method}-${_.trimStart(req.baseUrl, API_URLS_V1_PREFIX)}-${req.ip}`;

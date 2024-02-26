@@ -1,8 +1,8 @@
 /* Business logic for user related APIs */
 import { Request, Response } from 'express';
-import { User } from '../models/user';
-import { UserResponses } from '../constants';
-import { GenericResponses } from '../../common/constants';
+import { UserModel } from '../models/userModel';
+import { UserResponseMessages } from '../constants';
+import { GenericResponses, MongooseErrors } from '../../common/constants';
 import logger from '../../../logging/logger';
 
 /**
@@ -18,16 +18,16 @@ class UserController {
   static async createUser(req: Request, res: Response): Promise<void> {
     try {
       /* Check if user already created */
-      const user = await User.findById(req.body._id);
+      const user = await UserModel.findById(req.body._id);
       if (user) {
         res.status(409).json({
-          message: UserResponses._409_UserAlreadyExists
+          message: UserResponseMessages._409_UserAlreadyExists
         });
         return;
       }
 
       /* Create new user, don't need to worry about dupes since using firebase auth */
-      const newUser = new User({
+      const newUser = new UserModel({
         _id: req.body._id,
         age: req.body.age,
         sex: req.body.sex,
@@ -44,13 +44,19 @@ class UserController {
       });
       await newUser.save();
       res.status(201).json({
-        message: UserResponses._201_UserCreateSuccessful
+        message: UserResponseMessages._201_UserCreateSuccessful
       });
-    } catch (error) {
+    } catch (error: unknown) {
       logger.error('Error occurred during user creation:\n', error);
-      res.status(500).json({
-        message: GenericResponses._500
-      });
+      if ((error as Error).name === MongooseErrors.ValidationError) {
+        res.status(400).json({
+          message: GenericResponses._400
+        });
+      } else {
+        res.status(500).json({
+          message: GenericResponses._500
+        });
+      }
     }
   }
 }
