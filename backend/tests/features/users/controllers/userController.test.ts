@@ -92,4 +92,90 @@ describe('User Controller Tests', () => {
       expect(response._getJSONData().message).toBe(GenericResponseMessages._500);
     });
   });
+
+  describe('updateUser', () => {
+    it('should fail when trying to update the immutable _id field', async () => {
+      /* Set up mocks */
+      class CustomError extends Error {
+        codeName = MongooseErrors.ImmutableFieldError;
+        constructor() {
+          super();
+        }
+      }
+      UserModel.findByIdAndUpdate = jest.fn().mockImplementation(() => {
+        throw new CustomError();
+      });
+
+      /* Make request */
+      request = createRequest();
+      await UserController.updateUser(request, response);
+
+      /* Test against expected */
+      expect(response.statusCode).toBe(400);
+      expect(response._getJSONData().message).toBe(UserResponseMessages._400_ImmutableField);
+    });
+
+    it('should fail when updating a field to the wrong datatype', async () => {
+      /* Set up mocks */
+      const error = new Error();
+      error.name = MongooseErrors.CastError;
+      UserModel.findByIdAndUpdate = jest.fn().mockImplementation(() => {
+        throw error;
+      });
+
+      /* Make request */
+      request = createRequest();
+      await UserController.updateUser(request, response);
+
+      /* Test against expected */
+      expect(response.statusCode).toBe(400);
+      expect(response._getJSONData().message).toBe(UserResponseMessages._400_InvalidSchema);
+    });
+
+    it('should fail when updating an invalid range', async () => {
+      /* Set up mocks */
+      const error = new Error();
+      error.name = MongooseErrors.ValidationError;
+      UserModel.findByIdAndUpdate = jest.fn().mockImplementation(() => {
+        throw error;
+      });
+
+      /* Make request */
+      request = createRequest();
+      await UserController.updateUser(request, response);
+
+      /* Test against expected */
+      expect(response.statusCode).toBe(400);
+      expect(response._getJSONData().message).toBe(UserResponseMessages._400_InvalidSchema);
+    });
+
+    it('should return a 500 code for all other errors', async () => {
+      /* Set up mocks */
+      const error = new Error();
+      UserModel.findByIdAndUpdate = jest.fn().mockImplementation(() => {
+        throw error;
+      });
+
+      /* Make request */
+      request = createRequest();
+      await UserController.updateUser(request, response);
+
+      /* Test against expected */
+      expect(response.statusCode).toBe(500);
+      expect(response._getJSONData().message).toBe(GenericResponseMessages._500);
+    });
+
+    it('should successfully update a user', async () => {
+      /* Set up mocks */
+      UserModel.findByIdAndUpdate = jest.fn().mockResolvedValueOnce(true);
+
+      /* Make request */
+      request = createRequest();
+      await UserController.updateUser(request, response);
+
+      /* Test against expected */
+      expect(response.statusCode).toBe(200);
+      expect(response._getJSONData().message).toBe(UserResponseMessages._200_UserUpdateSuccessful);
+    });
+  });
 });

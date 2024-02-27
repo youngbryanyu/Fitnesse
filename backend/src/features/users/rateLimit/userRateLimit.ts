@@ -29,12 +29,10 @@ export function getRateLimitCreateUser() {
           });
         },
         store:
-          /* istanbul ignore next */
           environment == Environments.Test
             ? new MemoryStore()
             : new RedisStore({
-                sendCommand: /* istanbul ignore next */ (...args) =>
-                  RedisClient.getClient().sendCommand(args)
+                sendCommand: (...args) => RedisClient.getClient().sendCommand(args)
               }),
         keyGenerator: (req) => {
           return `${req.method}-${_.trimStart(req.baseUrl, API_URLS_V1_PREFIX)}-${req.ip}`;
@@ -61,12 +59,10 @@ export function getRateLimitUpdateUser() {
           });
         },
         store:
-          /* istanbul ignore next */
           environment == Environments.Test
             ? new MemoryStore()
             : new RedisStore({
-                sendCommand: /* istanbul ignore next */ (...args) =>
-                  RedisClient.getClient().sendCommand(args)
+                sendCommand: (...args) => RedisClient.getClient().sendCommand(args)
               }),
         keyGenerator: (req) => {
           return `${req.method}-${_.trimStart(req.baseUrl, API_URLS_V1_PREFIX)}/:id-${req.ip}`;

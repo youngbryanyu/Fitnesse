@@ -34,6 +34,7 @@ class UserController {
         height: req.body.height,
         weight: req.body.weight,
         activityLevel: req.body.activityLevel,
+        weightGoal: req.body.weightGoal,
         useMetric: req.body.useMetric,
         goals: {
           calories: req.body.goals.calories,
@@ -96,10 +97,15 @@ class UserController {
     } catch (error: any) {
       logger.error('Error occurred during user update:\n', error);
       if (error.codeName === MongooseErrors.ImmutableFieldError) {
+        /* Special case with `codeName` field */
         res.status(400).json({
           message: UserResponseMessages._400_ImmutableField
         });
       } else if (error.name === MongooseErrors.CastError) {
+        res.status(400).json({
+          message: UserResponseMessages._400_InvalidSchema
+        });
+      } else if (error.name === MongooseErrors.ValidationError) {
         res.status(400).json({
           message: UserResponseMessages._400_InvalidSchema
         });

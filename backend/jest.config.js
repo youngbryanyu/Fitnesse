@@ -18,8 +18,8 @@ module.exports = {
     '!src/**/index.ts',   /* exclude index.ts files */
     '!src/**/models/**',  /* exclude data models */
     '!src/config/**',     /* exclude config and constants */
-    '!src/logging/**'     /* exclude logging setup */
-    
+    '!src/logging/**',     /* exclude logging setup */
+    '!src/**/rateLimit/**' /* exclude rate limiting setup files */
   ],
   setupFilesAfterEnv: ['./jest.setup.js'] /* Global set up file */,
   // workerIdleMemoryLimit: '512mb'          /* Set worker process idle memory limit */

@@ -26,12 +26,10 @@ export function getRateLimitHealthCheck() {
           });
         },
         store:
-          /* istanbul ignore next */
           environment == Environments.Test
             ? new MemoryStore()
             : new RedisStore({
-                sendCommand: /* istanbul ignore next */ (...args: string[]) =>
-                  RedisClient.getClient().sendCommand(args)
+                sendCommand: (...args: string[]) => RedisClient.getClient().sendCommand(args)
               }),
         keyGenerator: (req) => {
           return `${req.method}-${_.trimStart(req.baseUrl, API_URLS_V1_PREFIX)}-${req.ip}`;
