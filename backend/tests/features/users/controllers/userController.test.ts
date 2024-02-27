@@ -3,7 +3,7 @@ import { MockRequest, MockResponse, createRequest, createResponse } from 'node-m
 import UserController from '../../../../src/features/users/controllers/userController';
 import { UserResponseMessages } from '../../../../src/features/users/constants';
 import { UserModel } from '../../../../src/features/users/models/userModel';
-import { GenericResponses, MongooseErrors } from '../../../../src/features/common/constants';
+import { GenericResponseMessages, MongooseErrors } from '../../../../src/features/common/constants';
 
 describe('User Controller Tests', () => {
   let request: MockRequest<Request>;
@@ -44,7 +44,7 @@ describe('User Controller Tests', () => {
 
       /* Test against expected */
       expect(response.statusCode).toBe(400);
-      expect(response._getJSONData().message).toBe(GenericResponses._400);
+      expect(response._getJSONData().message).toBe(UserResponseMessages._400_InvalidSchema);
     });
 
     it('should save the new user to the database', async () => {
@@ -89,7 +89,7 @@ describe('User Controller Tests', () => {
 
       /* Test against expected */
       expect(response.statusCode).toBe(500);
-      expect(response._getJSONData().message).toBe(GenericResponses._500);
+      expect(response._getJSONData().message).toBe(GenericResponseMessages._500);
     });
   });
 });

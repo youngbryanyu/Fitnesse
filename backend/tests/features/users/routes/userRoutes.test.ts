@@ -1,6 +1,6 @@
 /* Unit tests for the health check routes */
 import request from 'supertest';
-import { ApiUrlsV1, GenericResponses } from '../../../../src/features/common/constants';
+import { ApiUrlsV1, GenericResponseMessages } from '../../../../src/features/common/constants';
 import App from '../../../../src/app';
 import Config from 'simple-app-config';
 import UserController from '../../../../src/features/users/controllers/userController';
@@ -9,10 +9,16 @@ import UserController from '../../../../src/features/users/controllers/userContr
 jest.mock('../../../../src/features/users/controllers/userController', () => ({
   createUser: jest.fn().mockImplementation((req, res) => {
     res.sendStatus(200);
+  }),
+  updateUser: jest.fn().mockImplementation((req, res) => {
+    res.sendStatus(200);
   })
 }));
 jest.mock('../../../../src/features/auth/controllers/authController', () => ({
   verify: jest.fn().mockImplementation((req, res, next) => {
+    next();
+  }),
+  checkAccess: jest.fn().mockImplementation((req, res, next) => {
     next();
   })
 }));
@@ -52,7 +58,7 @@ describe('User Routes Tests', () => {
       /* Test against expected */
       expect(UserController.createUser).toHaveBeenCalledTimes(threshold);
       expect(response.statusCode).toBe(429);
-      expect(response.body.message).toBe(GenericResponses._429);
+      expect(response.body.message).toBe(GenericResponseMessages._429);
     });
   });
 });

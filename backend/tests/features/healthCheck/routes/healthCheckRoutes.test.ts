@@ -1,6 +1,6 @@
 /* Unit tests for the health check routes */
 import request from 'supertest';
-import { ApiUrlsV1, GenericResponses } from '../../../../src/features/common/constants';
+import { ApiUrlsV1, GenericResponseMessages } from '../../../../src/features/common/constants';
 import App from '../../../../src/app';
 import Config from 'simple-app-config';
 import HealthCheckController from '../../../../src/features/healthCheck/controllers/healthCheckController';
@@ -47,7 +47,7 @@ describe('Health Check Routes Tests', () => {
       /* Test against expected */
       expect(HealthCheckController.checkHealth).toHaveBeenCalledTimes(threshold);
       expect(response.statusCode).toBe(429);
-      expect(response.body.message).toBe(GenericResponses._429);
+      expect(response.body.message).toBe(GenericResponseMessages._429);
     });
   });
 });

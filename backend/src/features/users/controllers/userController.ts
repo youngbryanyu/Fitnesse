@@ -2,7 +2,7 @@
 import { Request, Response } from 'express';
 import { UserModel } from '../models/userModel';
 import { UserResponseMessages } from '../constants';
-import { GenericResponses, MongooseErrors } from '../../common/constants';
+import { GenericResponseMessages, MongooseErrors } from '../../common/constants';
 import logger from '../../../logging/logger';
 
 /**
@@ -44,17 +44,68 @@ class UserController {
       });
       await newUser.save();
       res.status(201).json({
-        message: UserResponseMessages._201_UserCreateSuccessful
+        message: UserResponseMessages._201_UserCreateSuccessful,
+        newUser: newUser
       });
-    } catch (error: unknown) {
+      /* eslint-disable-next-line */
+    } catch (error: any) {
       logger.error('Error occurred during user creation:\n', error);
-      if ((error as Error).name === MongooseErrors.ValidationError) {
+      if (error.name === MongooseErrors.ValidationError) {
         res.status(400).json({
-          message: GenericResponses._400
+          message: UserResponseMessages._400_InvalidSchema
         });
       } else {
         res.status(500).json({
-          message: GenericResponses._500
+          message: GenericResponseMessages._500
+        });
+      }
+    }
+  }
+
+  /**
+   * Updates an arbitrary number of fields in an existing user. Only updates the user if the request body has a timestamp newer
+   * than the existing in the user document.
+   * @param req incoming request from client.
+   * @param res response to return to client.
+   * @returns Returns a promise indicating completion of the async function.
+   */
+  static async updateUser(req: Request, res: Response): Promise<void> {
+    try {
+      const userId = req.params.userId;
+      const { updatedAt, ...userData } = req.body;
+      const timestamp = new Date(updatedAt);
+
+      /* Try updating user */
+      const updatedUser = await UserModel.findByIdAndUpdate(
+        userId,
+        {
+          ...userData,
+          updatedAt: timestamp
+        },
+        {
+          new: true,
+          runValidators: true,
+          upsert: false
+        }
+      );
+      res.status(200).json({
+        message: UserResponseMessages._200_UserUpdateSuccessful,
+        updatedUser: updatedUser
+      });
+      /* eslint-disable-next-line */
+    } catch (error: any) {
+      logger.error('Error occurred during user update:\n', error);
+      if (error.codeName === MongooseErrors.ImmutableFieldError) {
+        res.status(400).json({
+          message: UserResponseMessages._400_ImmutableField
+        });
+      } else if (error.name === MongooseErrors.CastError) {
+        res.status(400).json({
+          message: UserResponseMessages._400_InvalidSchema
+        });
+      } else {
+        res.status(500).json({
+          message: GenericResponseMessages._500
         });
       }
     }
