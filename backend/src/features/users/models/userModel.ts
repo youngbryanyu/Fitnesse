@@ -8,7 +8,7 @@ import { ActivityLevels, Sexes, WeightGoals } from '../constants';
  */
 export interface IUser extends BaseDocument<IUser> {
   _id: string /* Use firebase UID */;
-  age: number;
+  birthday: Date;
   sex: number;
   height: number /* store height in cm */;
   weight: number /* store weight in kg */;
@@ -30,7 +30,7 @@ export interface IUser extends BaseDocument<IUser> {
  */
 const userSchema = new Schema<IUser>({
   _id: { type: String } /* _id defaults to unique and required */,
-  age: { type: Number, required: true, min: 0, max: 150 },
+  birthday: { type: Date, required: true },
   sex: {
     type: Number,
     required: true,
@@ -55,14 +55,8 @@ const userSchema = new Schema<IUser>({
     fat: { type: Number, required: true, min: 0 },
     carbohydrates: { type: Number, required: true, min: 0 }
   },
-  createdAt: {
-    type: Date,
-    default: Date.now
-  },
-  updatedAt: {
-    type: Date,
-    default: Date.now
-  }
+  createdAt: { type: Date, required: true },
+  updatedAt: { type: Date, required: true }
 });
 
 /* Create and export the user model */

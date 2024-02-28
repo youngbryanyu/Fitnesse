@@ -29,7 +29,7 @@ class UserController {
       /* Create new user, don't need to worry about dupes since using firebase auth */
       const newUser = new UserModel({
         _id: req.body.userId, // change to userId
-        age: req.body.age,
+        birthday: req.body.birthday,
         sex: req.body.sex,
         height: req.body.height,
         weight: req.body.weight,
@@ -41,7 +41,9 @@ class UserController {
           protein: req.body.goals.protein,
           fat: req.body.goals.fat,
           carbohydrates: req.body.goals.carbohydrates
-        }
+        },
+        createdAt: req.body.createdAt,
+        updatedAt: req.body.updatedAt
       });
       await newUser.save();
       res.status(201).json({
