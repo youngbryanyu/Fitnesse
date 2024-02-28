@@ -226,4 +226,38 @@ describe('User Controller Tests', () => {
       expect(response._getJSONData().message).toBe(GenericResponseMessages._500);
     });
   });
+
+  describe('deleteUser', () => {
+    it('should successfully delete a user', async () => {
+      /* Create request */
+      request = createRequest();
+
+      /* Set up mocks */
+      UserModel.findByIdAndDelete = jest.fn().mockResolvedValueOnce(true);
+
+      /* Call function */
+      await UserController.deleteUser(request, response);
+
+      /* Compare against expected */
+      expect(response.statusCode).toBe(200);
+      expect(response._getJSONData().message).toBe(UserResponseMessages._200_UserDeleteSuccessful);
+    });
+
+    it('should return a 500 code for errors', async () => {
+      /* Create request */
+      request = createRequest();
+
+      /* Set up mocks */
+      UserModel.findByIdAndDelete = jest.fn().mockImplementationOnce(() => {
+        throw new Error();
+      });
+
+      /* Call function */
+      await UserController.deleteUser(request, response);
+
+      /* Compare against expected */
+      expect(response.statusCode).toBe(500);
+      expect(response._getJSONData().message).toBe(GenericResponseMessages._500);
+    });
+  });
 });

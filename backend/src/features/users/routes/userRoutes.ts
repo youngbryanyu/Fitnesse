@@ -1,4 +1,4 @@
-/* Routes for user authentication */
+/* Routes for users */
 import express from 'express';
 import UserController from '../controllers/userController';
 import {

@@ -86,7 +86,8 @@ class UserController {
         {
           new: true,
           runValidators: true,
-          upsert: false
+          upsert:
+            false /* Doesn't create a new entry if it doesn't already exist, and will succeed */
         }
       );
       res.status(200).json({
