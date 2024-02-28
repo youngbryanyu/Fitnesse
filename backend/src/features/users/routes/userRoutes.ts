@@ -1,7 +1,12 @@
 /* Routes for user authentication */
 import express from 'express';
 import UserController from '../controllers/userController';
-import { getRateLimitCreateUser, getRateLimitUpdateUser } from '../rateLimit/userRateLimit';
+import {
+  getRateLimitCreateUser,
+  getRateLimitDeleteUser,
+  getRateLimitGetUser,
+  getRateLimitUpdateUser
+} from '../rateLimit/userRateLimit';
 import AuthController from '../../auth/controllers/authController';
 
 const userRouter = express.Router();
@@ -27,10 +32,19 @@ userRouter.put(
 /* Get user */
 userRouter.get(
   '/:userId',
-  getRateLimitUpdateUser(),
+  getRateLimitGetUser(),
   AuthController.verify,
   AuthController.checkAccess,
   UserController.getUser
+);
+
+/* Delete user */
+userRouter.delete(
+  '/:userId',
+  getRateLimitDeleteUser(),
+  AuthController.verify,
+  AuthController.checkAccess,
+  UserController.deleteUser
 );
 
 export default userRouter;

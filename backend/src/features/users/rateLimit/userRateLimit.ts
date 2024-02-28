@@ -11,8 +11,7 @@ import _ from 'lodash';
 const environment = Config.get('ENV');
 
 /**
- * Rate limiter for create user
- * @returns
+ * Returns rate limiter for create user
  */
 export function getRateLimitCreateUser() {
   let rateLimiterMiddleware: RateLimitRequestHandler | undefined = undefined;
@@ -29,10 +28,12 @@ export function getRateLimitCreateUser() {
           });
         },
         store:
+          /* istanbul ignore next */
           environment == Environments.Test
             ? new MemoryStore()
             : new RedisStore({
-                sendCommand: (...args) => RedisClient.getClient().sendCommand(args)
+                sendCommand: /* istanbul ignore next */ (...args) =>
+                  RedisClient.getClient().sendCommand(args)
               }),
         keyGenerator: (req) => {
           return `${req.method}-${_.trimStart(req.baseUrl, API_URLS_V1_PREFIX)}-${req.ip}`;
@@ -44,6 +45,9 @@ export function getRateLimitCreateUser() {
   };
 }
 
+/**
+ * Returns rate limiter for update user
+ */
 export function getRateLimitUpdateUser() {
   let rateLimiterMiddleware: RateLimitRequestHandler | undefined = undefined;
 
@@ -59,10 +63,82 @@ export function getRateLimitUpdateUser() {
           });
         },
         store:
+          /* istanbul ignore next */
           environment == Environments.Test
             ? new MemoryStore()
             : new RedisStore({
-                sendCommand: (...args) => RedisClient.getClient().sendCommand(args)
+                sendCommand: /* istanbul ignore next */ (...args) =>
+                  RedisClient.getClient().sendCommand(args)
+              }),
+        keyGenerator: (req) => {
+          return `${req.method}-${_.trimStart(req.baseUrl, API_URLS_V1_PREFIX)}/:id-${req.ip}`;
+        }
+      });
+    }
+
+    rateLimiterMiddleware(req, res, next);
+  };
+}
+
+/**
+ * Returns rate limiter for get user
+ */
+export function getRateLimitGetUser() {
+  let rateLimiterMiddleware: RateLimitRequestHandler | undefined = undefined;
+
+  return function (req: Request, res: Response, next: NextFunction) {
+    if (!rateLimiterMiddleware) {
+      rateLimiterMiddleware = rateLimit({
+        windowMs: Config.get('RATE_LIMITING.USERS.GET.WINDOW'),
+        max: Config.get('RATE_LIMITING.USERS.GET.THRESHOLD'),
+        handler: (req, res) => {
+          logger.info(`The get user rate limit has been reached for IP ${req.ip}`);
+          res.status(429).json({
+            message: GenericResponseMessages._429
+          });
+        },
+        store:
+          /* istanbul ignore next */
+          environment == Environments.Test
+            ? new MemoryStore()
+            : new RedisStore({
+                sendCommand: /* istanbul ignore next */ (...args) =>
+                  RedisClient.getClient().sendCommand(args)
+              }),
+        keyGenerator: (req) => {
+          return `${req.method}-${_.trimStart(req.baseUrl, API_URLS_V1_PREFIX)}/:id-${req.ip}`;
+        }
+      });
+    }
+
+    rateLimiterMiddleware(req, res, next);
+  };
+}
+
+/**
+ * Returns rate limiter for delete user
+ */
+export function getRateLimitDeleteUser() {
+  let rateLimiterMiddleware: RateLimitRequestHandler | undefined = undefined;
+
+  return function (req: Request, res: Response, next: NextFunction) {
+    if (!rateLimiterMiddleware) {
+      rateLimiterMiddleware = rateLimit({
+        windowMs: Config.get('RATE_LIMITING.USERS.DELETE.WINDOW'),
+        max: Config.get('RATE_LIMITING.USERS.DELETE.THRESHOLD'),
+        handler: (req, res) => {
+          logger.info(`The delete user rate limit has been reached for IP ${req.ip}`);
+          res.status(429).json({
+            message: GenericResponseMessages._429
+          });
+        },
+        store:
+          /* istanbul ignore next */
+          environment == Environments.Test
+            ? new MemoryStore()
+            : new RedisStore({
+                sendCommand: /* istanbul ignore next */ (...args) =>
+                  RedisClient.getClient().sendCommand(args)
               }),
         keyGenerator: (req) => {
           return `${req.method}-${_.trimStart(req.baseUrl, API_URLS_V1_PREFIX)}/:id-${req.ip}`;

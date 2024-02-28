@@ -36,7 +36,9 @@ class FirebaseClient {
    */
   public static async reset() {
     try {
-      await admin.app().delete();
+      if (admin.apps.length > 0) {
+        await admin.app().delete();
+      }
     } catch (error) {
       logger.error('Failed to disconnect gracefully from Firebase:\n', error);
     }

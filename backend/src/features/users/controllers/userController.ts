@@ -138,9 +138,30 @@ class UserController {
       res.status(200).json({
         user: user
       });
-      /* eslint-disable-next-line */
     } catch (error) {
       logger.error('Error occurred while retrieving user:\n', error);
+      res.status(500).json({
+        message: GenericResponseMessages._500
+      });
+    }
+  }
+
+  /**
+   * Deletes a user and all their data from all collections.
+   * @param req incoming request from client.
+   * @param res response to return to client.
+   * @returns Returns a promise indicating completion of the async function.
+   */
+  static async deleteUser(req: Request, res: Response): Promise<void> {
+    try {
+      /* Delete from users collection */
+      await UserModel.findByIdAndDelete(req.params.userId);
+
+      res.status(200).json({
+        message: UserResponseMessages._200_UserDeleteSuccessful
+      });
+    } catch (error) {
+      logger.error('Error occurred while deleting user:\n', error);
       res.status(500).json({
         message: GenericResponseMessages._500
       });

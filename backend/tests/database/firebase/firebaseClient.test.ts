@@ -15,7 +15,8 @@ jest.mock('firebase-admin', () => {
     })),
     credential: {
       cert: jest.fn().mockReturnValue({})
-    }
+    },
+    apps: [{}]
   };
 });
 
@@ -49,6 +50,7 @@ describe('FirebaseClient Tests', () => {
       /* Call functions */
       FirebaseClient.initialize();
       const app = admin.app();
+      admin.apps[0] = app; // TODO: mock
       await FirebaseClient.reset();
 
       /* Test against expected */
