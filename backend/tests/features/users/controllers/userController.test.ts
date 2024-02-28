@@ -94,7 +94,8 @@ describe('User Controller Tests', () => {
   });
 
   describe('updateUser', () => {
-    it('should fail when trying to update the immutable _id field', async () => {      /* Set up mocks */
+    it('should fail when trying to update the immutable _id field', async () => {
+      /* Set up mocks */
       class CustomError extends Error {
         codeName = MongooseErrors.ImmutableFieldError;
         constructor() {

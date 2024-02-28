@@ -24,8 +24,8 @@ userRouter.post(
 userRouter.put(
   '/:userId',
   getRateLimitUpdateUser(),
-  // AuthController.verify,
-  // AuthController.checkAccess,
+  AuthController.verify,
+  AuthController.checkAccess,
   UserController.updateUser
 );
 
