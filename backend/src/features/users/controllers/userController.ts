@@ -77,8 +77,11 @@ class UserController {
       const timestamp = new Date(updatedAt);
 
       /* Try updating user */
-      const updatedUser = await UserModel.findByIdAndUpdate(
-        userId,
+      const updatedUser = await UserModel.findOneAndUpdate(
+        {
+          _id: userId,
+          updatedAt: { $lt: timestamp } /* last write wins */
+        },
         {
           ...userData,
           updatedAt: timestamp
@@ -86,8 +89,7 @@ class UserController {
         {
           new: true,
           runValidators: true,
-          upsert:
-            false /* Doesn't create a new entry if it doesn't already exist, and will succeed */
+          upsert: false /* Don't create document if it doesn't already exist */
         }
       );
       res.status(200).json({

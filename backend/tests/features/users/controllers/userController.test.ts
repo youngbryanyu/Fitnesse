@@ -94,15 +94,14 @@ describe('User Controller Tests', () => {
   });
 
   describe('updateUser', () => {
-    it('should fail when trying to update the immutable _id field', async () => {
-      /* Set up mocks */
+    it('should fail when trying to update the immutable _id field', async () => {      /* Set up mocks */
       class CustomError extends Error {
         codeName = MongooseErrors.ImmutableFieldError;
         constructor() {
           super();
         }
       }
-      UserModel.findByIdAndUpdate = jest.fn().mockImplementation(() => {
+      UserModel.findOneAndUpdate = jest.fn().mockImplementation(() => {
         throw new CustomError();
       });
 
@@ -119,7 +118,7 @@ describe('User Controller Tests', () => {
       /* Set up mocks */
       const error = new Error();
       error.name = MongooseErrors.CastError;
-      UserModel.findByIdAndUpdate = jest.fn().mockImplementation(() => {
+      UserModel.findOneAndUpdate = jest.fn().mockImplementation(() => {
         throw error;
       });
 
@@ -136,7 +135,7 @@ describe('User Controller Tests', () => {
       /* Set up mocks */
       const error = new Error();
       error.name = MongooseErrors.ValidationError;
-      UserModel.findByIdAndUpdate = jest.fn().mockImplementation(() => {
+      UserModel.findOneAndUpdate = jest.fn().mockImplementation(() => {
         throw error;
       });
 
@@ -152,7 +151,7 @@ describe('User Controller Tests', () => {
     it('should return a 500 code for all other errors', async () => {
       /* Set up mocks */
       const error = new Error();
-      UserModel.findByIdAndUpdate = jest.fn().mockImplementation(() => {
+      UserModel.findOneAndUpdate = jest.fn().mockImplementation(() => {
         throw error;
       });
 
@@ -167,7 +166,7 @@ describe('User Controller Tests', () => {
 
     it('should successfully update a user', async () => {
       /* Set up mocks */
-      UserModel.findByIdAndUpdate = jest.fn().mockResolvedValueOnce(true);
+      UserModel.findOneAndUpdate = jest.fn().mockResolvedValueOnce(true);
 
       /* Make request */
       request = createRequest();
