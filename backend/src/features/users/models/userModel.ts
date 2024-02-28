@@ -50,10 +50,10 @@ const userSchema = new Schema<IUser>(
     },
     useMetric: { type: Boolean, required: true },
     goals: {
-      calories: { type: Number, required: true },
-      protein: { type: Number, required: true },
-      fat: { type: Number, required: true },
-      carbohydrates: { type: Number, required: true }
+      calories: { type: Number, required: true, min: 0 },
+      protein: { type: Number, required: true, min: 0 },
+      fat: { type: Number, required: true, min: 0 },
+      carbohydrates: { type: Number, required: true, min: 0 }
     }
   },
   { timestamps: true }

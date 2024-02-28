@@ -12,6 +12,9 @@ jest.mock('../../../../src/features/users/controllers/userController', () => ({
   }),
   updateUser: jest.fn().mockImplementation((req, res) => {
     res.sendStatus(200);
+  }),
+  getUser: jest.fn().mockImplementation((req, res) => {
+    res.sendStatus(200);
   })
 }));
 jest.mock('../../../../src/features/auth/controllers/authController', () => ({
@@ -57,6 +60,62 @@ describe('User Routes Tests', () => {
 
       /* Test against expected */
       expect(UserController.createUser).toHaveBeenCalledTimes(threshold);
+      expect(response.statusCode).toBe(429);
+      expect(response.body.message).toBe(GenericResponseMessages._429);
+    });
+  });
+
+  describe('PUT /users/:id', () => {
+    it('should call UserController.updateUser', async () => {
+      /* Make the API call */
+      const expressInstance = appInstance.getExpressApp();
+      await request(expressInstance).put(`${ApiUrlsV1.Users}/1`).send({});
+
+      /* Test against expected */
+      expect(UserController.updateUser).toHaveBeenCalled();
+    });
+
+    it('should fail when the rate limit is exceeded', async () => {
+      /* Call API `threshold` times so that next call will cause rating limiting */
+      const expressInstance = appInstance.getExpressApp();
+      const threshold: number = Config.get('RATE_LIMITING.USERS.PUT.THRESHOLD');
+      for (let i = 0; i < threshold; i++) {
+        await request(expressInstance).put(`${ApiUrlsV1.Users}/1`).send({});
+      }
+
+      /* Call API */
+      const response = await request(expressInstance).put(`${ApiUrlsV1.Users}/1`).send({});
+
+      /* Test against expected */
+      expect(UserController.updateUser).toHaveBeenCalledTimes(threshold);
+      expect(response.statusCode).toBe(429);
+      expect(response.body.message).toBe(GenericResponseMessages._429);
+    });
+  });
+
+  describe('GET /users/:id', () => {
+    it('should call UserController.getUser', async () => {
+      /* Make the API call */
+      const expressInstance = appInstance.getExpressApp();
+      await request(expressInstance).get(`${ApiUrlsV1.Users}/1`).send({});
+
+      /* Test against expected */
+      expect(UserController.getUser).toHaveBeenCalled();
+    });
+
+    it('should fail when the rate limit is exceeded', async () => {
+      /* Call API `threshold` times so that next call will cause rating limiting */
+      const expressInstance = appInstance.getExpressApp();
+      const threshold: number = Config.get('RATE_LIMITING.USERS.GET.THRESHOLD');
+      for (let i = 0; i < threshold; i++) {
+        await request(expressInstance).get(`${ApiUrlsV1.Users}/1`).send({});
+      }
+
+      /* Call API */
+      const response = await request(expressInstance).get(`${ApiUrlsV1.Users}/1`).send({});
+
+      /* Test against expected */
+      expect(UserController.getUser).toHaveBeenCalledTimes(threshold);
       expect(response.statusCode).toBe(429);
       expect(response.body.message).toBe(GenericResponseMessages._429);
     });

@@ -18,7 +18,7 @@ class UserController {
   static async createUser(req: Request, res: Response): Promise<void> {
     try {
       /* Check if user already created */
-      const user = await UserModel.findById(req.body._id);
+      const user = await UserModel.findById(req.body.userId);
       if (user) {
         res.status(409).json({
           message: UserResponseMessages._409_UserAlreadyExists
@@ -28,7 +28,7 @@ class UserController {
 
       /* Create new user, don't need to worry about dupes since using firebase auth */
       const newUser = new UserModel({
-        _id: req.body._id,
+        _id: req.body.userId, // change to userId
         age: req.body.age,
         sex: req.body.sex,
         height: req.body.height,
@@ -114,6 +114,36 @@ class UserController {
           message: GenericResponseMessages._500
         });
       }
+    }
+  }
+
+  /**
+   * Returns a user. If the user already exists, it fails.
+   * @param req incoming request from client.
+   * @param res response to return to client.
+   * @returns Returns a promise indicating completion of the async function.
+   */
+  static async getUser(req: Request, res: Response): Promise<void> {
+    try {
+      /* Check if user already created */
+      const user = await UserModel.findById(req.params.userId);
+      console.log(JSON.stringify(user));
+      if (!user) {
+        res.status(404).json({
+          message: UserResponseMessages._404_UserDoesntExist
+        });
+        return;
+      }
+
+      res.status(200).json({
+        user: user
+      });
+      /* eslint-disable-next-line */
+    } catch (error) {
+      logger.error('Error occurred while retrieving user:\n', error);
+      res.status(500).json({
+        message: GenericResponseMessages._500
+      });
     }
   }
 }

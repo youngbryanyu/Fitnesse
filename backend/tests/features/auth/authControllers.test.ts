@@ -133,25 +133,6 @@ describe('AuthController Tests', () => {
       expect(TestController.testFunction).not.toHaveBeenCalled();
     });
 
-    it("should respond with 401 unauthorized if the `_id` field in the body doesn't match the tokenUid in the header", async () => {
-      /* Create request */
-      request = createRequest({
-        headers: { 'token-uid': 'test_uid' },
-        body: { _id: 'nonmatching_uid' }
-      });
-
-      /* Set up mocks */
-      jest.spyOn(TestController, 'testFunction');
-
-      /* Call function */
-      await AuthController.checkAccess(request, response, TestController.testFunction);
-
-      /* Test against expected */
-      expect(response.statusCode).toBe(401);
-      expect(response._getJSONData().message).toBe(AuthResponseMessages._401_Unauthorized);
-      expect(TestController.testFunction).not.toHaveBeenCalled();
-    });
-
     it("should respond with 401 unauthorized if the `userId` field in the body doesn't match the tokenUid in the header", async () => {
       /* Create request */
       request = createRequest({

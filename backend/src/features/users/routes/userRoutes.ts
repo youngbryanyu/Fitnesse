@@ -24,4 +24,13 @@ userRouter.put(
   UserController.updateUser
 );
 
+/* Get user */
+userRouter.get(
+  '/:userId',
+  getRateLimitUpdateUser(),
+  AuthController.verify,
+  AuthController.checkAccess,
+  UserController.getUser
+);
+
 export default userRouter;

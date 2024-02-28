@@ -77,7 +77,7 @@ describe('User Controller Tests', () => {
       expect(response._getJSONData().message).toBe(UserResponseMessages._201_UserCreateSuccessful);
     });
 
-    it('should fail if any other error is thrown', async () => {
+    it('should return a 500 code if any other error is thrown', async () => {
       /* Set up mocks */
       UserModel.findById = jest.fn().mockImplementationOnce(() => {
         throw new Error();
@@ -176,6 +176,54 @@ describe('User Controller Tests', () => {
       /* Test against expected */
       expect(response.statusCode).toBe(200);
       expect(response._getJSONData().message).toBe(UserResponseMessages._200_UserUpdateSuccessful);
+    });
+  });
+
+  describe('getUser', () => {
+    it('should successfully get a user', async () => {
+      /* Create request */
+      request = createRequest();
+
+      /* Set up mocks */
+      UserModel.findById = jest.fn().mockResolvedValueOnce({});
+
+      /* Call function */
+      await UserController.getUser(request, response);
+
+      /* Compare against expected */
+      expect(response.statusCode).toBe(200);
+    });
+
+    it('should return a 404 code for nonexistent users', async () => {
+      /* Create request */
+      request = createRequest();
+
+      /* Set up mocks */
+      UserModel.findById = jest.fn().mockResolvedValueOnce(undefined);
+
+      /* Call function */
+      await UserController.getUser(request, response);
+
+      /* Compare against expected */
+      expect(response.statusCode).toBe(404);
+      expect(response._getJSONData().message).toBe(UserResponseMessages._404_UserDoesntExist);
+    });
+
+    it('should return a 500 code for errors', async () => {
+      /* Create request */
+      request = createRequest();
+
+      /* Set up mocks */
+      UserModel.findById = jest.fn().mockImplementationOnce(() => {
+        throw new Error();
+      });
+
+      /* Call function */
+      await UserController.getUser(request, response);
+
+      /* Compare against expected */
+      expect(response.statusCode).toBe(500);
+      expect(response._getJSONData().message).toBe(GenericResponseMessages._500);
     });
   });
 });

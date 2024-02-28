@@ -45,9 +45,8 @@ class AuthController {
    * Verifies that a user can access a resouce by checking if the UID in the JWT token (`tokenUid` field in body after `verify` is called) is the same as the user id in the request
    * body or params.
    *
-   * - _id is in the body is when creating the user document itself (POST).
-   * - userId is in the path params when performing PUT/DELETE/GET on a document
-   * _ userId is in the body when creating a document referencing a user (POST)
+   * - userId is in the path params when performing POST/PUT/DELETE/GET on a document
+   * _ userId is in the top level of the body when creating a document referencing a user (POST)
    *
    * The body, params, and headers will never be null since we are using the bodyParser middleware.
    * @param req The incoming HTTP request.
@@ -67,11 +66,8 @@ class AuthController {
       return;
     }
 
-    /* Check if `userId` or `_id` is in body */
-    if (
-      (req.body.userId !== undefined && tokenUid !== req.body.userId) ||
-      (req.body._id !== undefined && tokenUid !== req.body._id)
-    ) {
+    /* Check if `userId` is in body */
+    if (req.body.userId !== undefined && tokenUid !== req.body.userId) {
       res.status(401).json({
         message: AuthResponseMessages._401_Unauthorized
       });
