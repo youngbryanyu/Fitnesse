@@ -7,7 +7,7 @@ import logger from '../../logging/logger';
  */
 class FirebaseClient {
   /**
-   * Creates a connection to the firebase instance
+   * Creates a firebase client to make HTTP requests to firebase
    */
   public static initialize(): void {
     try {
@@ -24,7 +24,7 @@ class FirebaseClient {
           privateKey: privateKey
         })
       });
-      logger.info('Successfully connected to Firebase');
+      logger.info('Successfully initialized Firebase client');
     } catch (error) {
       logger.error('Error occurred while connecting to Firebase:\n', error);
       throw error;
@@ -32,7 +32,7 @@ class FirebaseClient {
   }
 
   /**
-   * Disconnect from firebase.
+   * Clean up the firebase client.
    */
   public static async reset() {
     try {

@@ -38,7 +38,7 @@ let cleanedUp = false;
       /* Connect to Redis */
       await RedisClient.initialize();
 
-      /* Connect to Firebase */
+      /* Create Firebase client (no persistent connection) */
       FirebaseClient.initialize();
     } catch (error) {
       logger.error('Failed to establish all DB connections:\n', error);
