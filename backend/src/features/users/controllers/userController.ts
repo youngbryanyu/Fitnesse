@@ -54,6 +54,10 @@ class UserController {
         res.status(400).json({
           message: UserResponseMessages._400_InvalidSchema
         });
+      } else if (error.name === MongooseErrors.CastError) {
+        res.status(400).json({
+          message: UserResponseMessages._400_CastFailed
+        });
       } else {
         res.status(500).json({
           message: GenericResponseMessages._500
@@ -76,7 +80,7 @@ class UserController {
       const timestamp = new Date(updatedAt);
 
       /* Try updating user */
-      const user = await UserModel.findOneAndUpdate(
+      await UserModel.findOneAndUpdate(
         {
           _id: userId,
           updatedAt: { $lt: timestamp } /* last write wins */
@@ -101,13 +105,13 @@ class UserController {
         res.status(400).json({
           message: UserResponseMessages._400_ImmutableField
         });
-      } else if (error.name === MongooseErrors.CastError) {
-        res.status(400).json({
-          message: UserResponseMessages._400_InvalidSchema
-        });
       } else if (error.name === MongooseErrors.ValidationError) {
         res.status(400).json({
           message: UserResponseMessages._400_InvalidSchema
+        });
+      } else if (error.name === MongooseErrors.CastError) {
+        res.status(400).json({
+          message: UserResponseMessages._400_CastFailed
         });
       } else {
         res.status(500).json({

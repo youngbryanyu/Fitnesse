@@ -47,6 +47,23 @@ describe('User Controller Tests', () => {
       expect(response._getJSONData().message).toBe(UserResponseMessages._400_InvalidSchema);
     });
 
+    it('should fail if a cast error is thrown', async () => {
+      /* Set up mocks */
+      const error = new Error('error');
+      error.name = MongooseErrors.CastError;
+      UserModel.findById = jest.fn().mockImplementationOnce(() => {
+        throw error;
+      });
+
+      /* Make request */
+      request = createRequest();
+      await UserController.createUser(request, response);
+
+      /* Test against expected */
+      expect(response.statusCode).toBe(400);
+      expect(response._getJSONData().message).toBe(UserResponseMessages._400_CastFailed);
+    });
+
     it('should save the new user to the database', async () => {
       /* Set up mocks */
       UserModel.findById = jest.fn().mockResolvedValueOnce(undefined);
@@ -128,7 +145,7 @@ describe('User Controller Tests', () => {
 
       /* Test against expected */
       expect(response.statusCode).toBe(400);
-      expect(response._getJSONData().message).toBe(UserResponseMessages._400_InvalidSchema);
+      expect(response._getJSONData().message).toBe(UserResponseMessages._400_CastFailed);
     });
 
     it('should fail when updating an invalid range', async () => {
