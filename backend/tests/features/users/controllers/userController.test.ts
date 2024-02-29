@@ -74,7 +74,6 @@ describe('User Controller Tests', () => {
 
       /* Test against expected */
       expect(response.statusCode).toBe(201);
-      expect(response._getJSONData().message).toBe(UserResponseMessages._201_UserCreateSuccessful);
     });
 
     it('should return a 500 code if any other error is thrown', async () => {
@@ -174,8 +173,7 @@ describe('User Controller Tests', () => {
       await UserController.updateUser(request, response);
 
       /* Test against expected */
-      expect(response.statusCode).toBe(200);
-      expect(response._getJSONData().message).toBe(UserResponseMessages._200_UserUpdateSuccessful);
+      expect(response.statusCode).toBe(204);
     });
   });
 
@@ -239,8 +237,7 @@ describe('User Controller Tests', () => {
       await UserController.deleteUser(request, response);
 
       /* Compare against expected */
-      expect(response.statusCode).toBe(200);
-      expect(response._getJSONData().message).toBe(UserResponseMessages._200_UserDeleteSuccessful);
+      expect(response.statusCode).toBe(204);
     });
 
     it('should return a 500 code for errors', async () => {

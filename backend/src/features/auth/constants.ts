@@ -5,7 +5,7 @@
  */
 export enum AuthHeaders {
   Authorization = 'authorization',
-  TokenUid = 'token-uid'
+  Uid = 'uid'
 }
 
 export enum AuthResponseMessages {

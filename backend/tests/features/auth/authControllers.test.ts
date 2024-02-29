@@ -136,7 +136,7 @@ describe('AuthController Tests', () => {
     it("should respond with 401 unauthorized if the `userId` field in the body doesn't match the tokenUid in the header", async () => {
       /* Create request */
       request = createRequest({
-        headers: { 'token-uid': 'test_uid' },
+        headers: { uid: 'test_uid' },
         body: { userId: 'nonmatching_uid' }
       });
 
@@ -155,7 +155,7 @@ describe('AuthController Tests', () => {
     it("should respond with 401 unauthorized if the `userId` field in the path params doesn't match the tokenUid in the header", async () => {
       /* Create request */
       request = createRequest({
-        headers: { 'token-uid': 'test_uid' },
+        headers: { uid: 'test_uid' },
         params: { userId: 'nonmatching_uid' }
       });
 
@@ -174,7 +174,7 @@ describe('AuthController Tests', () => {
     it("should call the next function if the user id isn't in the request", async () => {
       /* Create request */
       request = createRequest({
-        headers: { 'token-uid': 'test_uid' }
+        headers: { uid: 'test_uid' }
       });
 
       /* Set up mocks */
@@ -191,7 +191,7 @@ describe('AuthController Tests', () => {
     it('should call the next function if the user id in the request matches the tokenUid in the header', async () => {
       /* Create request */
       request = createRequest({
-        headers: { 'token-uid': 'test_uid' },
+        headers: { uid: 'test_uid' },
         params: { userId: 'test_uid' }
       });
 

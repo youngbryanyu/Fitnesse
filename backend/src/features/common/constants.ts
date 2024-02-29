@@ -24,5 +24,5 @@ export enum GenericResponseMessages {
 export enum MongooseErrors {
   ValidationError = 'ValidationError' /* `name` of error when schema validation fails */,
   ImmutableFieldError = 'ImmutableField' /* `codeName` when field being updated is immutable */,
-  CastError = 'CastError' /* `name` of error when schema validation fails upon update */
+  CastError = 'CastError' /* `name` of error when using the wrong data type in a field */
 }

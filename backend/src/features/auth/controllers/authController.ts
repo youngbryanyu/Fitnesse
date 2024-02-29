@@ -29,7 +29,7 @@ class AuthController {
       const tokenPayload = await admin.auth().verifyIdToken(idToken);
 
       /* Add UID to the header of the request */
-      req.headers[AuthHeaders.TokenUid] = tokenPayload.uid;
+      req.headers[AuthHeaders.Uid] = tokenPayload.uid;
 
       /* Call next function */
       next();
@@ -46,7 +46,7 @@ class AuthController {
    * body or params.
    *
    * - userId is in the path params when performing POST/PUT/DELETE/GET on a document
-   * _ userId is in the top level of the body when creating a document referencing a user (POST)
+   * - userId is in the top level of the body when creating a document referencing a user (POST)
    *
    * The body, params, and headers will never be null since we are using the bodyParser middleware.
    * @param req The incoming HTTP request.
@@ -56,7 +56,7 @@ class AuthController {
    */
   static async checkAccess(req: Request, res: Response, next: NextFunction) {
     /* tokenUid should be added to request body from the `verify` function */
-    const tokenUid = req.headers[AuthHeaders.TokenUid];
+    const tokenUid = req.headers[AuthHeaders.Uid];
 
     /* Check if decrypted token's UID is undefined */
     if (tokenUid === undefined) {

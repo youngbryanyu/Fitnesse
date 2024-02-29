@@ -4,9 +4,6 @@
  * HTTP response messages
  */
 export enum UserResponseMessages {
-  _200_UserUpdateSuccessful = 'Updated user successfully.',
-  _200_UserDeleteSuccessful = 'Deleted user successfully.',
-  _201_UserCreateSuccessful = 'Created user successfully.',
   _400_ImmutableField = 'Cannot modify an immutable field',
   _400_InvalidSchema = "The request body doesn't follow the document schema",
   _404_UserDoesntExist = "The requested user doesn't exist",

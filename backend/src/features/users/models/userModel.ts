@@ -50,12 +50,13 @@ const userSchema = new Schema<IUser>({
   },
   useMetric: { type: Boolean, required: true },
   goals: {
-    calories: { type: Number, required: true, min: 0 },
-    protein: { type: Number, required: true, min: 0 },
-    fat: { type: Number, required: true, min: 0 },
-    carbohydrates: { type: Number, required: true, min: 0 }
+    calories: { type: Number, required: true, min: 0, max: 9999 },
+    protein: { type: Number, required: true, min: 0, max: 9999 },
+    fat: { type: Number, required: true, min: 0, max: 9999 },
+    carbohydrates: { type: Number, required: true, min: 0, max: 9999 }
   },
   createdAt: { type: Date, required: true },
+  /* No index needed on `updatedAt` for PUT queries (with LWW) since each user's _id only has 1 document */
   updatedAt: { type: Date, required: true }
 });
 

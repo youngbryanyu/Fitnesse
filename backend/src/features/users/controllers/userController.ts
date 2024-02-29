@@ -46,10 +46,7 @@ class UserController {
         updatedAt: req.body.updatedAt
       });
       await newUser.save();
-      res.status(201).json({
-        message: UserResponseMessages._201_UserCreateSuccessful,
-        newUser: newUser
-      });
+      res.status(201);
       /* eslint-disable-next-line */
     } catch (error: any) {
       logger.error('Error occurred during user creation:\n', error);
@@ -79,7 +76,7 @@ class UserController {
       const timestamp = new Date(updatedAt);
 
       /* Try updating user */
-      const updatedUser = await UserModel.findOneAndUpdate(
+      await UserModel.findOneAndUpdate(
         {
           _id: userId,
           updatedAt: { $lt: timestamp } /* last write wins */
@@ -94,10 +91,7 @@ class UserController {
           upsert: false /* Don't create document if it doesn't already exist */
         }
       );
-      res.status(200).json({
-        message: UserResponseMessages._200_UserUpdateSuccessful,
-        updatedUser: updatedUser
-      });
+      res.status(204);
       /* eslint-disable-next-line */
     } catch (error: any) {
       logger.error('Error occurred during user update:\n', error);
@@ -162,9 +156,7 @@ class UserController {
       /* Delete from users collection */
       await UserModel.findByIdAndDelete(req.params.userId);
 
-      res.status(200).json({
-        message: UserResponseMessages._200_UserDeleteSuccessful
-      });
+      res.status(204);
     } catch (error) {
       logger.error('Error occurred while deleting user:\n', error);
       res.status(500).json({
