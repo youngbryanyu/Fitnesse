@@ -9,5 +9,6 @@ export enum AuthHeaders {
 }
 
 export enum AuthResponseMessages {
-  _401_Unauthorized = "You are not authenticated with a valid access token or aren't authorized to access this resource."
+  _401_InvalidToken = 'You are not authenticated with a valid access token',
+  _401_NoAccess = "You aren't authorized to access this resource"
 }

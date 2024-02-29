@@ -50,7 +50,7 @@ describe('AuthController Tests', () => {
 
       /* Test against expected */
       expect(response.statusCode).toBe(401);
-      expect(response._getJSONData().message).toBe(AuthResponseMessages._401_Unauthorized);
+      expect(response._getJSONData().message).toBe(AuthResponseMessages._401_InvalidToken);
       expect(TestController.testFunction).not.toHaveBeenCalled();
     });
 
@@ -68,7 +68,7 @@ describe('AuthController Tests', () => {
 
       /* Test against expected */
       expect(response.statusCode).toBe(401);
-      expect(response._getJSONData().message).toBe(AuthResponseMessages._401_Unauthorized);
+      expect(response._getJSONData().message).toBe(AuthResponseMessages._401_InvalidToken);
       expect(TestController.testFunction).not.toHaveBeenCalled();
     });
 
@@ -109,7 +109,7 @@ describe('AuthController Tests', () => {
 
       /* Test against expected */
       expect(response.statusCode).toBe(401);
-      expect(response._getJSONData().message).toBe(AuthResponseMessages._401_Unauthorized);
+      expect(response._getJSONData().message).toBe(AuthResponseMessages._401_InvalidToken);
       expect(TestController.testFunction).not.toHaveBeenCalled();
     });
   });
@@ -129,7 +129,7 @@ describe('AuthController Tests', () => {
 
       /* Test against expected */
       expect(response.statusCode).toBe(401);
-      expect(response._getJSONData().message).toBe(AuthResponseMessages._401_Unauthorized);
+      expect(response._getJSONData().message).toBe(AuthResponseMessages._401_NoAccess);
       expect(TestController.testFunction).not.toHaveBeenCalled();
     });
 
@@ -148,7 +148,7 @@ describe('AuthController Tests', () => {
 
       /* Test against expected */
       expect(response.statusCode).toBe(401);
-      expect(response._getJSONData().message).toBe(AuthResponseMessages._401_Unauthorized);
+      expect(response._getJSONData().message).toBe(AuthResponseMessages._401_NoAccess);
       expect(TestController.testFunction).not.toHaveBeenCalled();
     });
 
@@ -167,7 +167,7 @@ describe('AuthController Tests', () => {
 
       /* Test against expected */
       expect(response.statusCode).toBe(401);
-      expect(response._getJSONData().message).toBe(AuthResponseMessages._401_Unauthorized);
+      expect(response._getJSONData().message).toBe(AuthResponseMessages._401_NoAccess);
       expect(TestController.testFunction).not.toHaveBeenCalled();
     });
 

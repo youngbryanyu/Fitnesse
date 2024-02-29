@@ -16,7 +16,7 @@ class AuthController {
     /* Check if headers contains bearer schema */
     if (!req.headers.authorization || !req.headers.authorization.startsWith('Bearer ')) {
       res.status(401).json({
-        message: AuthResponseMessages._401_Unauthorized
+        message: AuthResponseMessages._401_InvalidToken
       });
       return;
     }
@@ -35,7 +35,7 @@ class AuthController {
       next();
     } catch (error) {
       res.status(401).json({
-        message: AuthResponseMessages._401_Unauthorized
+        message: AuthResponseMessages._401_InvalidToken
       });
       return;
     }
@@ -61,7 +61,7 @@ class AuthController {
     /* Check if decrypted token's UID is undefined */
     if (tokenUid === undefined) {
       res.status(401).json({
-        message: AuthResponseMessages._401_Unauthorized
+        message: AuthResponseMessages._401_NoAccess
       });
       return;
     }
@@ -69,7 +69,7 @@ class AuthController {
     /* Check if `userId` is in body */
     if (req.body.userId !== undefined && tokenUid !== req.body.userId) {
       res.status(401).json({
-        message: AuthResponseMessages._401_Unauthorized
+        message: AuthResponseMessages._401_NoAccess
       });
       return;
     }
@@ -77,7 +77,7 @@ class AuthController {
     /* Check if `userId` is in path params */
     if (req.params.userId !== undefined && tokenUid !== req.params.userId) {
       res.status(401).json({
-        message: AuthResponseMessages._401_Unauthorized
+        message: AuthResponseMessages._401_NoAccess
       });
       return;
     }
