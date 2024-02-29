@@ -76,7 +76,7 @@ class UserController {
       const timestamp = new Date(updatedAt);
 
       /* Try updating user */
-      await UserModel.findOneAndUpdate(
+      const user = await UserModel.findOneAndUpdate(
         {
           _id: userId,
           updatedAt: { $lt: timestamp } /* last write wins */
@@ -91,6 +91,7 @@ class UserController {
           upsert: false /* Don't create document if it doesn't already exist */
         }
       );
+
       res.status(204).json();
       /* eslint-disable-next-line */
     } catch (error: any) {
@@ -126,7 +127,6 @@ class UserController {
     try {
       /* Check if user already created */
       const user = await UserModel.findById(req.params.userId);
-      console.log(JSON.stringify(user));
       if (!user) {
         res.status(404).json({
           message: UserResponseMessages._404_UserDoesntExist
