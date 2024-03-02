@@ -35,11 +35,11 @@ export enum ActivityLevels {
  * Weight goal
  */
 export enum WeightGoals {
-  fastLoss = 0,
-  moderateLoss = 1,
-  slowLoss = 2,
-  maintain = 3,
-  slowGain = 4,
-  moderateGain = 5,
-  fastGain = 6
+  FastLoss = 0,
+  ModerateLoss = 1,
+  SlowLoss = 2,
+  Maintain = 3,
+  SlowGain = 4,
+  ModerateGain = 5,
+  FastGain = 6
 }
