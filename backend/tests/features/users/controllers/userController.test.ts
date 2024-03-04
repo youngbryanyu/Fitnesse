@@ -148,6 +148,19 @@ describe('User Controller Tests', () => {
       expect(response._getJSONData().message).toBe(UserResponseMessages._400_CastFailed);
     });
 
+    it('should return a 409 code when the update is stale', async () => {
+      /* Set up mocks */
+      UserModel.findOneAndUpdate = jest.fn().mockResolvedValueOnce(undefined);
+
+      /* Make request */
+      request = createRequest();
+      await UserController.updateUser(request, response);
+
+      /* Test against expected */
+      expect(response.statusCode).toBe(409);
+      expect(response._getJSONData().message).toBe(UserResponseMessages._409_StaleUpdate);
+    });
+
     it('should fail when updating an invalid range', async () => {
       /* Set up mocks */
       const error = new Error();

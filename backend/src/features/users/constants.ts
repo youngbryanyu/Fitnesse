@@ -9,7 +9,7 @@ export enum UserResponseMessages {
   _400_CastFailed = 'The data type in the body cannot be casted to the required schema datatype',
   _404_UserDoesntExist = "The requested user doesn't exist",
   _409_UserAlreadyExists = 'User already exists.',
-  _409_StaleUpdate = 'The update is stale since a newer update has already been applied to the user.'
+  _409_StaleUpdate = "The update failed since it is stale or the user doesn't exist."
 }
 
 /**
