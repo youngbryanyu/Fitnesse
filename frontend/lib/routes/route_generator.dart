@@ -1,7 +1,7 @@
 /* Route handler to determine which page to show */
 import 'package:flutter/material.dart';
-import 'package:frontend/auth/pages/auth_page_selector.dart';
-import 'package:frontend/core/pages/home_page.dart';
+import 'package:frontend/features/auth/pages/auth_page_selector.dart';
+import 'package:frontend/features/home/pages/home_page.dart';
 import 'package:frontend/routes/routes.dart';
 
 /* Generates the page route based on the route settings */
