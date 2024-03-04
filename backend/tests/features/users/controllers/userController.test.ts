@@ -157,8 +157,8 @@ describe('User Controller Tests', () => {
       await UserController.updateUser(request, response);
 
       /* Test against expected */
-      expect(response.statusCode).toBe(409);
-      expect(response._getJSONData().message).toBe(UserResponseMessages._409_StaleUpdate);
+      expect(response.statusCode).toBe(200);
+      expect(response._getJSONData().message).toBe(UserResponseMessages._200_StaleUpdate);
     });
 
     it('should fail when updating an invalid range', async () => {

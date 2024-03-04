@@ -98,8 +98,8 @@ class UserController {
 
       /* If nothing matched the query condition */
       if (!user) {
-        res.status(409).json({
-          message: UserResponseMessages._409_StaleUpdate
+        res.status(200).json({
+          message: UserResponseMessages._200_StaleUpdate
         });
         return;
       }
