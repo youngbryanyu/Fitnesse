@@ -8,7 +8,7 @@ export enum Environments {
 }
 
 /* API URLs version 1 */
-export const API_URLS_V1_PREFIX = '/fitnesse/v1';
+export const API_URLS_V1_PREFIX = '/v1';
 export enum ApiUrlsV1 {
   HealthCheck = `${API_URLS_V1_PREFIX}/healthCheck`,
   Users = `${API_URLS_V1_PREFIX}/users`
