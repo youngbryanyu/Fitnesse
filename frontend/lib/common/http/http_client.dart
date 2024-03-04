@@ -13,9 +13,9 @@ class HttpClient {
   HttpClient._internal();
 
   /* Get getter for singleton instance */
-  Dio get instance => _createDioInstance();
+  static Dio get instance => _createDioInstance();
 
-  Dio _createDioInstance() {
+  static Dio _createDioInstance() {
     final dio = Dio(
       BaseOptions(
         baseUrl: 'https://fitnesse-backend.onrender.com/v1',
@@ -46,7 +46,7 @@ class HttpClient {
   }
 
   /* Get the firebase id token from the current user */
-  Future<String?> _getFirebaseIdToken() async {
+  static Future<String?> _getFirebaseIdToken() async {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       final token = await user.getIdToken();

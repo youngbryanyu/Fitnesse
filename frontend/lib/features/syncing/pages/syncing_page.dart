@@ -1,5 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:frontend/common/services/api/user_api_service.dart';
 import 'package:frontend/features/syncing/providers/syncing_page_state_provider.dart';
 
 class SyncingPage extends ConsumerWidget {
@@ -8,16 +10,22 @@ class SyncingPage extends ConsumerWidget {
   /* Download necessary user data from server, then switch to home selector page */
   Future<void> syncDataWithServer(WidgetRef ref) async {
     try {
-      // TODO: make api call
-      await Future.delayed(Duration(seconds: 1));
+      final userId = FirebaseAuth.instance.currentUser?.uid;
+
+      if (userId == null) {
+        throw Error();
+      }
+
+      final user = await UserApiService.getUser(userId);
+      print(user);
+      // TODO: write user to local realm DB
+
+      /* Go to home page */
+      ref.read(syncingPageStateProvider.notifier).state = SyncingPageState.home;
+      // TODO: go to home page selector instead of home page
     } catch (error) {
       /* Log out upon error */
     }
-
-    /* Go to home page selector */
-    print(ref.watch(syncingPageStateProvider));
-    ref.read(syncingPageStateProvider.notifier).state = SyncingPageState.home;
-    print('synced');
   }
 
   @override
