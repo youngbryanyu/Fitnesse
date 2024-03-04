@@ -15,6 +15,8 @@ class HomePage extends ConsumerWidget {
   void signOutUser(WidgetRef ref) async {
     FirebaseAuth.instance.signOut();
     ref.read(authPageStateProvider.notifier).state = AuthPageState.login;
+
+    // TODO: notify user if not all data has been synced with server yet
   }
 
   @override

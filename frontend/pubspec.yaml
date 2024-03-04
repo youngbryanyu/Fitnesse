@@ -50,6 +50,9 @@ dependencies:
   # dio http client
   dio: ^5.4.1
 
+  # logger
+  logging: ^1.2.0 
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

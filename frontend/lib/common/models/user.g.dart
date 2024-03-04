@@ -9,6 +9,7 @@ part of 'user.dart';
 // ignore_for_file: type=lint
 class User extends _User with RealmEntity, RealmObjectBase, RealmObject {
   User(
+    String id,
     DateTime birthday,
     int sexIndex,
     int height,
@@ -20,6 +21,7 @@ class User extends _User with RealmEntity, RealmObjectBase, RealmObject {
     DateTime updatedAt, {
     Goals? goals,
   }) {
+    RealmObjectBase.set(this, 'id', id);
     RealmObjectBase.set(this, 'birthday', birthday);
     RealmObjectBase.set(this, 'sex', sexIndex);
     RealmObjectBase.set(this, 'height', height);
@@ -33,6 +35,11 @@ class User extends _User with RealmEntity, RealmObjectBase, RealmObject {
   }
 
   User._();
+
+  @override
+  String get id => RealmObjectBase.get<String>(this, 'id') as String;
+  @override
+  set id(String value) => RealmObjectBase.set(this, 'id', value);
 
   @override
   DateTime get birthday =>
@@ -106,6 +113,7 @@ class User extends _User with RealmEntity, RealmObjectBase, RealmObject {
   static SchemaObject _initSchema() {
     RealmObjectBase.registerFactory(User._);
     return const SchemaObject(ObjectType.realmObject, User, 'User', [
+      SchemaProperty('id', RealmPropertyType.string, primaryKey: true),
       SchemaProperty('birthday', RealmPropertyType.timestamp),
       SchemaProperty('sexIndex', RealmPropertyType.int, mapTo: 'sex'),
       SchemaProperty('height', RealmPropertyType.int),

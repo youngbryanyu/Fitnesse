@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:frontend/common/http/http_client.dart';
+import 'package:frontend/logging/logger.dart';
 
 /* Class for interacting with user related backend APIs */
 class UserApiService {
@@ -18,7 +19,10 @@ class UserApiService {
       } else {
         return null;
       }
+
+      // TODO: handle 500 status code
     } catch (error) {
+      appLogger.info('Error while getting user from the backend:\n', error);
       rethrow;
     }
   }

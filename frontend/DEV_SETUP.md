@@ -117,6 +117,7 @@ Run `flutter test` to run the unit tests.
 
 #### Common issues
 - If you have issues importing assets after adding new assets and referencing them in `pubspec.yaml`, make sure to run `flutter pub get` then reload the emulator.
+- You may need to run `dart run realm generate` if you modify the `*.g.dart` files when changing the realm schea.
 
 # Other Resources
 - [Firebase project setup](https://firebase.google.com/docs/flutter/setup?platform=ios): guide to install the firebase dependencies locally and setup firebase.

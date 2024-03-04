@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/features/auth/pages/auth_page_selector.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:frontend/common/styles/themes.dart';
+import 'package:frontend/logging/logger.dart';
 import 'package:frontend/routes/route_generator.dart';
 
 /* Determine which firebase config file to import depending on environment */
@@ -17,6 +18,9 @@ void main() async {
   /* Initialize firebase app */
   await Firebase.initializeApp(
       options: firebase_options.DefaultFirebaseOptions.currentPlatform);
+
+  /* Initialize logger*/
+  initializeLogger();
 
   /* Start app */
   runApp(const ProviderScope(child: App()));

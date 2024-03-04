@@ -18,8 +18,10 @@ class HttpClient {
   static Dio _createDioInstance() {
     final dio = Dio(
       BaseOptions(
-        baseUrl: 'https://fitnesse-backend.onrender.com/v1',
-      ),
+          baseUrl: 'https://fitnesse-backend.onrender.com/v1',
+          validateStatus: (status) {
+            return true; /* Manually handle server-side errors */
+          }),
     );
 
     /* Add interceptor to auto-add access token to HTTP requests */
