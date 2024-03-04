@@ -20,28 +20,36 @@ class SyncingPage extends ConsumerWidget {
   /* Download necessary user data from server, then switch to home selector page */
   Future<void> syncDataWithServer(WidgetRef ref) async {
     try {
+      /* Get uid */
       final userId = FirebaseAuth.instance.currentUser?.uid;
+
+      /* Sign out if no user */
       if (userId == null) {
-        throw Error();
+        signOutUser(ref);
+        return;
       }
 
       /* Make HTTP request to get user info */
       final userData = await UserApiService.getUser(userId);
+
+      /* Go to onboarding page if no user info yet */
       if (userData == null) {
-        throw Error();
+        ref.read(syncingPageStateProvider.notifier).state =
+            SyncingPageState.onboarding;
+        return;
       }
 
-      /* Go to onboarding if no user info yet */
-      ref.read(syncingPageStateProvider.notifier).state =
-          SyncingPageState.onboarding;
-      appLogger.info('done');
       /* Save user to realm */
       await UserRealmService.createUser(userData);
 
       /* Go to home page */
       ref.read(syncingPageStateProvider.notifier).state = SyncingPageState.home;
     } catch (error) {
-      appLogger.info('Error occurred while syncing data with server:\n', error);
+      appLogger.info(
+        'Error occurred while syncing data with server. Logging out:\n',
+        error,
+      );
+      signOutUser(ref);
     }
   }
 
@@ -50,7 +58,7 @@ class SyncingPage extends ConsumerWidget {
     /* Get the screen height */
     double screenHeight = MediaQuery.of(context).size.height;
 
-    /* Call data sync function user*/
+    /* Call data sync function on page load */
     WidgetsBinding.instance.addPostFrameCallback((_) {
       syncDataWithServer(ref);
     });
@@ -63,7 +71,7 @@ class SyncingPage extends ConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const CircularProgressIndicator(),
-              SizedBox(height: screenHeight * .1),
+              SizedBox(height: screenHeight * .01),
               Text(
                 'Syncing data with the server...',
                 style: TextStyle(

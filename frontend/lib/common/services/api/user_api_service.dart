@@ -17,10 +17,12 @@ class UserApiService {
       if (response.statusCode == 200) {
         return response.data['user'];
       } else {
+        if (response.statusCode == 500) {
+          // TODO: handle 500 status code
+        }
+
         return null;
       }
-
-      // TODO: handle 500 status code
     } catch (error) {
       appLogger.info('Error while getting user from the backend:\n', error);
       rethrow;
