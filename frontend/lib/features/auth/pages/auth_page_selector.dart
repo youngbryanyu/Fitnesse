@@ -4,11 +4,9 @@ import "package:flutter_riverpod/flutter_riverpod.dart";
 import "package:frontend/features/auth/pages/login_page.dart";
 import "package:frontend/features/auth/pages/register_page.dart";
 import "package:frontend/features/auth/pages/forgot_password_page.dart";
-import "package:frontend/features/home/pages/home_page.dart";
 import "package:frontend/features/auth/providers/auth_page_state_provider.dart";
 import "package:frontend/features/auth/providers/firebase_auth_state_provider.dart";
 import "package:frontend/features/syncing/pages/syncing_page_selector.dart";
-import "package:frontend/features/syncing/providers/syncing_page_state_provider.dart";
 
 // -------------------------------------------------------------
 // - THIS SHOULD ALWAYS BE THE PAGE AT THE ROOT OF THE NAVIGATOR

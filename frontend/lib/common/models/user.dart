@@ -34,7 +34,7 @@ int _enumToInt(dynamic enumValue) => enumValue.index;
 @RealmModel()
 class _User {
   @PrimaryKey()
-  late String _id;
+  late String id;
   late DateTime birthday;
   @MapTo('sex')
   late int sexIndex;

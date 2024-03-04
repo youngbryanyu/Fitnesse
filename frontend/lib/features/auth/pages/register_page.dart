@@ -58,8 +58,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
       }
 
       /* Switch to syncing page selector */
-      ref.read(authPageStateProvider.notifier).state =
-          AuthPageState.syncingPageSelector;
+      ref.read(authPageStateProvider.notifier).state = AuthPageState.syncing;
       ref.read(syncingPageStateProvider.notifier).state =
           SyncingPageState.syncing;
     } on FirebaseAuthException catch (error) {

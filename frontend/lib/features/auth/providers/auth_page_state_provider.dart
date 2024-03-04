@@ -5,7 +5,7 @@ enum AuthPageState {
   login,
   register,
   forgotPassword,
-  syncingPageSelector,
+  syncing,
 }
 
 /* Listen for state changes for which auth page the user is on */

@@ -48,8 +48,7 @@ class _LoginPageState extends ConsumerState<WelcomePage> {
       }
 
       /* Switch to home page */
-      ref.read(authPageStateProvider.notifier).state =
-          AuthPageState.syncingPageSelector;
+      ref.read(authPageStateProvider.notifier).state = AuthPageState.syncing;
     } on FirebaseAuthException catch (error) {
       /* Pop loading circle */
       if (mounted) {

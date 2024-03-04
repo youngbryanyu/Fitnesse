@@ -51,8 +51,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       }
 
       /* Switch to syncing page selector */
-      ref.read(authPageStateProvider.notifier).state =
-          AuthPageState.syncingPageSelector;
+      ref.read(authPageStateProvider.notifier).state = AuthPageState.syncing;
       ref.read(syncingPageStateProvider.notifier).state =
           SyncingPageState.syncing;
     } on FirebaseAuthException catch (error) {
@@ -119,7 +118,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    /* Get the screen height */
+    /* Get the screen size */
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
 
@@ -140,7 +139,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(height: screenHeight * .02),
+                    SizedBox(height: screenHeight * .01),
 
                     /* Username or email text field */
                     AuthTextField(

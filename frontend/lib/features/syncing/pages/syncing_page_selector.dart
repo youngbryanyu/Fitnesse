@@ -2,8 +2,7 @@
 import "package:flutter/material.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
 import "package:frontend/features/home/pages/home_page.dart";
-import "package:frontend/features/onboarding/pages/welcome_page.dart";
-import "package:frontend/features/onboarding/providers/onboarding_page_state_provider.dart";
+import "package:frontend/features/onboarding/pages/onboarding_page_selector.dart";
 import "package:frontend/features/syncing/pages/syncing_page.dart";
 import "package:frontend/features/syncing/providers/syncing_page_state_provider.dart";
 
@@ -24,6 +23,8 @@ class SyncingPageSelector extends ConsumerWidget {
     switch (pageState) {
       case SyncingPageState.syncing:
         return const SyncingPage();
+      case SyncingPageState.onboarding:
+        return const OnboardingPageSelector();
       case SyncingPageState.home:
         return HomePage();
       default:
