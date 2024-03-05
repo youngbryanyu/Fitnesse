@@ -3,6 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 /* States for which auth page the user is on */
 enum OnboardingPageState {
   welcome,
+  enterBiometrics,
+  finishOnboarding,
+  customMacros,
 }
 
 /* Listen for state changes for which onboarding page the user is on */

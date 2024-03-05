@@ -40,8 +40,7 @@ class AuthPageSelector extends ConsumerWidget {
           }
         } else {
           /* User is logged in */
-          return const SyncingPageSelector();
-          // return HomePage();
+          return const SyncingPageSelector(); /* Always sync when app starts */
         }
       },
       loading: () => const CircularProgressIndicator(),

@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/common/services/api/user_api_service.dart';
 import 'package:frontend/common/services/realm/user_realm_service.dart';
 import 'package:frontend/features/auth/providers/auth_page_state_provider.dart';
+import 'package:frontend/features/onboarding/providers/onboarding_page_state_provider.dart';
 import 'package:frontend/features/syncing/providers/syncing_page_state_provider.dart';
 import 'package:frontend/logging/logger.dart';
 
@@ -36,6 +37,8 @@ class SyncingPage extends ConsumerWidget {
       if (userData == null) {
         ref.read(syncingPageStateProvider.notifier).state =
             SyncingPageState.onboarding;
+        ref.read(onboardingPageStateProvider.notifier).state =
+            OnboardingPageState.welcome;
         return;
       }
 
@@ -70,6 +73,7 @@ class SyncingPage extends ConsumerWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              /* Loading circle*/
               const CircularProgressIndicator(),
               SizedBox(height: screenHeight * .01),
               Text(
@@ -80,6 +84,8 @@ class SyncingPage extends ConsumerWidget {
                 ),
               ),
               SizedBox(height: screenHeight * .01),
+
+              /* Cancel button */
               GestureDetector(
                 onTap: () {
                   signOutUser(ref);

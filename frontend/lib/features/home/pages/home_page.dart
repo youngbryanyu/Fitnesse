@@ -17,6 +17,8 @@ class HomePage extends ConsumerWidget {
     ref.read(authPageStateProvider.notifier).state = AuthPageState.login;
 
     // TODO: notify user if not all data has been synced with server yet
+
+    // TODO: move this to a central shared file
   }
 
   @override

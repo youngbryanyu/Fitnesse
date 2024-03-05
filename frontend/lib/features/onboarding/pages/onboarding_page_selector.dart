@@ -2,6 +2,7 @@
 import "package:flutter/material.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
 import "package:frontend/features/home/pages/home_page_selector.dart";
+import "package:frontend/features/onboarding/pages/enter_biometrics_page.dart";
 import "package:frontend/features/onboarding/pages/welcome_page.dart";
 import "package:frontend/features/onboarding/providers/onboarding_page_state_provider.dart";
 
@@ -21,6 +22,8 @@ class OnboardingPageSelector extends ConsumerWidget {
     switch (pageState) {
       case OnboardingPageState.welcome:
         return const WelcomePage();
+      case OnboardingPageState.enterBiometrics:
+        return const EnterBiometricsPage();
       default:
         return const HomePageSelector();
     }

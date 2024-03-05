@@ -28,7 +28,7 @@ class SyncingPageSelector extends ConsumerWidget {
       case SyncingPageState.home:
         return const HomePageSelector();
       default:
-        return const HomePageSelector();
+        return const SyncingPage();
     }
   }
 }
