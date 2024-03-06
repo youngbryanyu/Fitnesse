@@ -75,9 +75,24 @@ final ThemeData lightTheme = ThemeData(
       color: Colors.white,
     ),
     labelSmall: TextStyle(
-      fontSize: 20,
+      fontSize: 12,
       fontWeight: FontWeight.bold,
       color: Colors.white,
+    ),
+    headlineSmall: TextStyle(
+      fontSize: 12,
+      fontWeight: FontWeight.normal,
+      color: Colors.blue,
+    ),
+    headlineMedium: TextStyle(
+      fontSize: 14,
+      fontWeight: FontWeight.normal,
+      color: Colors.blue,
+    ),
+    headlineLarge: TextStyle(
+      fontSize: 16,
+      fontWeight: FontWeight.normal,
+      color: Colors.blue,
     ),
   ),
 );
@@ -157,9 +172,24 @@ final ThemeData darkTheme = ThemeData(
       color: Colors.black,
     ),
     labelSmall: TextStyle(
-      fontSize: 20,
+      fontSize: 12,
       fontWeight: FontWeight.bold,
       color: Colors.black,
+    ),
+    headlineSmall: TextStyle(
+      fontSize: 12,
+      fontWeight: FontWeight.normal,
+      color: Colors.blue,
+    ),
+    headlineMedium: TextStyle(
+      fontSize: 14,
+      fontWeight: FontWeight.normal,
+      color: Colors.blue,
+    ),
+    headlineLarge: TextStyle(
+      fontSize: 16,
+      fontWeight: FontWeight.normal,
+      color: Colors.blue,
     ),
   ),
 );

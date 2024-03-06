@@ -19,6 +19,8 @@ class HomePage extends ConsumerWidget {
     // TODO: notify user if not all data has been synced with server yet
 
     // TODO: move this to a central shared file
+
+    // TODO: adjust all ref.read statements for error in screenshot
   }
 
   @override
