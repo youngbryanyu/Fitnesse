@@ -35,7 +35,7 @@ class WelcomePage extends ConsumerWidget {
 
                 /* Next page button */
                 SmallRoundButton(
-                  title: "Next",
+                  title: "Continue",
                   onPressed: () {
                     ref.read(onboardingPageStateProvider.notifier).state =
                         OnboardingPageState.enterBiometrics;

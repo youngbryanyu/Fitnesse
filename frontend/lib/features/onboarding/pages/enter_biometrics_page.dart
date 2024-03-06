@@ -17,18 +17,10 @@ class EnterBiometricsPage extends ConsumerStatefulWidget {
 }
 
 class _EnterBiometricsPageState extends ConsumerState<EnterBiometricsPage> {
-  // TODO: set all values initially to "select, then enforce that they must be selected"
-  String selectedSex = 'Male';
-  DateTime? selectedBirthday;
-  String selectedUnit = 'Metric';
-  int selectedHeight = 0; // Default in cm for metric
-  int selectedWeight = 0; // Default in kg for metric
-  String selectedActivityLevel = 'Sedentary';
-  String selectedWeightGoal = 'Maintain';
-
-  // Define lists for the picker data
-  final List<String> sexOptions = ['Male', 'Female', 'Other'];
-  final List<String> unitOptions = ['Metric', 'Imperial'];
+  // Define lists for the picker data.
+  // TODO: move these somewhere to integrate with User schema (check backend too)
+  final List<String> sexOptions = ['Male', 'Female'];
+  final List<String> unitOptions = ['Imperial', 'Metric'];
   final List<String> activityLevelOptions = [
     'Sedentary',
     'Lightly Active',
@@ -37,6 +29,15 @@ class _EnterBiometricsPageState extends ConsumerState<EnterBiometricsPage> {
     'Extremely Active'
   ];
   final List<String> weightGoalOptions = ['Lose', 'Gain', 'Maintain'];
+
+  // TODO: set all values initially to "select, then enforce that they must be selected"
+  String selectedSex = 'Select';
+  DateTime? selectedBirthday;
+  String selectedUnit = 'Imperial';
+  int selectedHeight = -1; // Default in cm for more precision over in
+  int selectedWeight = -1; // Default in lbs for more precision over kg
+  String selectedActivityLevel = 'Select';
+  String selectedWeightGoal = 'Select';
 
   void signOutUser(WidgetRef ref) async {
     FirebaseAuth.instance.signOut();
@@ -102,8 +103,12 @@ class _EnterBiometricsPageState extends ConsumerState<EnterBiometricsPage> {
             ),
             buildCustomListTile(
               'Height',
-              formatHeight(selectedHeight,
-                  selectedUnit), // Use the helper function for formatting
+              selectedHeight == -1
+                  ? 'Select'
+                  : formatHeight(
+                      selectedHeight,
+                      selectedUnit,
+                    ), // Use the helper function for formatting
               () {
                 showHeightPicker(context);
               },
@@ -111,7 +116,12 @@ class _EnterBiometricsPageState extends ConsumerState<EnterBiometricsPage> {
             ),
             buildCustomListTile(
               'Weight',
-              '$selectedWeight ${selectedUnit == "Metric" ? "kg" : "lbs"}',
+              selectedWeight == -1
+                  ? 'Select'
+                  : formatWeight(
+                      selectedWeight,
+                      selectedUnit,
+                    ),
               () {
                 showWeightPicker(context);
               },
@@ -171,6 +181,16 @@ class _EnterBiometricsPageState extends ConsumerState<EnterBiometricsPage> {
       final int inches = totalInches % 12;
 
       return "$feet' $inches\"";
+    }
+  }
+
+  String formatWeight(int weightLbs, String unit) {
+    if (unit == "Imperial") {
+      return "$weightLbs lbs";
+    } else {
+      final int weightKg = (weightLbs / 2.2).round();
+
+      return "$weightKg kg";
     }
   }
 
@@ -287,14 +307,17 @@ class _EnterBiometricsPageState extends ConsumerState<EnterBiometricsPage> {
     List<int> inchesOptions =
         List.generate(12, (index) => index); // 0-11 inches
 
+    int selectedIndex = selectedHeight;
     // Convert selectedHeight to feet and inches if Imperial
     int feet = 0;
     int inches = 0;
     if (selectedUnit == 'Imperial') {
       double totalInches = selectedHeight / 2.54; // Convert cm to inches
       feet = totalInches ~/ 12;
-      inches = (totalInches % 12).round();
+      inches = (totalInches.round() % 12).round();
     }
+
+    // TODO create helper for conversion
 
     showModalBottomSheet(
       context: context,
@@ -324,11 +347,14 @@ class _EnterBiometricsPageState extends ConsumerState<EnterBiometricsPage> {
                       onPressed: () {
                         Navigator.of(context).pop();
                         // Convert feet and inches back to cm and set selectedHeight
-                        if (selectedUnit == 'Imperial') {
-                          selectedHeight =
-                              (((feet * 12) + inches) * 2.54).round();
-                        }
-                        setState(() {});
+                        setState(() {
+                          if (selectedUnit == 'Imperial') {
+                            selectedHeight = (((feet * 12) + inches) * 2.54)
+                                .round(); // convert to CM
+                          } else {
+                            selectedHeight = selectedIndex; // use CM
+                          }
+                        });
                       },
                     ),
                   ],
@@ -384,12 +410,15 @@ class _EnterBiometricsPageState extends ConsumerState<EnterBiometricsPage> {
                           backgroundColor:
                               Theme.of(context).colorScheme.background,
                           itemExtent: 32.0,
+                          scrollController: FixedExtentScrollController(
+                            initialItem: selectedIndex,
+                          ),
                           onSelectedItemChanged: (int index) {
-                            // Assuming you have a method to convert cm to the selectedHeight
-                            selectedHeight = index + 1; // cm starts at 1
+                            selectedIndex =
+                                index; // Temporarily store new index
                           },
                           children: List.generate(
-                                  500, (index) => index + 1) // Up to 500 cm
+                                  501, (index) => index) // Up to 500 cm
                               .map((cm) => Center(
                                   child: Text('$cm cm',
                                       style: Theme.of(context)
@@ -412,8 +441,10 @@ class _EnterBiometricsPageState extends ConsumerState<EnterBiometricsPage> {
   void showWeightPicker(BuildContext context) {
     int maxValue =
         selectedUnit == 'Metric' ? 500 : 1100; // Max weight in kg or lbs
-    List<int> weightOptions = List.generate(maxValue, (index) => index + 1);
-    int selectedIndex = selectedWeight - 1; // Adjust based on zero indexing
+    List<int> weightOptions = List.generate(maxValue, (index) => index);
+    int selectedIndex = selectedUnit == 'Imperial'
+        ? selectedWeight
+        : (selectedWeight / 2.2).round(); // convert lbs to kg for metric
 
     showModalBottomSheet(
       context: context,
@@ -443,7 +474,12 @@ class _EnterBiometricsPageState extends ConsumerState<EnterBiometricsPage> {
                       onPressed: () {
                         Navigator.of(context).pop();
                         setState(() {
-                          selectedWeight = weightOptions[selectedIndex];
+                          if (selectedUnit == 'Metric') {
+                            selectedWeight = (selectedIndex * 2.2)
+                                .round(); // convert kg to lbs
+                          } else {
+                            selectedWeight = selectedIndex; // already in lbs
+                          }
                         });
                       },
                     ),
@@ -478,6 +514,8 @@ class _EnterBiometricsPageState extends ConsumerState<EnterBiometricsPage> {
     );
   }
 }
+
+// TODO: find make sure max values for weight and height conform to backend constraints
 
 // TODO: move to own component class
 Widget buildCustomListTile(
