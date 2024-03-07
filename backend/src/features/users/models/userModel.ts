@@ -10,8 +10,8 @@ export interface IUser extends BaseDocument<IUser> {
   _id: string /* Use firebase UID */;
   birthday: Date;
   sex: number;
-  height: number /* store height in cm */;
-  weight: number /* store weight in kg */;
+  height: number /* store height in cm for precision over in */;
+  weight: number /* store weight in lbs for precision over kg */;
   activityLevel: number;
   weightGoal: number;
   useMetric: boolean;

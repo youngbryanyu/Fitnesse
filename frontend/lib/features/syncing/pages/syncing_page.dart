@@ -54,7 +54,7 @@ class SyncingPage extends ConsumerWidget {
       );
       signOutUser(ref);
     }
-  }
+  } // TODO: perhaps use individual try catch for HTTP so its not grouped into the same
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

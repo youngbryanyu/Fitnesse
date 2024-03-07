@@ -4,7 +4,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/common/components/buttons/small_round_button.dart';
+import 'package:frontend/common/services/api/user_api_service.dart';
 import 'package:frontend/features/auth/providers/auth_page_state_provider.dart';
+import 'package:frontend/features/syncing/providers/syncing_page_state_provider.dart';
+import 'package:frontend/logging/logger.dart';
 import 'package:intl/intl.dart';
 
 /* Enter biometrics page widget */
@@ -28,7 +31,15 @@ class _EnterBiometricsPageState extends ConsumerState<EnterBiometricsPage> {
     'Very Active',
     'Extremely Active'
   ];
-  final List<String> weightGoalOptions = ['Lose', 'Gain', 'Maintain'];
+  final List<String> weightGoalOptions = [
+    'Fast loss',
+    'Moderate loss',
+    'Slow loss',
+    'Maintain',
+    'Slow Gain',
+    'Moderate Gain',
+    'Fast Gain',
+  ];
 
   // TODO: set all values initially to "select, then enforce that they must be selected"
   String selectedSex = 'Select';
@@ -39,13 +50,48 @@ class _EnterBiometricsPageState extends ConsumerState<EnterBiometricsPage> {
   String selectedActivityLevel = 'Select';
   String selectedWeightGoal = 'Select';
 
+  // TODO: remove this later, since we don't need a logout page
   void signOutUser(WidgetRef ref) async {
     FirebaseAuth.instance.signOut();
     ref.read(authPageStateProvider.notifier).state = AuthPageState.login;
+  }
 
-    // TODO: notify user if not all data has been synced with server yet
+  // TODO create input validation to ensure all fields must be filled in before continuing
+  void createUser(WidgetRef ref) async {
+    try {
+      /* Get uid */
+      final userId = FirebaseAuth.instance.currentUser?.uid;
 
-    // TODO: move this to a central shared file
+      /* Sign out if no user */
+      if (userId == null) {
+        signOutUser(ref);
+        return;
+      }
+
+      // TODO: add user to realm first
+
+      /* Make HTTP request to create new user info */
+      // TODO: handle this error with HTTP on its own
+      await UserApiService.createUser(
+        userId: userId,
+        birthday: selectedBirthday!,
+        sex: sexOptions.indexOf(selectedSex),
+        height: selectedHeight,
+        weight: selectedWeight,
+        activityLevel: activityLevelOptions.indexOf(selectedActivityLevel),
+        weightGoal: weightGoalOptions.indexOf(selectedWeightGoal),
+        userMetric: selectedUnit == 'Imperial' ? false : true,
+      );
+
+      // TODO: navigate to home page, change to custom macros page later
+      ref.read(syncingPageStateProvider.notifier).state = SyncingPageState.home;
+    } catch (error) {
+      appLogger.info(
+        'Error occurred while syncing new user to server. Logging out:\n',
+        error,
+      ); // TODO: fix handling of error
+      signOutUser(ref);
+    }
   }
 
   @override
@@ -160,11 +206,17 @@ class _EnterBiometricsPageState extends ConsumerState<EnterBiometricsPage> {
               context,
             ),
             SmallRoundButton(
+              title: "I'm finished",
+              onPressed: () {
+                createUser(ref);
+              }, // TODO: edit this button or use another one
+            ),
+            SmallRoundButton(
               title: "Logout",
               onPressed: () {
                 signOutUser(ref);
               },
-            )
+            ),
           ],
         ),
       ),
