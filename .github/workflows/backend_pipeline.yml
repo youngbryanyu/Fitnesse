@@ -99,7 +99,7 @@ jobs:
         username: ${{ secrets.DOCKER_USERNAME_DEV }}
         password: ${{ secrets.DOCKER_PASSWORD_DEV }}
     - name: Build and Push Docker image
-      uses: docker/build-push-action@v5
+      uses: docker/build-push-action@v6
       with:
         context: ./backend
         file: ./backend/Dockerfile.dev
